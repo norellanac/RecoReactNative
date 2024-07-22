@@ -1,10 +1,10 @@
 {
     "commons": {
-        "start": "Empezar",
-        "begin": "Empecemos",
+        "start": "Start",
+        "begin": "Getting Started",
         "next": "Siguiente",
-        "continue": "Continuar",
-        "decline": "Rechazar",
+        "continue": "Continue",
+        "decline": "Decline",
         "back": "Volver",
         "yes": "Sí",
         "no": "No",
@@ -40,5 +40,6 @@
             "register": "Registrarme",
             "login": "Ingresar"
         }
-    }
+    },
+    "welcome_message": "Welcome"
 }

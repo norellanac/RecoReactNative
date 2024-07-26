@@ -1,50 +1,51 @@
-# Welcome to your Expo app 👋
+# ProjectX Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Welcome to ProjectX Mobile, an advanced mobile application built with Expo, designed to deliver a seamless and efficient experience across both Android and iOS platforms. Leveraging the power of React Native and a suite of carefully selected libraries, this project aims to provide a robust foundation for developing high-quality mobile applications.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Cross-Platform Support**: Runs on Android, iOS, and web platforms.
+- **Internationalization**: Integrated with `i18next` and `react-i18next` for easy localization.
+- **Custom Icons**: Utilizes `@expo/vector-icons` for a wide range of icons.
+- **Navigation**: Implemented with `@react-navigation/native` for smooth and intuitive navigation between screens.
+- **Performance Optimized**: Includes `react-native-reanimated` and `react-native-gesture-handler` for fluid animations and gestures.
+- **Testing Ready**: Setup with `jest` and `jest-expo` for unit testing.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- Yarn package manager
+- Expo CLI
+
+### Installation
+
+1. Clone the repository:
 
    ```bash
-   npm install
-   ```
-
-2. Start the app
+   git clone
+    ```
+2. Navigate to the project directory:
 
    ```bash
-    npx expo start
+   cd ProjectX-Mobile
    ```
+3. Install the dependencies:
 
-In the output, you'll find options to open the app in a
+   ```bash
+    yarn install
+    ```
+4. Start the development server:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   yarn start
+   ```
+5. Open the Expo Go app on your mobile device and scan the QR code to run the application.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## License
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

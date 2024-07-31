@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,SafeAreaView } from "react-native";
 import LanguageSwitcher from "./components/molecules/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import FormField from './components/molecules/FormField';
 import './helpers/i18n';
 import './../polyfills';
 
@@ -14,6 +15,11 @@ export default function App() {
         <Text style={styles.subtitle}>{t('welcome_message')}</Text>
         <Text style={styles.subtitle}>This is the first page of your app.</Text>
       <LanguageSwitcher />
+      </View>
+      <View style={styles.main}>
+        <SafeAreaView style={styles.container}>
+          <FormField />
+        </SafeAreaView>
       </View>
     </View>
   );

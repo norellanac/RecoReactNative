@@ -41,5 +41,8 @@
             "login": "Ingresar"
         }
     },
-    "welcome_message": "Welcome"
+    "welcome_message": "Welcome",
+    "Forms":{
+        "passwordLong6": "Must have at least 6 characters"
+    }
 }

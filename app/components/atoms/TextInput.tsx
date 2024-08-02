@@ -1,4 +1,3 @@
-// src/components/atoms/TextInput.tsx
 import React from 'react';
 import { TextInput, StyleSheet, TextInputProps } from 'react-native';
 

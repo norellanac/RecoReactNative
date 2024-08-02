@@ -43,6 +43,7 @@
     },
     "welcome_message": "Bienvenido",
     "Forms":{
-        "passwordLong6": "Debe tener al menos 6 caracteres"
+        "password_long": "Debe tener al menos 6 caracteres",
+        "invalid_email": "Email inválido"
     }
 }

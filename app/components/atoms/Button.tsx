@@ -1,4 +1,3 @@
-// src/components/atoms/Button.tsx
 import React from 'react';
 import { Button, ButtonProps } from 'react-native';
 

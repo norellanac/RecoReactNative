@@ -1,7 +1,7 @@
 import React from 'react';
-import { TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { TextInput, StyleSheet } from 'react-native';
 
-interface InputProps extends TextInputProps {
+type InputProps = {
   placeholder: string;
   onChangeText: (text: string) => void;
   onBlur: () => void;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, ButtonProps } from 'react-native';
+import { Button } from 'react-native';
 
-interface CustomButtonProps extends ButtonProps {
+type CustomButtonProps = {
   onPress: () => void;
   title: string;
 }

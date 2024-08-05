@@ -41,5 +41,9 @@
             "login": "Ingresar"
         }
     },
-    "welcome_message": "Bienvenido"
+    "welcome_message": "Bienvenido",
+    "Forms":{
+        "password_long": "Debe tener al menos 6 caracteres",
+        "invalid_email": "Email inválido"
+    }
 }

@@ -9,7 +9,7 @@ export default function App() {
   // const { t } = useTranslation();
   return (
     <ThemeProvider>
-      <RootNavigator isAuthenticated={false} />
+      <RootNavigator isAuthenticated={true} />
     </ThemeProvider>
   );
 }

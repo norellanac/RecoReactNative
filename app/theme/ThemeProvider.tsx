@@ -7,14 +7,18 @@ type ThemeContextType = {
   setTheme: (themeName: 'light' | 'dark') => void;
 };
 
+const defaultSetTheme = (themeName: 'light' | 'dark') => {
+  console.log(`setTheme function is not initialized. Attempted to set theme to ${themeName}`);
+};
+
 const ThemeContext = createContext<ThemeContextType>({
   theme: themes.light,
-  setTheme: () => {},
+  setTheme: defaultSetTheme,
 });
 
-interface ThemeProviderProps {
+type ThemeProviderProps = {
   children: ReactNode;
-}
+};
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const systemColorScheme = useColorScheme();

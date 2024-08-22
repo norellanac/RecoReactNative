@@ -7,9 +7,15 @@ type InputProps = {
   onBlur: () => void;
   value: string;
   secureTextEntry?: boolean;
-}
+};
 
-const Input: React.FC<InputProps> = ({ placeholder, onChangeText, onBlur, value, secureTextEntry }) => {
+const Input: React.FC<InputProps> = ({
+  placeholder,
+  onChangeText,
+  onBlur,
+  value,
+  secureTextEntry,
+}) => {
   return (
     <TextInput
       style={styles.input}

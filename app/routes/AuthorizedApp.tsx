@@ -7,7 +7,10 @@ const AuthorizedAppStack = createNativeStackNavigator();
 const AuthorizedApp = () => {
   return (
     <AuthorizedAppStack.Navigator screenOptions={{ headerShown: false }}>
-      <AuthorizedAppStack.Screen name="MainTabs" component={BottomTabNavigator} />
+      <AuthorizedAppStack.Screen
+        name="MainTabs"
+        component={BottomTabNavigator}
+      />
       {/* Other authenticated screens can be added here */}
     </AuthorizedAppStack.Navigator>
   );

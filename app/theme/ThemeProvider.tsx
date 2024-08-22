@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Appearance, useColorScheme } from 'react-native';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import { useColorScheme } from 'react-native';
 import { Theme, themes } from './../theme/themes';
 
 type ThemeContextType = {
@@ -8,7 +14,9 @@ type ThemeContextType = {
 };
 
 const defaultSetTheme = (themeName: 'light' | 'dark') => {
-  console.log(`setTheme function is not initialized. Attempted to set theme to ${themeName}`);
+  console.log(
+    `setTheme function is not initialized. Attempted to set theme to ${themeName}`,
+  );
 };
 
 const ThemeContext = createContext<ThemeContextType>({

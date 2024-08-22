@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ExampleHome, LandingHome } from '../features/Home/screens';
+// import { ExampleHome, LandingHome } from '../features/Home/screens';
 import { HomeNavigation } from '../features/Home/screens/HomeStack';
 import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
 

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+// import { StyleSheet } from 'react-native';
 
 const lightTheme = {
   colors: {
@@ -12,14 +12,14 @@ const lightTheme = {
 };
 
 const darkTheme = {
-    colors: {
-        primary: '#D0BCFF',
-        secondary: '#625B71',
-        tertiary: '#7D5260',
-        background: '#1C1B1F',
-        text: '#000000',
-        // Add other color definitions here
-    },
+  colors: {
+    primary: '#D0BCFF',
+    secondary: '#625B71',
+    tertiary: '#7D5260',
+    background: '#1C1B1F',
+    text: '#000000',
+    // Add other color definitions here
+  },
 };
 
 export const themes = {

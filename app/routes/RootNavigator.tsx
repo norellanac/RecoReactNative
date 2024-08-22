@@ -9,13 +9,13 @@ const RootStack = createNativeStackNavigator();
 const RootNavigator = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return (
     <NavigationContainer independent>
-        <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
-            <RootStack.Screen name="AuthorizedApp" component={AuthorizedApp} />
+          <RootStack.Screen name="AuthorizedApp" component={AuthorizedApp} />
         ) : (
-            <RootStack.Screen name="AuthStack" component={AuthNavigator} />
+          <RootStack.Screen name="AuthStack" component={AuthNavigator} />
         )}
-        </RootStack.Navigator>
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 };

@@ -25,27 +25,41 @@ Welcome to ProjectX Mobile, an advanced mobile application built with Expo, desi
 
    ```bash
    git clone
-    ```
+   ```
+
 2. Navigate to the project directory:
 
    ```bash
    cd ProjectX-Mobile
    ```
+
 3. Install the dependencies:
 
    ```bash
     yarn install
-    ```
+   ```
+
 4. Start the development server:
 
    ```bash
    yarn start
    ```
+
 5. Open the Expo Go app on your mobile device and scan the QR code to run the application.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ```
 
 
+```
+
+## prettier & eslint
+
+To use the libraries for formatting and linting with Prettier and ESLint, you need to run the following commands to ensure that our code is optimized:
+
+`yarn prettier --write .`
+
+`yarn eslint --fix .`

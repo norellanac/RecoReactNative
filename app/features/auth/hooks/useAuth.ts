@@ -12,10 +12,10 @@ export const useAuth = () => {
   //saving the value in device storage using mmkv library
   const checkIsAuth = async () => {
     try {
-    //   const value = await AsyncStorage.getItem('isAuth');
-    //   if (value !== null) {
-    //     setIsAuth(value === 'true');
-    //   }
+      //   const value = await AsyncStorage.getItem('isAuth');
+      //   if (value !== null) {
+      //     setIsAuth(value === 'true');
+      //   }
     } catch (error) {
       console.error('Error reading isAuth from AsyncStorage', error);
     }

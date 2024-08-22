@@ -6,8 +6,7 @@ import Input from '../atoms/TextInput';
 import CustomButton from '../atoms/Button';
 import ErrorText from '../atoms/ErrorText';
 
-
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 import '../../helpers/i18n';
 import '../../../polyfills';
 
@@ -18,14 +17,22 @@ const FormField: React.FC = () => {
     <Formik
       initialValues={{ email: '', password: '' }}
       // PARA MIENTRAS SOLO MANDO A LA CONSOLA LOS CAMPOS
-      onSubmit={values => console.log(values)}
-
+      onSubmit={(values) => console.log(values)}
       validationSchema={Yup.object().shape({
         email: Yup.string().email('Email inválido').required('Requerido'),
-        password: Yup.string().min(6, t('Forms.passwordLong6')).required('Requerido'),
+        password: Yup.string()
+          .min(6, t('Forms.passwordLong6'))
+          .required('Requerido'),
       })}
     >
-      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
         <View style={styles.form}>
           <Input
             placeholder="Email"
@@ -33,7 +40,9 @@ const FormField: React.FC = () => {
             onBlur={() => handleBlur('email')}
             value={values.email}
           />
-          {touched.email && errors.email && <ErrorText>{errors.email}</ErrorText>}
+          {touched.email && errors.email && (
+            <ErrorText>{errors.email}</ErrorText>
+          )}
           <Input
             placeholder="Password"
             onChangeText={handleChange('password')}
@@ -41,7 +50,9 @@ const FormField: React.FC = () => {
             value={values.password}
             secureTextEntry
           />
-          {touched.password && errors.password && <ErrorText>{errors.password}</ErrorText>}
+          {touched.password && errors.password && (
+            <ErrorText>{errors.password}</ErrorText>
+          )}
           <CustomButton onPress={handleSubmit} title="Submit" />
         </View>
       )}

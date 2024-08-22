@@ -9,8 +9,12 @@ type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 export const ExampleHome = ({ navigation } /** route */ : Props) => {
   return (
     <Screen>
-        <Text>Example Home Screen</Text>
-        <Button variant='elevated' title="Go Back" onPress={() => navigation.goBack()} />
+      <Text>Example Home Screen</Text>
+      <Button
+        variant="elevated"
+        title="Go Back"
+        onPress={() => navigation.goBack()}
+      />
     </Screen>
   );
 };

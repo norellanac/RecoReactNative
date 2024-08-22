@@ -50,8 +50,10 @@ const FormField: React.FC = () => {
             value={values.password}
             secureTextEntry
           />
-          {touched.password && errors.password && <ErrorText>{errors.password}</ErrorText>}
-          <Button variant='elevated'  title="Submit" onPress={handleSubmit} />
+          {touched.password && errors.password && (
+            <ErrorText>{errors.password}</ErrorText>
+          )}
+          <Button variant="elevated" title="Submit" onPress={handleSubmit} />
         </View>
       )}
     </Formik>

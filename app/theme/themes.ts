@@ -1,30 +1,29 @@
-import { t } from "i18next";
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const commonButtonStyles = {
-  flexDirection: "row",
-  justifyContent: "center",
-  alignItems: "center",
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
   borderRadius: 100,
   minHeight: 50,
   minWidth: 120,
 };
 
 const colors = {
-  primary: "#6750A4",
-  secondary: "#625B71",
-  tertiary: "#7D5260",
-  error: "#B3261E",
-  primary_container: "#EADDFF",
-  secondary_container: "#E8DEF8",
-  tertiary_container: "#FFD8E4",
-  error_container: "#F9DEDC",
-  background: "#FFFBFE",
-  text: "#000000",
-  black: "#000000",
-  white: "#FFFFFF",
-  grey: "#79747E",
-  softgrey: "#E8E8E8",
+  primary: '#6750A4',
+  secondary: '#625B71',
+  tertiary: '#7D5260',
+  error: '#B3261E',
+  primary_container: '#EADDFF',
+  secondary_container: '#E8DEF8',
+  tertiary_container: '#FFD8E4',
+  error_container: '#F9DEDC',
+  background: '#FFFBFE',
+  text: '#000000',
+  black: '#000000',
+  white: '#FFFFFF',
+  grey: '#79747E',
+  softgrey: '#E8E8E8',
   // Add other color definitions here
 };
 
@@ -42,7 +41,7 @@ const lightTheme = {
     },
     outlined: {
       ...commonButtonStyles,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       borderColor: colors.grey,
       borderWidth: 1,
     },
@@ -54,12 +53,12 @@ const lightTheme = {
     },
     text: {
       ...commonButtonStyles,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       color: colors.primary,
     },
     text_disabled: {
       ...commonButtonStyles,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       color: colors.grey,
       opacity: 0.5,
     },
@@ -69,7 +68,7 @@ const lightTheme = {
       borderColor: colors.background, // Outline color
       backgroundColor: colors.background,
       // Shadow for iOS
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 3, height: 3 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -82,7 +81,7 @@ const lightTheme = {
       borderColor: colors.background, // Outline color
       backgroundColor: colors.background,
       // Shadow for iOS
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 3, height: 3 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -111,22 +110,22 @@ const darkTheme = {
     },
     outlined: {
       ...commonButtonStyles,
-      backgroundColor: "transparent",
-      borderColor: "#79747E",
+      backgroundColor: 'transparent',
+      borderColor: '#79747E',
       borderWidth: 1,
     },
     text: {
       ...commonButtonStyles,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       color: colors.primary,
     },
     elevated: {
       ...commonButtonStyles,
       borderWidth: 2,
-      borderColor: "#FFFBFE", // Outline color
-      backgroundColor: "#FFFBFE",
+      borderColor: '#FFFBFE', // Outline color
+      backgroundColor: '#FFFBFE',
       // Shadow for iOS
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 3, height: 3 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -135,7 +134,7 @@ const darkTheme = {
     },
     tonal: {
       ...commonButtonStyles,
-      backgroundColor: "#E8DEF8",
+      backgroundColor: '#E8DEF8',
     },
   }),
 };

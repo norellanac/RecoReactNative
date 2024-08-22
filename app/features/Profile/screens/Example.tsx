@@ -9,8 +9,12 @@ type Props = NativeStackScreenProps<ProfileStackParams, 'Profile'>;
 export const ExampleProfile = ({ navigation } /** route */ : Props) => {
   return (
     <Screen>
-        <Text>Example Profile Screen</Text>
-        <Button variant='tonal' title="Go Back" onPress={() => navigation.goBack()} />
+      <Text>Example Profile Screen</Text>
+      <Button
+        variant="tonal"
+        title="Go Back"
+        onPress={() => navigation.goBack()}
+      />
     </Screen>
   );
 };

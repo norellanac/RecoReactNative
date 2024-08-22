@@ -13,8 +13,16 @@ const LanguageSwitcher: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Button variant='elevated' title="English" onPress={() => changeLanguage('en')} />
-      <Button variant='filled' title="Español" onPress={() => changeLanguage('es')} />
+      <Button
+        variant="elevated"
+        title="English"
+        onPress={() => changeLanguage('en')}
+      />
+      <Button
+        variant="filled"
+        title="Español"
+        onPress={() => changeLanguage('es')}
+      />
     </View>
   );
 };

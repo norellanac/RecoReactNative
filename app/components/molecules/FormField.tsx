@@ -3,12 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '../atoms/TextInput';
-import CustomButton from '../atoms/Button';
 import ErrorText from '../atoms/ErrorText';
 
 import { useTranslation } from 'react-i18next';
 import '../../helpers/i18n';
 import '../../../polyfills';
+import { Button } from '../atoms';
 
 const FormField: React.FC = () => {
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ const FormField: React.FC = () => {
           {touched.password && errors.password && (
             <ErrorText>{errors.password}</ErrorText>
           )}
-          <CustomButton onPress={handleSubmit} title="Submit" />
+          <Button variant="elevated" title="Submit" onPress={handleSubmit} />
         </View>
       )}
     </Formik>

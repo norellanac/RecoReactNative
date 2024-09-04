@@ -4,6 +4,7 @@ import { HomeNavigation } from '../features/Home/screens/HomeStack';
 import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
 import { LandingProfile } from '../features/Profile/screens/Landing';
 import { TaskPage } from '../features/Task/screens/Task';
+import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -18,26 +19,44 @@ const BottomTabNavigator = () => {
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Task') {
-            iconName = focused ? 'list' : 'list-outline';
+            iconName = focused ? 'file-tray' : 'file-tray-outline';
           } else if (route.name === 'Tasker') {
-            iconName = focused ? 'person' : 'person-outline';
+            iconName = focused ? 'heart' : 'heart-outline';
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'settings' : 'settings-outline';
+            iconName = focused ? 'person' : 'person-outline';
           }
 
-          // Puedes devolver cualquier componente aquí
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return (
+            <View style={[styles.iconContainer, focused && styles.focusedIconContainer]}>
+              <Ionicons
+                name={iconName}
+                size={24}
+                color={color}
+              />
+            </View>
+          );
         },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: '#1D192B',
+        tabBarInactiveTintColor: '#817c8d',
         tabBarStyle: {
           backgroundColor: '#f8f9fa',
+          paddingTop:5,
           paddingBottom: 5,
           height: 60,
         },
         tabBarLabelStyle: {
+          fontFamily: 'Roboto',
+          fontWeight: '500',
           fontSize: 12,
-          fontWeight: 'bold',
+          lineHeight: 16,
+          textAlign: 'center',
+          letterSpacing: 1,
+          color: '#817c8d',
+        },
+        tabBarIconStyle: {
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         },
       })}
     >
@@ -48,5 +67,18 @@ const BottomTabNavigator = () => {
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 64,
+    height: 32,
+    borderRadius: 16,
+  },
+  focusedIconContainer: {
+    backgroundColor: '#E8DEF8',
+  },
+});
 
 export default BottomTabNavigator;

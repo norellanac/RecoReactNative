@@ -23,7 +23,9 @@ export const TextInput = ({ variant, label, leftIcon, disabled, actionIcon, styl
         {leftIcon && <Ionicons name={leftIcon + "-outline"} size={24} style={{ color: disabled ? colors.grey : colors.primary, marginLeft: 10 }} />}
         <RNTextInput
           style={[styles.input]}
+          editable={!disabled}  
           {...props}
+
         />
         {actionIcon && <Ionicons name={actionIcon + "-outline"} size={24} style={{ color: disabled ? colors.grey : colors.primary, marginRight: 10 }} />}
       </View>

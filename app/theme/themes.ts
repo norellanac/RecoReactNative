@@ -99,6 +99,24 @@ const lightTheme = {
       opacity: 0.5,
     },
   }),
+  inputVariants: StyleSheet.create({
+    underlined: {
+      borderBottomWidth: 1,
+      borderBottomColor: colors.grey,
+    },
+    outlined: {
+      borderWidth: 1,
+      borderColor: colors.grey,
+      borderRadius: 4,
+      backgroundColor: colors.white,
+    },
+    rounded: {
+      borderWidth: 1,
+      borderColor: colors.grey,
+      borderRadius: 28,
+      backgroundColor: colors.background,
+    },
+  }),
 };
 
 const darkTheme = {
@@ -135,6 +153,24 @@ const darkTheme = {
     tonal: {
       ...commonButtonStyles,
       backgroundColor: '#E8DEF8',
+    },
+  }),
+  inputVariants: StyleSheet.create({
+    underlined: {
+      borderBottomWidth: 1,
+      borderBottomColor: colors.grey,
+    },
+    outlined: {
+      borderWidth: 1,
+      borderColor: colors.grey,
+      borderRadius: 4,
+      backgroundColor: colors.background,
+    },
+    rounded: {
+      borderWidth: 1,
+      borderColor: colors.grey,
+      borderRadius: 28,
+      backgroundColor: colors.background,
     },
   }),
 };

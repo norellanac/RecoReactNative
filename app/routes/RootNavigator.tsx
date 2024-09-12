@@ -3,14 +3,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthorizedApp from './AuthorizedApp';
 import AuthNavigator from '../features/auth/screens/AuthStack';
 import { NavigationContainer } from '@react-navigation/native';
+import { useAppSelector } from '../hooks/useAppSelector';
+import { selectAuth } from '../redux/slices/authSlice';
 
 const RootStack = createNativeStackNavigator();
 
-const RootNavigator = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+const RootNavigator = () => {
+  const authState = useAppSelector(selectAuth);
   return (
     <NavigationContainer independent>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
+        {authState.isAuthenticated ? (
           <RootStack.Screen name="AuthorizedApp" component={AuthorizedApp} />
         ) : (
           <RootStack.Screen name="AuthStack" component={AuthNavigator} />

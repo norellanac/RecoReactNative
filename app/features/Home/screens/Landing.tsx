@@ -1,14 +1,33 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from './../../../components/atoms/Button';
 import { TextInput } from './../../../components/atoms/TextInput';
-
+import { useAppDispatch } from '@/app/hooks/useAppDispatch';
+import { useAppSelector } from '@/app/hooks/useAppSelector';
+import { logout, selectAuth } from '@/app/redux/slices/authSlice';
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
 export const LandingHome = ({ navigation } /** route */ : Props) => {
+  const dispatch = useAppDispatch();
+  const authState = useAppSelector(selectAuth);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  const userData = (
+    <View style={styles.container}>
+      <Text style={styles.label}>User ID:</Text>
+      <Text style={styles.value}>{authState.user.id}</Text>
+      <Text style={styles.label}>Name:</Text>
+      <Text style={styles.value}>{authState.user.name}</Text>
+      <Text style={styles.label}>Email:</Text>
+      <Text style={styles.value}>{authState.user.email}</Text>
+    </View>
+  );
   return (
     <Screen>
       <View
@@ -20,37 +39,6 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           marginVertical: 90,
         }}
       >
-        <Text>Landing sssHome Screen</Text>
-
-        <TextInput
-          variant="underlined"
-          label="Username"
-          placeholder="Enter your username"
-          leftIcon="home"
-        />
-
-        <TextInput
-          variant="outlined"
-          label="Username"
-          placeholder="Enter your username"
-          leftIcon="document"
-        />
-
-        <TextInput
-          variant="rounded"
-          label="Username"
-          placeholder="Enter your username"
-          leftIcon="flag"
-        />
-
-        <TextInput
-          variant="rounded"
-          label="Password"
-          placeholder="Enter your password"
-          leftIcon="shield-half"
-          actionIcon="search"
-        />
-
         <Button
           variant="elevated"
           title="Landing Home"
@@ -61,7 +49,24 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           title="Example Screen Home"
           onPress={() => navigation.navigate('ExampleHome')}
         />
+        {userData}
+        <Button variant="filled" title="Logout" onPress={handleLogout} />
       </View>
     </Screen>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  label: {
+    fontWeight: 'bold',
+  },
+  value: {
+    marginBottom: 10,
+  },
+  message: {
+    fontStyle: 'italic',
+  },
+});

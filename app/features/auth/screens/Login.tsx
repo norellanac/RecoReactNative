@@ -1,4 +1,3 @@
-import LanguageSwitcher from '@/app/components/molecules/LanguageSwitcher';
 import { t } from 'i18next';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -16,7 +15,6 @@ export const Login = ({} /** route, navigation  */ : Props) => {
   const dispatch = useAppDispatch();
 
   const handleLogin = () => {
-    // Simulate a login API call
     const user = { id: '1', name: 'John Doe', email: 'john.doe@example.com' };
     dispatch(loginSuccess(user));
   };
@@ -26,8 +24,6 @@ export const Login = ({} /** route, navigation  */ : Props) => {
       <View>
         <Text>{t('commons.start')}</Text>
         <Text>{t('welcome_message')}</Text>
-        <Text>This is the first page of your app.</Text>
-        <LanguageSwitcher />
       </View>
       <View>
         <SafeAreaView>

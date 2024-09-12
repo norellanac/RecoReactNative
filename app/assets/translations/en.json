@@ -2,43 +2,42 @@
   "commons": {
     "start": "Start",
     "begin": "Getting Started",
-    "next": "Siguiente",
+    "next": "Next",
     "continue": "Continue",
     "decline": "Decline",
-    "back": "Volver",
-    "yes": "Sí",
+    "back": "Go Back",
+    "yes": "Yes",
     "no": "No",
     "ok": "Ok",
-    "go_home": "Volver al inicio",
-    "back_to_top": "Volver al inicio",
-    "copy": "Copiar",
-    "cancel": "Cancelar",
-    "loading": "Cargando",
-    "loading_ellipsis": "Cargando...",
-    "request": "Solicitar",
-    "more_information": "Más Información",
-    "accept": "Aceptar",
-    "available": "Disponible",
-    "confirm": "Confirmar",
+    "go_home": "Go Home",
+    "back_to_top": "Back to Top",
+    "copy": "Copy",
+    "cancel": "Cancel",
+    "loading": "Loading",
+    "loading_ellipsis": "Loading...",
+    "request": "Request",
+    "more_information": "More Information",
+    "accept": "Accept",
+    "available": "Available",
+    "confirm": "Confirm",
     "error": "Error",
-    "success": "¡Éxito!",
-    "general_error": "Ocurrió un error",
-    "view_more": "Ver más",
-    "view_less": "Ver menos",
-    "maintentance_message": "Nos encontramos en mantenimiento",
-    "hasConnection": "Se ha restablecido la conexion",
-    "lostConnection": "No tienes conexion a internet"
+    "success": "Success!",
+    "general_error": "An error occurred",
+    "view_more": "View more",
+    "view_less": "View less",
+    "maintentance_message": "We are in maintenance",
+    "hasConnection": "Connection has been restored",
+    "lostConnection": "You are not connected to the internet"
   },
   "auth": {
     "landing_screen": {
-      "register": "Registrarme",
-      "login": "Ingresar"
+      "register": "Sign Up",
+      "login": "Log In"
     }
   },
   "home": {
     "landing_screen": {
-      "register": "Registrarme",
-      "login": "Ingresar"
+      "welcome": "Welcome to the application"
     }
   },
   "welcome_message": "Welcome",

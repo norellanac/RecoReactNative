@@ -37,8 +37,7 @@
   },
   "home": {
     "landing_screen": {
-      "register": "Registrarme",
-      "login": "Ingresar"
+      "welcome": "Bienvenido a la aplicación"
     }
   },
   "welcome_message": "Bienvenido",

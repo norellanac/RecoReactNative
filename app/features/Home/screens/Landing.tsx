@@ -9,12 +9,14 @@ import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { logout, selectAuth } from '@/app/redux/slices/authSlice';
 import { useGetExampleDataQuery } from '@/app/services/api';
+import { useTranslation } from 'react-i18next';
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
 export const LandingHome = ({ navigation } /** route */ : Props) => {
   const dispatch = useAppDispatch();
   const authState = useAppSelector(selectAuth);
   const { data } = useGetExampleDataQuery();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -30,6 +32,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
       <Text style={styles.value}>{authState.user.email}</Text>
     </View>
   );
+
   return (
     <Screen>
       <View
@@ -41,6 +44,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           marginVertical: 90,
         }}
       >
+        <Text>{t('home.landing_screen.welcome')}</Text>
         <Button
           variant="elevated"
           title="Landing Home"

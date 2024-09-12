@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -8,11 +8,13 @@ import { TextInput } from './../../../components/atoms/TextInput';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { logout, selectAuth } from '@/app/redux/slices/authSlice';
+import { useGetExampleDataQuery } from '@/app/services/api';
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
 export const LandingHome = ({ navigation } /** route */ : Props) => {
   const dispatch = useAppDispatch();
   const authState = useAppSelector(selectAuth);
+  const { data } = useGetExampleDataQuery();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -46,8 +48,8 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
         />
         <Button
           variant="filled"
-          title="Example Screen Home"
-          onPress={() => navigation.navigate('ExampleHome')}
+          title="Display user data from API"
+          onPress={() => Alert.alert('User Data', JSON.stringify(data))}
         />
         {userData}
         <Button variant="filled" title="Logout" onPress={handleLogout} />

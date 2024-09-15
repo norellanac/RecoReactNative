@@ -1,7 +1,14 @@
 import React from 'react';
-import { View, TextInput as RNTextInput, Text, StyleSheet, TextInputProps, TouchableOpacity } from 'react-native';
+import {
+  View,
+  TextInput as RNTextInput,
+  Text,
+  StyleSheet,
+  TextInputProps,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from './../../theme/ThemeProvider';
+import ErrorText from './ErrorText';
 
 type InputProps = TextInputProps & {
   variant: 'underlined' | 'outlined' | 'rounded';
@@ -9,9 +16,19 @@ type InputProps = TextInputProps & {
   leftIcon?: React.ReactNode;
   disabled?: boolean;
   actionIcon?: React.ReactNode;
+  errorMsg?: string;
 };
 
-export const TextInput = ({ variant, label, leftIcon, disabled, actionIcon, style, ...props }: InputProps) => {
+export const TextInput = ({
+  variant,
+  label,
+  leftIcon,
+  disabled,
+  actionIcon,
+  style,
+  errorMsg,
+  ...props
+}: InputProps) => {
   const { theme } = useTheme();
   const { colors, inputVariants } = theme;
   const variantStyles = inputVariants[variant];
@@ -20,15 +37,29 @@ export const TextInput = ({ variant, label, leftIcon, disabled, actionIcon, styl
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.inputContainer, variantStyles, style]}>
-        {leftIcon && <Ionicons name={leftIcon + "-outline"} size={24} style={{ color: disabled ? colors.grey : colors.primary, marginLeft: 10 }} />}
-        <RNTextInput
-          style={[styles.input]}
-          editable={!disabled}  
-          {...props}
-
-        />
-        {actionIcon && <Ionicons name={actionIcon + "-outline"} size={24} style={{ color: disabled ? colors.grey : colors.primary, marginRight: 10 }} />}
+        {leftIcon && (
+          <Ionicons
+            name={leftIcon + '-outline'}
+            size={24}
+            style={{
+              color: disabled ? colors.grey : colors.primary,
+              marginLeft: 10,
+            }}
+          />
+        )}
+        <RNTextInput style={[styles.input]} editable={!disabled} {...props} />
+        {actionIcon && (
+          <Ionicons
+            name={actionIcon + '-outline'}
+            size={24}
+            style={{
+              color: disabled ? colors.grey : colors.primary,
+              marginRight: 10,
+            }}
+          />
+        )}
       </View>
+      {errorMsg && <ErrorText>{errorMsg}</ErrorText>}
     </View>
   );
 };
@@ -53,4 +84,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

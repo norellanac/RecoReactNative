@@ -8,7 +8,7 @@ import { TextInput } from './../../../components/atoms/TextInput';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
-export const LandingHome = ({ navigation } /** route */: Props) => {
+export const LandingHome = ({ navigation } /** route */ : Props) => {
   return (
     <Screen>
       <View
@@ -20,27 +20,27 @@ export const LandingHome = ({ navigation } /** route */: Props) => {
           marginVertical: 90,
         }}
       >
-        <Text>Landing Home Screen</Text>
+        <Text>Landing sssHome Screen</Text>
 
         <TextInput
           variant="underlined"
           label="Username"
           placeholder="Enter your username"
-          leftIcon='home'
+          leftIcon="home"
         />
 
         <TextInput
           variant="outlined"
           label="Username"
           placeholder="Enter your username"
-          leftIcon='document'
+          leftIcon="document"
         />
 
         <TextInput
           variant="rounded"
           label="Username"
           placeholder="Enter your username"
-          leftIcon='flag'
+          leftIcon="flag"
         />
 
         <TextInput
@@ -48,8 +48,7 @@ export const LandingHome = ({ navigation } /** route */: Props) => {
           label="Password"
           placeholder="Enter your password"
           leftIcon="shield-half"
-          actionIcon='search'
-
+          actionIcon="search"
         />
 
         <Button

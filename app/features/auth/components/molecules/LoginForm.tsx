@@ -32,6 +32,9 @@ export const LoginForm: React.FC = () => {
             onBlur={() => handleBlur('email')}
             value={values.email}
             errorMsg={errors.email}
+            variant="rounded"
+            label="Email"
+            leftIcon="mail"
           />
           <TextInput
             placeholder="Password"
@@ -39,7 +42,9 @@ export const LoginForm: React.FC = () => {
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
-            secureTextEntry
+            variant="rounded"
+            label="Password"
+            leftIcon="key"
           />
           <Button variant="elevated" title="Submit" onPress={handleSubmit} />
         </View>

@@ -1,4 +1,3 @@
-import FormField from '@/app/components/molecules/FormField';
 import LanguageSwitcher from '@/app/components/molecules/LanguageSwitcher';
 import { t } from 'i18next';
 import React from 'react';
@@ -7,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Screen } from './../../../components/templates';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParams } from './AuthStack';
+import { LoginForm } from '../components/molecules';
 type Props = NativeStackScreenProps<AuthStackParams, 'Login'>;
 
 export const Login = ({} /** route, navigation  */ : Props) => {
@@ -20,7 +20,7 @@ export const Login = ({} /** route, navigation  */ : Props) => {
       </View>
       <View>
         <SafeAreaView>
-          <FormField />
+          <LoginForm />
         </SafeAreaView>
       </View>
     </Screen>

@@ -37,3 +37,44 @@ export const Button = ({ variant, title, isLoading, disabled, onPress, style, ..
     </TouchableOpacity>
   );
 };
+
+//Example usage:
+<>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="filled"
+  title={<Text>{'+ Filled Button'}</Text>}
+/>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="outlined"
+  title="Outlined Button"
+/>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="text"
+  disabled
+  title="Disabled Text Button"
+/>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="text"
+  title=" Text Button"
+/>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="elevated"
+  title="Elevated Button"
+/>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="elevated"
+  isLoading
+  title="Loading Elevated Button"
+/>
+<Button
+  onPress={() => console.log('pressed')}
+  variant="tonal"
+  title="Tonal Button"
+/>
+</>

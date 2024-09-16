@@ -32,28 +32,28 @@ export const TextInput = ({
   const { theme } = useTheme();
   const { colors, inputVariants } = theme;
   const variantStyles = inputVariants[variant];
-
+  const colorActive = errorMsg ? colors.error : (disabled ? colors.grey : colors.primary);
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={[styles.inputContainer, variantStyles, style]}>
+      <View style={[styles.inputContainer, variantStyles, style,{borderColor:colorActive}]}>
         {leftIcon && (
           <Ionicons
             name={leftIcon + '-outline'}
             size={24}
             style={{
-              color: disabled ? colors.grey : colors.primary,
+              color: colorActive,
               marginLeft: 10,
             }}
           />
         )}
-        <RNTextInput style={[styles.input]} editable={!disabled} {...props} />
+        <RNTextInput style={[styles.input]} editable={!disabled} {...props}   />
         {actionIcon && (
           <Ionicons
             name={actionIcon + '-outline'}
             size={24}
             style={{
-              color: disabled ? colors.grey : colors.primary,
+              color: colorActive,
               marginRight: 10,
             }}
           />

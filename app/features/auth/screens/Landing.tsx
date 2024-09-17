@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { AuthStackParams } from './AuthStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Screen } from '../../../components/templates';
-import { Button } from './../../../components/atoms';
+import { Button, Text } from './../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/app/components/molecules/LanguageSwitcher';
 
@@ -22,7 +22,9 @@ export const LandingAuth = ({ navigation } /* route, navigation */ : Props) => {
           marginVertical: 90,
         }}
       >
-        <Text>Workoo</Text>
+        <Text variant={'headline'} size={'large'} color="primary">
+          Workoo
+        </Text>
         <LanguageSwitcher />
         <Button
           variant="filled"

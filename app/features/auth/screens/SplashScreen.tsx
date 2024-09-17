@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '../../../components/atoms';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 //import roboto from '../../../assets/fonts/Roboto-Regular.ttf';
@@ -34,7 +35,9 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <Text style={styles.appName}>{appName}</Text>
+        <Text variant={'display'} size={'large'} color="primary">
+          {appName}
+        </Text>
       </View>
     </View>
   );

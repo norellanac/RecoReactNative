@@ -1,5 +1,10 @@
 import React from 'react';
-import { TouchableOpacity, Text,  TouchableOpacityProps, ActivityIndicator } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  TouchableOpacityProps,
+  ActivityIndicator,
+} from 'react-native';
 import { useTheme } from './../../theme/ThemeProvider';
 
 type ButtonProps = TouchableOpacityProps & {
@@ -10,18 +15,36 @@ type ButtonProps = TouchableOpacityProps & {
   onPress: () => void;
 };
 
-export const Button = ({ variant, title, isLoading, disabled, onPress, style, ...props }: ButtonProps) => {
+export const Button = ({
+  variant,
+  title,
+  isLoading,
+  disabled,
+  onPress,
+  style,
+  ...props
+}: ButtonProps) => {
   const { theme } = useTheme();
   const { colors, buttonVariants } = theme;
-  const variantStyles = buttonVariants[disabled ? `${variant}_disabled` : variant];
-  const textColor = variant === 'filled' ? colors.white : variant === 'tonal' ? colors.black : colors.primary;
+  const variantStyles =
+    buttonVariants[disabled ? `${variant}_disabled` : variant];
+  const textColor =
+    variant === 'filled'
+      ? colors.white
+      : variant === 'tonal'
+        ? colors.black
+        : colors.primary;
 
   const renderText = () => {
     if (isLoading) {
       return <ActivityIndicator size="small" />;
     }
     if (typeof title === 'string') {
-      return <Text style={{ color: disabled ? colors.grey : textColor }}>{title}</Text>;
+      return (
+        <Text style={{ color: disabled ? colors.grey : textColor }}>
+          {title}
+        </Text>
+      );
     }
     return title;
   };
@@ -40,41 +63,41 @@ export const Button = ({ variant, title, isLoading, disabled, onPress, style, ..
 
 //Example usage:
 <>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="filled"
-  title={<Text>{'+ Filled Button'}</Text>}
-/>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="outlined"
-  title="Outlined Button"
-/>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="text"
-  disabled
-  title="Disabled Text Button"
-/>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="text"
-  title=" Text Button"
-/>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="elevated"
-  title="Elevated Button"
-/>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="elevated"
-  isLoading
-  title="Loading Elevated Button"
-/>
-<Button
-  onPress={() => console.log('pressed')}
-  variant="tonal"
-  title="Tonal Button"
-/>
-</>
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="filled"
+    title={<Text>{'+ Filled Button'}</Text>}
+  />
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="outlined"
+    title="Outlined Button"
+  />
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="text"
+    disabled
+    title="Disabled Text Button"
+  />
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="text"
+    title=" Text Button"
+  />
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="elevated"
+    title="Elevated Button"
+  />
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="elevated"
+    isLoading
+    title="Loading Elevated Button"
+  />
+  <Button
+    onPress={() => console.log('pressed')}
+    variant="tonal"
+    title="Tonal Button"
+  />
+</>;

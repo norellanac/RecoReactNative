@@ -19,7 +19,7 @@ const SliderScreenComponent = ({ onReady }: { onReady: () => void }) => {
         console.warn(e);
       } finally {
         setAppSlider(true);
-        // onReady();
+        onReady();
       }
     };
 

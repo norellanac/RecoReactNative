@@ -16,6 +16,7 @@ type InputProps = TextInputProps & {
   leftIcon?: React.ReactNode;
   disabled?: boolean;
   actionIcon?: React.ReactNode;
+  especialIcon: string;
   errorMsg?: string;
 };
 
@@ -25,6 +26,7 @@ export const TextInput = ({
   leftIcon,
   disabled,
   actionIcon,
+  especialIcon,
   style,
   errorMsg,
   ...props
@@ -32,11 +34,22 @@ export const TextInput = ({
   const { theme } = useTheme();
   const { colors, inputVariants } = theme;
   const variantStyles = inputVariants[variant];
-  const colorActive = errorMsg ? colors.error : (disabled ? colors.grey : colors.primary);
+  const colorActive = errorMsg
+    ? colors.error
+    : disabled
+      ? colors.grey
+      : colors.primary;
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={[styles.inputContainer, variantStyles, style,{borderColor:colorActive}]}>
+      <View
+        style={[
+          styles.inputContainer,
+          variantStyles,
+          style,
+          { borderColor: colorActive },
+        ]}
+      >
         {leftIcon && (
           <Ionicons
             name={leftIcon + '-outline'}
@@ -47,10 +60,10 @@ export const TextInput = ({
             }}
           />
         )}
-        <RNTextInput style={[styles.input]} editable={!disabled} {...props}   />
+        <RNTextInput style={[styles.input]} editable={!disabled} {...props} />
         {actionIcon && (
           <Ionicons
-            name={actionIcon + '-outline'}
+            name={actionIcon + (especialIcon ? especialIcon : '-outline')}
             size={24}
             style={{
               color: colorActive,

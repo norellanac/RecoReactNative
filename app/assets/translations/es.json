@@ -43,6 +43,10 @@
   "welcome_message": "Bienvenido",
   "Forms": {
     "password_long": "Debe tener al menos 6 caracteres",
-    "invalid_email": "Email inválido"
+    "invalid_email": "Email inválido",
+    "required ": "Requerido"
+  },
+  "login": {
+    "have_not_account": "No tengo cuenta, por favor"
   }
 }

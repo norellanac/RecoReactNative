@@ -18,12 +18,11 @@ export default function App() {
   const handleAppReady = () => {
     setAppReady(true);
   };
-  const handleAppSlider = () => { 
+  const handleAppSlider = () => {
     setAppSlider(true);
   };
 
   if (!isAppReady) return <SplashScreenComponent onReady={handleAppReady} />;
-  if (!isAppSlider) return <SliderScreenComponent onReady={handleAppSlider} />;
   if (!isAppSlider) return <SliderScreenComponent onReady={handleAppSlider} />;
 
   return (

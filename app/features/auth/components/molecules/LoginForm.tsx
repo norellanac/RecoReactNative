@@ -16,12 +16,10 @@ export const LoginForm: React.FC = () => {
       initialValues={{ email: '', password: '' }}
       onSubmit={(values) => console.log(values)}
       validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email(t('Forms.invalid_email'))
-          .required('Requerido'),
+        email: Yup.string().required(t('Forms.required')),
         password: Yup.string()
           .min(6, t('Forms.password_long'))
-          .required('Requerido'),
+          .required(t('Forms.required')),
       })}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -32,9 +30,8 @@ export const LoginForm: React.FC = () => {
             onBlur={() => handleBlur('email')}
             value={values.email}
             errorMsg={errors.email}
-            variant="rounded"
-            label="Email"
-            leftIcon="mail"
+            variant="underlined"
+            label="Phone Number"
           />
           <TextInput
             placeholder="Password"
@@ -42,11 +39,12 @@ export const LoginForm: React.FC = () => {
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
-            variant="rounded"
+            variant="underlined"
             label="Password"
-            leftIcon="key"
+            actionIcon="eye"
+            especialIcon="-sharp"
           />
-          <Button variant="elevated" title="Submit" onPress={handleSubmit} />
+          <Button variant="filled" title="Log In" onPress={handleSubmit} />
         </View>
       )}
     </Formik>
@@ -55,6 +53,7 @@ export const LoginForm: React.FC = () => {
 
 const styles = StyleSheet.create({
   form: {
+    marginTop: 100,
     padding: 16,
   },
 });

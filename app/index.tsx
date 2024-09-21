@@ -8,16 +8,23 @@ import { store } from './redux/store/store';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './helpers/i18n';
 import SplashScreenComponent from './features/auth/screens/SplashScreen';
+import SliderScreenComponent from './features/auth/screens/IntroSlider';
 import { useState } from 'react';
 
 export default function App() {
   const [isAppReady, setAppReady] = useState(false);
+  const [isAppSlider, setAppSlider] = useState(false);
 
   const handleAppReady = () => {
     setAppReady(true);
   };
+  const handleAppSlider = () => { 
+    setAppSlider(true);
+  };
 
   if (!isAppReady) return <SplashScreenComponent onReady={handleAppReady} />;
+  if (!isAppSlider) return <SliderScreenComponent onReady={handleAppSlider} />;
+  if (!isAppSlider) return <SliderScreenComponent onReady={handleAppSlider} />;
 
   return (
     <Provider store={store}>

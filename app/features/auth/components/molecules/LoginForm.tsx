@@ -7,14 +7,27 @@ import { useTranslation } from 'react-i18next';
 import '../../../../helpers/i18n';
 import '../../../../../polyfills';
 import { Button } from '../../../../components/atoms';
+import { useAppDispatch } from '@/app/hooks/useAppDispatch';
+import { loginSuccess } from '@/app/redux/slices/authSlice';
 
 export const LoginForm: React.FC = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const handleLogin = () => {
+    const user = { id: '1', name: 'John Doe', email: 'john.doe@example.com' };
+    dispatch(loginSuccess(user));
+  };
+
+  const handleSubmit = (values: { email: string; password: string }) => {
+    console.log(values);
+    handleLogin();
+  };
 
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
         email: Yup.string().required(t('Forms.required')),
         password: Yup.string()

@@ -15,9 +15,9 @@ export type AuthStackParams = {
 const AuthNavigator = () => {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      <AuthStack.Screen name="Landing" component={LandingAuth} />
       <AuthStack.Screen name="Login" component={Login} />
       <AuthStack.Screen name="Register" component={Register} />
+      <AuthStack.Screen name="Landing" component={LandingAuth} />
     </AuthStack.Navigator>
   );
 };

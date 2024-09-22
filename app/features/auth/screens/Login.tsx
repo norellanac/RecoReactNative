@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Login'>;
 
-export const Login = ({}: Props) => {
+export const Login = ({navigation}: Props) => {
   const { t } = useTranslation();
   return (
     <Screen>
@@ -22,7 +22,11 @@ export const Login = ({}: Props) => {
           <Text style={styles.forgetPass}>Forget Password?</Text>
           <View style={styles.msmFood}>
             <Text style={styles.txtFood}>{t('login.have_not_account')}</Text>
-            <Button variant="text" title="Sign Up" />
+            <Button
+              variant="text"
+              title="Sign Up"
+              onPress={() => navigation.navigate('Register')}
+            />
           </View>
         </SafeAreaView>
       </View>

@@ -4,7 +4,6 @@ import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from './../../../components/atoms/Button';
-import { TextInput } from './../../../components/atoms/TextInput';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { logout, selectAuth } from '@/app/redux/slices/authSlice';

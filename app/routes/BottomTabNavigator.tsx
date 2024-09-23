@@ -4,60 +4,58 @@ import { HomeNavigation } from '../features/Home/screens/HomeStack';
 import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
 import { LandingProfile } from '../features/Profile/screens/Landing';
 import { TaskPage } from '../features/Task/screens/Task';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { Text } from '../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeProvider';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+const isTablet = Dimensions.get('window').width >= 768;
+
+const BottomTabNavigator = React.memo(() => {
+  const { theme } = useTheme();
+  const { colors } = theme;
+  const iconMapping = {
+    Home: ['home', 'home-outline'],
+    Task: ['file-tray', 'file-tray-outline'],
+    Tasker: ['heart', 'heart-outline'],
+    Profile: ['person', 'person-outline'],
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Task') {
-            iconName = focused ? 'file-tray' : 'file-tray-outline';
-          } else if (route.name === 'Tasker') {
-            iconName = focused ? 'heart' : 'heart-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
-          }
+          const iconName = focused
+            ? iconMapping[route.name][0]
+            : iconMapping[route.name][1];
 
           return (
-            <View
-              style={[
-                styles.iconContainer,
-                focused && styles.focusedIconContainer,
-              ]}
-            >
-              <Ionicons name={iconName} size={24} color={color} />
+            <View style={styles.iconLabelContainer}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  focused && { backgroundColor: colors.secondary_container },
+                ]}
+              >
+                <Ionicons name={iconName} size={size || 24} color={color} />
+              </View>
+              <Text variant={'body'} size={'medium'} color={'secondary'}>
+                {route.name}
+              </Text>
             </View>
           );
         },
-        tabBarActiveTintColor: '#1D192B',
-        tabBarInactiveTintColor: '#817c8d',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.secondary,
         tabBarStyle: {
-          backgroundColor: '#f8f9fa',
-          paddingTop: 5,
-          paddingBottom: 5,
+          backgroundColor: colors.background,
+          paddingVertical: 5,
           height: 60,
         },
         tabBarLabelStyle: {
-          fontFamily: 'Roboto',
-          fontWeight: '500',
-          fontSize: 12,
-          lineHeight: 16,
-          textAlign: 'center',
-          letterSpacing: 1,
-          color: '#817c8d',
-        },
-        tabBarIconStyle: {
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: 'none', // Hide the default label style
         },
       })}
     >
@@ -67,18 +65,20 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="Profile" component={LandingProfile} />
     </Tab.Navigator>
   );
-};
+});
 
 const styles = StyleSheet.create({
+  iconLabelContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: isTablet ? 80 : 64, // Adjust width for tablets
+  },
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 64,
+    width: 50,
     height: 32,
     borderRadius: 16,
-  },
-  focusedIconContainer: {
-    backgroundColor: '#E8DEF8',
   },
 });
 

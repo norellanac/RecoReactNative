@@ -42,11 +42,18 @@
   },
   "welcome_message": "Welcome",
   "Forms": {
+    "password": "Password",
+    "confirm_password":"Confirm Password",
+    "full_name": "Full Name",
+    "phone_number":"Phone Number",
     "password_long": "Must have at least 6 characters",
     "invalid_email": "Invalid e-mail",
     "required": "Required"
   },
   "login": {
     "have_not_account": "Haven't account, please"
+  },
+  "register": {
+    "already_have_an_account": "Already hace an account?"
   }
 }

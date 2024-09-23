@@ -7,21 +7,32 @@ import { useTranslation } from 'react-i18next';
 import '../../../../helpers/i18n';
 import '../../../../../polyfills';
 import { Button } from '../../../../components/atoms';
+import { useAppDispatch } from '@/app/hooks/useAppDispatch';
+import { loginSuccess } from '@/app/redux/slices/authSlice';
 
 export const LoginForm: React.FC = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const handleLogin = () => {
+    const user = { id: '1', name: 'John Doe', email: 'john.doe@example.com' };
+    dispatch(loginSuccess(user));
+  };
+
+  const handleSubmit = (values: { email: string; password: string }) => {
+    console.log(values);
+    handleLogin();
+  };
 
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email(t('Forms.invalid_email'))
-          .required('Requerido'),
+        email: Yup.string().required(t('Forms.required')),
         password: Yup.string()
           .min(6, t('Forms.password_long'))
-          .required('Requerido'),
+          .required(t('Forms.required')),
       })}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -32,9 +43,8 @@ export const LoginForm: React.FC = () => {
             onBlur={() => handleBlur('email')}
             value={values.email}
             errorMsg={errors.email}
-            variant="rounded"
-            label="Email"
-            leftIcon="mail"
+            variant="underlined"
+            label="Phone Number"
           />
           <TextInput
             placeholder="Password"
@@ -42,11 +52,12 @@ export const LoginForm: React.FC = () => {
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
-            variant="rounded"
+            variant="underlined"
             label="Password"
-            leftIcon="key"
+            actionIcon="eye"
+            especialIcon="-sharp"
           />
-          <Button variant="elevated" title="Submit" onPress={handleSubmit} />
+          <Button variant="filled" title="Log In" onPress={handleSubmit} />
         </View>
       )}
     </Formik>
@@ -55,6 +66,7 @@ export const LoginForm: React.FC = () => {
 
 const styles = StyleSheet.create({
   form: {
+    marginTop: 100,
     padding: 16,
   },
 });

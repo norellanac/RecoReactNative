@@ -1,36 +1,68 @@
 import { t } from 'i18next';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Screen } from './../../../components/templates';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParams } from './AuthStack';
 import { LoginForm } from '../components/molecules';
-import { useAppDispatch } from '@/app/hooks/useAppDispatch';
-import { loginSuccess } from '@/app/redux/slices/authSlice';
 import { Button } from '@/app/components/atoms';
+import { useTranslation } from 'react-i18next';
+
 type Props = NativeStackScreenProps<AuthStackParams, 'Login'>;
 
-export const Login = ({} /** route, navigation  */ : Props) => {
-  const dispatch = useAppDispatch();
-
-  const handleLogin = () => {
-    const user = { id: '1', name: 'John Doe', email: 'john.doe@example.com' };
-    dispatch(loginSuccess(user));
-  };
-
+export const Login = ({ navigation }: Props) => {
+  const { t } = useTranslation();
   return (
     <Screen>
-      <View>
-        <Text>{t('commons.start')}</Text>
-        <Text>{t('welcome_message')}</Text>
-      </View>
-      <View>
+      <View style={styles.container}>
         <SafeAreaView>
+          <Text style={styles.appName}>Workoo</Text>
           <LoginForm />
-          <Button onPress={handleLogin} variant="elevated" title="Login user" />
+          <Text style={styles.forgetPass}>Forget Password?</Text>
+          <View style={styles.msmFood}>
+            <Text style={styles.txtFood}>{t('login.have_not_account')}</Text>
+            <Button
+              variant="text"
+              title="Sign Up"
+              onPress={() => navigation.navigate('Register')}
+            />
+          </View>
         </SafeAreaView>
       </View>
     </Screen>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    padding: 20,
+  },
+
+  appName: {
+    fontFamily: 'Roboto',
+    fontWeight: 'bold',
+    fontSize: 34,
+    lineHeight: 64,
+    fontStyle: 'normal',
+    color: '#6750A4',
+    textAlign: 'center',
+  },
+  forgetPass: {
+    marginTop: 30,
+    textAlign: 'center',
+    color: '#6750A4',
+    fontSize: 14,
+  },
+  msmFood: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 100,
+    flexDirection: 'row',
+  },
+  txtFood: {
+    marginRight: -25,
+    fontSize: 14,
+  },
+});

@@ -14,9 +14,9 @@ export const HomeNavigation = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="Home"
+      initialRouteName="LandingHome"
     >
-      <HomeStack.Screen name="Home" component={LandingHome} />
+      <HomeStack.Screen name="LandingHome" component={LandingHome} />
       <HomeStack.Screen name="ExampleHome" component={ExampleHome} />
     </HomeStack.Navigator>
   );

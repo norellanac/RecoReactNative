@@ -27,12 +27,13 @@ const BottomTabNavigator = () => {
           }
 
           return (
-            <View style={[styles.iconContainer, focused && styles.focusedIconContainer]}>
-              <Ionicons
-                name={iconName}
-                size={24}
-                color={color}
-              />
+            <View
+              style={[
+                styles.iconContainer,
+                focused && styles.focusedIconContainer,
+              ]}
+            >
+              <Ionicons name={iconName} size={24} color={color} />
             </View>
           );
         },
@@ -40,7 +41,7 @@ const BottomTabNavigator = () => {
         tabBarInactiveTintColor: '#817c8d',
         tabBarStyle: {
           backgroundColor: '#f8f9fa',
-          paddingTop:5,
+          paddingTop: 5,
           paddingBottom: 5,
           height: 60,
         },

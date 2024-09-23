@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text } from '../../../components/atoms';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-//import roboto from '../../../assets/fonts/Roboto-Regular.ttf';
+import { Ionicons } from '@expo/vector-icons';
 
 const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   const [isAppReady, setAppReady] = useState(false);
@@ -18,6 +18,7 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
         await Font.loadAsync({
           Roboto: require('../../../assets/fonts/Roboto-Regular.ttf'),
           'Roboto-Bold': require('../../../assets/fonts/Roboto-Bold.ttf'),
+          ...Ionicons.font,
         });
         // Artificially delay for one second to simulate a slow loading experience
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -26,19 +27,22 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
       } finally {
         setAppReady(true);
         onReady();
+        await SplashScreen.hideAsync(); // Hide the splash screen after the app is ready
       }
     };
 
     prepare();
-  }, [onReady, setAppReady]);
+  }, [onReady]);
+
+  if (!isAppReady) {
+    return null; // Render nothing while the app is loading
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-        <Text variant={'display'} size={'large'} color="primary">
-          {appName}
-        </Text>
-      </View>
+      <Text variant={'display'} size={'large'} color="primary">
+        {appName}
+      </Text>
     </View>
   );
 };
@@ -49,13 +53,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-  },
-  appName: {
-    fontFamily: 'Roboto',
-    fontSize: 57,
-    fontWeight: 'bold',
-    lineHeight: 64,
-    fontStyle: 'normal',
   },
 });
 

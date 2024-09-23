@@ -12,9 +12,7 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   useEffect(() => {
     const prepare = async () => {
       try {
-        // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
-        // Load fonts
         await Font.loadAsync({
           Roboto: require('../../../assets/fonts/Roboto-Regular.ttf'),
           'Roboto-Bold': require('../../../assets/fonts/Roboto-Bold.ttf'),
@@ -27,16 +25,12 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
       } finally {
         setAppReady(true);
         onReady();
-        await SplashScreen.hideAsync(); // Hide the splash screen after the app is ready
+        await SplashScreen.hideAsync();
       }
     };
 
     prepare();
   }, [onReady]);
-
-  if (!isAppReady) {
-    return null; // Render nothing while the app is loading
-  }
 
   return (
     <View style={styles.container}>

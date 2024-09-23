@@ -1,46 +1,169 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-import * as Font from 'expo-font';
+import React, { useState, useCallback } from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
+import { Text } from '../../../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from 'expo-router';
 
-const SliderScreenComponent = ({ onReady }: { onReady: () => void }) => {
-  const [isAppSlider, setAppSlider] = useState(false);
-  const appName = 'Workoo';
+type Slide = {
+  title: string;
+  image: any;
+  description: string;
+};
 
-  useEffect(() => {
-    const prepare = async () => {
-      try {
-        await Font.loadAsync({
-          Roboto: require('../../../assets/fonts/Roboto-Regular.ttf'),
-          'Roboto-Bold': require('../../../assets/fonts/Roboto-Bold.ttf'),
-        });
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setAppSlider(true);
-        onReady();
-      }
-    };
+const slides: Slide[] = [
+  {
+    title: 'Welcome to Workoo',
+    image: require('../../../assets/img/Group_4.png'),
+    description:
+      'Easily manage your tasks and establish a network of preferred on Workoo',
+  },
+  {
+    title: 'Stay Organized',
+    image: require('../../../assets/img/Group_4.png'),
+    description: 'Keep track of your tasks and stay organized with Workoo',
+  },
+  {
+    title: 'Get Started',
+    image: require('../../../assets/img/Group_4.png'),
+    description: 'Join Workoo today and start managing your tasks efficiently',
+  },
+];
 
-    prepare();
-  }, [onReady, setAppSlider]);
+const IntroSlider: React.FC = () => {
+  const { width, height } = useWindowDimensions();
+  const isPortrait = height > width;
+  const navigation = useNavigation();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollViewRef = React.useRef<ScrollView>(null);
+
+  const handleScroll = useCallback(
+    (event: any) => {
+      const slideIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+      setCurrentIndex(slideIndex);
+    },
+    [width],
+  );
+
+  const handleSkip = useCallback(() => {
+    navigation.navigate('Login');
+  }, [navigation]);
+
+  const handleNext = useCallback(() => {
+    if (currentIndex < slides.length - 1) {
+      scrollViewRef.current?.scrollTo({
+        x: (currentIndex + 1) * width,
+        animated: true,
+      });
+    }
+  }, [currentIndex, width]);
+
+  const handlePrev = useCallback(() => {
+    if (currentIndex > 0) {
+      scrollViewRef.current?.scrollTo({
+        x: (currentIndex - 1) * width,
+        animated: true,
+      });
+    }
+  }, [currentIndex, width]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.appName}>{appName}</Text>
-        <Text style={styles.comment}>
-          Easily manage your tasks and establish a network of preferred on
-          Workoo
-        </Text>
-        <Image
-          source={require('../../../assets/img/Group_4.png')}
-          style={styles.img}
-        />
-        <Text style={styles.textDown}>
-          Get Started <Ionicons name="chevron-forward-outline" size={18} />
-        </Text>
+    <View style={[styles.container, { width, height }]}>
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={handleSkip}>
+          <Text variant="body" size="large" color="secondary">
+            Skip
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        contentContainerStyle={styles.scrollViewContent}
+      >
+        {slides.map((slide, index) => (
+          <View key={index} style={[styles.slide, { width }]}>
+            <Text variant="headline" size="large" color="primary">
+              {slide.title}
+            </Text>
+            <Text
+              variant="title"
+              size="large"
+              color="info"
+              style={[styles.description, { marginTop: isPortrait ? 80 : 30 }]}
+            >
+              {slide.description}
+            </Text>
+            <Image
+              source={slide.image}
+              style={[
+                styles.img,
+                {
+                  width: isPortrait ? 220 : 150,
+                  height: isPortrait ? 270 : 200,
+                },
+              ]}
+            />
+            {index === slides.length - 1 && (
+              <TouchableOpacity
+                onPress={handleSkip}
+                style={styles.getStartedButton}
+              >
+                <Text variant="title" size="large" color="primary">
+                  Get Started
+                </Text>
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={18}
+                  color="primary"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
+      </ScrollView>
+
+      <View style={styles.pagination}>
+        {slides.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              currentIndex === index ? styles.activeDot : styles.inactiveDot,
+            ]}
+          />
+        ))}
+      </View>
+
+      <View style={styles.arrows}>
+        <TouchableOpacity onPress={handlePrev} disabled={currentIndex === 0}>
+          <Ionicons
+            name="chevron-back-outline"
+            size={24}
+            color={currentIndex === 0 ? '#E0E0E0' : '#6750A4'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleNext}
+          disabled={currentIndex === slides.length - 1}
+        >
+          <Ionicons
+            name="chevron-forward-outline"
+            size={24}
+            color={currentIndex === slides.length - 1 ? '#E0E0E0' : '#6750A4'}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -49,33 +172,55 @@ const SliderScreenComponent = ({ onReady }: { onReady: () => void }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: '#ffffff',
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     padding: 20,
   },
-  appName: {
-    fontFamily: 'Roboto',
-    fontWeight: 'bold',
-    fontSize: 24,
-    lineHeight: 64,
-    fontStyle: 'normal',
-    color: '#6750A4',
+  scrollViewContent: {
+    alignItems: 'center',
   },
-  comment: {
-    fontSize: 24,
-    marginTop: 80,
+  slide: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  description: {
     textAlign: 'center',
   },
-  textDown: {
-    color: '#6750A4',
-    fontSize: 16,
-    marginTop: 150,
-    marginLeft: 150,
-  },
   img: {
-    width: 220,
-    height: 270,
+    resizeMode: 'contain',
+    marginTop: 20,
+  },
+  getStartedButton: {
+    marginTop: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  activeDot: {
+    backgroundColor: '#6750A4',
+  },
+  inactiveDot: {
+    backgroundColor: '#E0E0E0',
+  },
+  arrows: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginTop: 20,
   },
 });
 
-export default SliderScreenComponent;
+export default IntroSlider;

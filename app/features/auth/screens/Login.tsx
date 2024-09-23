@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Login'>;
 
-export const Login = ({navigation}: Props) => {
+export const Login = ({ navigation }: Props) => {
   const { t } = useTranslation();
   return (
     <Screen>

@@ -23,7 +23,6 @@ export default function App() {
   };
 
   if (!isAppReady) return <SplashScreenComponent onReady={handleAppReady} />;
-  if (!isAppSlider) return <SliderScreenComponent onReady={handleAppSlider} />;
 
   return (
     <Provider store={store}>

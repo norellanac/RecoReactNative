@@ -47,8 +47,8 @@ const BottomTabNavigator = React.memo(() => {
             </View>
           );
         },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.secondary,
+        tabBarActiveTintColor: colors.black,
+        tabBarInactiveTintColor: colors.grey,
         tabBarStyle: {
           backgroundColor: colors.background,
           paddingVertical: 5,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 50,
+    width: 70,
     height: 32,
     borderRadius: 16,
   },

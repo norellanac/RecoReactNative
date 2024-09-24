@@ -1,35 +1,103 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '../../../components/atoms';
 import { Screen } from '../../../components/templates';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { AuthStackParams } from './AuthStack';
-import { useAppDispatch } from '@/app/hooks/useAppDispatch';
-import { loginSuccess } from '@/app/redux/slices/authSlice';
 import { Button } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';
-import { LoginForm } from '../components/molecules';
+import { RegisterForm } from '../components/molecules';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Landing'>;
 
-export const Register = ({} /** route, navigation */ : Props) => {
+export const Register = ({ navigation } /** route, navigation */ : Props) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-
-  const handleLogin = () => {
-    const user = { id: '1', name: 'John Doe', email: 'john.doe@example.com' };
-    dispatch(loginSuccess(user));
-  };
 
   return (
     <Screen>
-      <View>
-        <Text>{t('commons.start')}</Text>
-        <Text>{t('welcome_message')}</Text>
-      </View>
-      <View>
-        <LoginForm />
-        <Button onPress={handleLogin} variant="elevated" title="Login user" />
+      <View style={styles.container}>
+        <Text
+          variant={'headline'}
+          size={'large'}
+          color="primary"
+          style={{ textAlign: 'center' }}
+        >
+          Workoo
+        </Text>
+        <RegisterForm />
+        <Text
+          variant={'body'}
+          size={'large'}
+          color="info"
+          style={{ textAlign: 'center' }}
+        >
+          By signing up you agree to our
+        </Text>
+        <View style={styles.terms_policy}>
+          <Text
+            variant={'body'}
+            size={'large'}
+            color="primary"
+            style={{ textAlign: 'center' }}
+          >
+            Terms of service,
+          </Text>
+          <Text
+            variant={'body'}
+            size={'large'}
+            color="info"
+            style={{ textAlign: 'center' }}
+          >
+            {' and '}
+          </Text>
+          <Text
+            variant={'body'}
+            size={'large'}
+            color="primary"
+            style={{ textAlign: 'center' }}
+          >
+            Privacy Policy
+          </Text>
+        </View>
+
+        <View style={styles.msmFood}>
+          <Text
+            variant={'body'}
+            size={'large'}
+            color="info"
+            style={{ textAlign: 'center' }}
+          >
+            {t('register.already_have_an_account')}
+          </Text>
+          <Button
+            variant="text"
+            title="Log in"
+            onPress={() => navigation.navigate('Login')}
+          />
+        </View>
       </View>
     </Screen>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    justifyContent: 'center', // Center vertically
+  },
+  terms_policy: {
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+  msmFood: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 30,
+    flexDirection: 'row',
+  },
+});

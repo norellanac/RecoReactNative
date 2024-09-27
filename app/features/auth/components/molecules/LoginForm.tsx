@@ -15,21 +15,20 @@ export const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleLogin = () => {
-    const user = { id: '1', name: 'John Doe', email: 'john.doe@example.com' };
+    const user = { id: '1', name: 'John Doe', phoneNumber: '12341234' };
     dispatch(loginSuccess(user));
   };
 
-  const handleSubmit = (values: { email: string; password: string }) => {
-    console.log(values);
+  const handleSubmit = (values: { phoneNumber: string; password: string }) => {
     handleLogin();
   };
 
   return (
     <Formik
-      initialValues={{ email: '', password: '' }}
+      initialValues={{ phoneNumber: '', password: '' }}
       onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        email: Yup.string().required(t('Forms.required')),
+        phoneNumber: Yup.string().required(t('Forms.required')),
         password: Yup.string()
           .min(6, t('Forms.password_long'))
           .required(t('Forms.required')),
@@ -38,26 +37,26 @@ export const LoginForm: React.FC = () => {
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
         <View style={styles.form}>
           <TextInput
-            placeholder="Email"
-            onChangeText={handleChange('email')}
-            onBlur={() => handleBlur('email')}
-            value={values.email}
-            errorMsg={errors.email}
+            placeholder={t('Forms.phone_number')}
+            onChangeText={handleChange('phoneNumber')}
+            onBlur={() => handleBlur('phoneNumber')}
+            value={values.phoneNumber}
+            errorMsg={errors.phoneNumber}
             variant="underlined"
-            label="Phone Number"
+            label={t('Forms.phone_number')}
           />
           <TextInput
-            placeholder="Password"
+            placeholder={t('Forms.password')} 
             onChangeText={handleChange('password')}
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
             variant="underlined"
-            label="Password"
+            label={t('Forms.password')}
             actionIcon="eye"
             especialIcon="-sharp"
           />
-          <Button variant="filled" title="Log In" onPress={handleSubmit} />
+          <Button variant="filled" title={t('login.login')} onPress={handleSubmit} />
         </View>
       )}
     </Formik>

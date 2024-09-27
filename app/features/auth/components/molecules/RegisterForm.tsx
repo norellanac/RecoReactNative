@@ -94,7 +94,7 @@ export const RegisterForm: React.FC = () => {
             actionIcon="eye"
             especialIcon="-sharp"
           />
-          <Button variant="filled" title="Sign Up" onPress={handleSubmit} />
+          <Button variant="filled" title={t('register.sign_up')} onPress={handleSubmit} />
         </View>
       )}
     </Formik>

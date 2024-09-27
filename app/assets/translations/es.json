@@ -1,5 +1,6 @@
 {
   "commons": {
+    "app_name":"Workoo",
     "start": "Empezar",
     "begin": "Empecemos",
     "next": "Siguiente",
@@ -51,9 +52,13 @@
     "required ": "Requerido"
   },
   "login": {
-    "have_not_account": "No tengo cuenta, por favor"
+    "have_not_account": "No tengo cuenta, por favor",
+    "login": "Iniciar sesión",
+    "forget_password":"¿Olvidó su contraseña?"
+
   },
   "register": {
-    "already_have_an_account": "¿Ya tienes una cuenta?"
+    "already_have_an_account": "¿Ya tienes una cuenta?",
+    "sign_up":"Registrarse"
   }
 }

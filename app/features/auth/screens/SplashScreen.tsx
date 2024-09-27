@@ -4,10 +4,14 @@ import { Text } from '../../../components/atoms';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   const [isAppReady, setAppReady] = useState(false);
-  const appName = 'Woorko';
+  const { t } = useTranslation();
+
+  const appName =t('commons.app_name');
 
   useEffect(() => {
     const prepare = async () => {

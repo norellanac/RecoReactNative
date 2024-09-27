@@ -10,6 +10,8 @@ import {
 import { Text } from '../../../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
+import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 type Slide = {
   title: string;
@@ -17,26 +19,28 @@ type Slide = {
   description: string;
 };
 
-const slides: Slide[] = [
-  {
-    title: 'Welcome to Workoo',
-    image: require('../../../assets/img/Group_4.png'),
-    description:
-      'Easily manage your tasks and establish a network of preferred on Workoo',
-  },
-  {
-    title: 'Stay Organized',
-    image: require('../../../assets/img/Group_4.png'),
-    description: 'Keep track of your tasks and stay organized with Workoo',
-  },
-  {
-    title: 'Get Started',
-    image: require('../../../assets/img/Group_4.png'),
-    description: 'Join Workoo today and start managing your tasks efficiently',
-  },
-];
+
 
 const IntroSlider: React.FC = () => {
+  const { t } = useTranslation();
+  const slides: Slide[] = [
+    {
+      title: t('slider.welcome_app'),
+      image: require('../../../assets/img/Group_4.png'),
+      description: t('slider.description_s1'),
+    },
+    {
+      title: t('slider.stay_organized'),
+      image: require('../../../assets/img/Group_4.png'),
+      description: t('slider.description_s2'),
+    },
+    {
+      title: t('slider.get_started'),
+      image: require('../../../assets/img/Group_4.png'),
+      description: t('slider.description_s3'),
+
+    },
+  ];
   const { width, height } = useWindowDimensions();
   const isPortrait = height > width;
   const navigation = useNavigation();
@@ -78,7 +82,7 @@ const IntroSlider: React.FC = () => {
       <View style={styles.topBar}>
         <TouchableOpacity onPress={handleSkip}>
           <Text variant="body" size="large" color="secondary">
-            Skip
+            {t('slider.skip')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -121,7 +125,7 @@ const IntroSlider: React.FC = () => {
                 style={styles.getStartedButton}
               >
                 <Text variant="title" size="large" color="primary">
-                  Get Started
+                  {t('slider.get_started')}
                 </Text>
                 <Ionicons
                   name="chevron-forward-outline"

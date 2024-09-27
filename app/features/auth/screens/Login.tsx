@@ -34,7 +34,7 @@ export const Login = ({ navigation }: Props) => {
             color="info"
             style={{ textAlign: 'center' }}
           >
-            {t('commons.forget_password')}
+            {t('login.forget_password')}
           </Text>
           <View style={styles.msmFood}>
             <Text
@@ -61,30 +61,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 20,
   },
-
-  appName: {
-    fontFamily: 'Roboto',
-    fontWeight: 'bold',
-    fontSize: 34,
-    lineHeight: 64,
-    fontStyle: 'normal',
-    color: '#6750A4',
-    textAlign: 'center',
-  },
-  forgetPass: {
-    marginTop: 30,
-    textAlign: 'center',
-    color: '#6750A4',
-    fontSize: 14,
-  },
   msmFood: {
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 100,
     flexDirection: 'row',
-  },
-  txtFood: {
-    marginRight: -25,
-    fontSize: 14,
   },
 });

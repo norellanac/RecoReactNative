@@ -28,7 +28,8 @@
     "view_less": "View less",
     "maintentance_message": "We are in maintenance",
     "hasConnection": "Connection has been restored",
-    "lostConnection": "You are not connected to the internet"
+    "lostConnection": "You are not connected to the internet",
+    "and": "and"
   },
   "auth": {
     "landing_screen": {
@@ -51,6 +52,16 @@
     "invalid_email": "Invalid e-mail",
     "required": "Required"
   },
+  "slider":{
+    "skip": "Skip",
+    "welcome_app": "Welcome to Workoo",
+    "stay_organized": "Stay Organized",
+    "get_started":"Get Started",
+    "description_s1": "Easily manage your tasks and establish a network of preferred on Workoo",
+    "description_s2": "Keep track of your tasks and stay organized with Workoo",
+    "description_s3": "Join Workoo today and start managing your tasks efficiently"
+    
+  },
   "login": {
     "have_not_account": "Haven't account, please",
     "login": "Login",
@@ -58,6 +69,9 @@
   },
   "register": {
     "already_have_an_account": "Already hace an account?",
-    "sign_up":"Sign Up"
+    "sign_up":"Sign Up",
+    "terms_text":"By signing up you agree to our",
+    "terms_service": "Terms of service",
+    "privacy_policy": "Privacy Policy"
   }
 }

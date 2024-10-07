@@ -1,6 +1,8 @@
 import { t } from 'i18next';
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '../../../components/atoms';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Screen } from './../../../components/templates';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -17,14 +19,34 @@ export const Login = ({ navigation }: Props) => {
     <Screen>
       <View style={styles.container}>
         <SafeAreaView>
-          <Text style={styles.appName}>Workoo</Text>
+          <Text
+            variant={'headline'}
+            size={'large'}
+            color="primary"
+            style={{ textAlign: 'center' }}
+          >
+            {t('commons.app_name')}
+          </Text>
           <LoginForm />
-          <Text style={styles.forgetPass}>Forget Password?</Text>
+          <Text
+            variant={'body'}
+            size={'large'}
+            color="info"
+            style={{ textAlign: 'center' }}
+          >
+            {t('login.forget_password')}
+          </Text>
           <View style={styles.msmFood}>
-            <Text style={styles.txtFood}>{t('login.have_not_account')}</Text>
+            <Text
+              variant={'body'}
+              size={'large'}
+              color="info"
+              style={{ textAlign: 'center' }}
+            >
+              {t('login.have_not_account')}</Text>
             <Button
               variant="text"
-              title="Sign Up"
+              title={t('register.sign_up')}
               onPress={() => navigation.navigate('Register')}
             />
           </View>
@@ -39,30 +61,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 20,
   },
-
-  appName: {
-    fontFamily: 'Roboto',
-    fontWeight: 'bold',
-    fontSize: 34,
-    lineHeight: 64,
-    fontStyle: 'normal',
-    color: '#6750A4',
-    textAlign: 'center',
-  },
-  forgetPass: {
-    marginTop: 30,
-    textAlign: 'center',
-    color: '#6750A4',
-    fontSize: 14,
-  },
   msmFood: {
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 100,
     flexDirection: 'row',
-  },
-  txtFood: {
-    marginRight: -25,
-    fontSize: 14,
   },
 });

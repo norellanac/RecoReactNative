@@ -11,7 +11,7 @@ import { RegisterForm } from '../components/molecules';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Landing'>;
 
-export const Register = ({ navigation } /** route, navigation */ : Props) => {
+export const Register = ({ navigation } /** route, navigation */: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -32,7 +32,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
           color="info"
           style={{ textAlign: 'center' }}
         >
-          By signing up you agree to our
+          {t('register.terms_text')}
         </Text>
         <View style={styles.terms_policy}>
           <Text
@@ -41,7 +41,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-            Terms of service,
+          {t('register.terms_service')}
           </Text>
           <Text
             variant={'body'}
@@ -49,7 +49,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="info"
             style={{ textAlign: 'center' }}
           >
-            {' and '}
+            {" "}{ t('commons.and')}{" "}
           </Text>
           <Text
             variant={'body'}
@@ -57,7 +57,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-            Privacy Policy
+          {t('register.privacy_policy')}
           </Text>
         </View>
 
@@ -84,7 +84,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    justifyContent: 'center', // Center vertically
+    justifyContent: 'center', 
   },
   terms_policy: {
     textAlign: 'center',

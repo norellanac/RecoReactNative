@@ -1,5 +1,6 @@
 {
   "commons": {
+    "app_name":"Workoo",
     "start": "Empezar",
     "begin": "Empecemos",
     "next": "Siguiente",
@@ -27,7 +28,8 @@
     "view_less": "Ver menos",
     "maintentance_message": "Nos encontramos en mantenimiento",
     "hasConnection": "Se ha restablecido la conexion",
-    "lostConnection": "No tienes conexion a internet"
+    "lostConnection": "No tienes conexion a internet",
+    "and": "y"
   },
   "auth": {
     "landing_screen": {
@@ -50,10 +52,26 @@
     "invalid_email": "Email inválido",
     "required ": "Requerido"
   },
+  "slider":{
+    "skip": "Saltar",
+    "welcome_app": "Bienvenido a Workoo",
+    "stay_organized": "Mantente organizado",
+    "get_started": "Comenzar",
+    "description_s1": "Gestiona fácilmente tus tareas y establece una red de preferidos en Workoo",
+    "description_s2": "Realice un seguimiento de sus tareas y manténgase organizado con Workoo",
+    "description_s3": "Únete a Workoo hoy y empieza a gestionar tus tareas de forma eficiente"
+  },
   "login": {
-    "have_not_account": "No tengo cuenta, por favor"
+    "have_not_account": "No tengo cuenta, por favor",
+    "login": "Iniciar sesión",
+    "forget_password":"¿Olvidó su contraseña?"
+
   },
   "register": {
-    "already_have_an_account": "¿Ya tienes una cuenta?"
+    "already_have_an_account": "¿Ya tienes una cuenta?",
+    "sign_up": "Registrarse",
+    "terms_text": "Al registrarse, acepta nuestras ",
+    "terms_service": "Condiciones de servicio",
+    "privacy_policy": "Política de privacidad"
   }
 }

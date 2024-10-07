@@ -16,7 +16,7 @@ type Props = NativeStackScreenProps<AuthStackParams, 'Login'>;
 export const Login = ({ navigation }: Props) => {
   const { t } = useTranslation();
   return (
-    <Screen>
+    <Screen statusBarProps={{}}>
       <View style={styles.container}>
         <SafeAreaView>
           <Text

@@ -26,6 +26,7 @@ const BottomTabNavigator = React.memo(() => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           const iconName = focused
             ? iconMapping[route.name][0]
@@ -51,8 +52,8 @@ const BottomTabNavigator = React.memo(() => {
         tabBarInactiveTintColor: colors.grey,
         tabBarStyle: {
           backgroundColor: colors.background,
-          paddingVertical: 5,
-          height: 60,
+          paddingVertical: 15,
+          minHeight: 70,
         },
         tabBarLabelStyle: {
           display: 'none', // Hide the default label style

@@ -9,26 +9,44 @@ import '../../../../../polyfills';
 import { Button } from '../../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { loginSuccess } from '@/app/redux/slices/authSlice';
+import { useLoginMutation } from '@/app/services/api';
+import { LoginValues } from '@/app/types/api/apiResponses';
 
 export const LoginForm: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
 
-  const handleLogin = () => {
-    const user = { id: '1', name: 'John Doe', phoneNumber: '12341234' };
-    dispatch(loginSuccess(user));
+  const handleLogin = async (values: LoginValues) => {
+    console.error('values:', values);
+    try {
+      const result = await login({
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+      if (result.success) {
+        const token = result.data.token;
+        dispatch(
+          loginSuccess({ user: result.data.user, token: token as string }),
+        );
+      } else {
+        console.error('Login failed:', result.message);
+      }
+    } catch (err) {
+      console.error('Failed to login:', err);
+    }
   };
 
-  const handleSubmit = (values: { phoneNumber: string; password: string }) => {
-    handleLogin();
+  const handleSubmit = (values: { email: string; password: string }) => {
+    handleLogin(values);
   };
 
   return (
     <Formik
-      initialValues={{ phoneNumber: '', password: '' }}
+      initialValues={{ email: '', password: '' }}
       onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        phoneNumber: Yup.string().required(t('Forms.required')),
+        email: Yup.string().required(t('Forms.required')),
         password: Yup.string()
           .min(6, t('Forms.password_long'))
           .required(t('Forms.required')),
@@ -38,10 +56,10 @@ export const LoginForm: React.FC = () => {
         <View style={styles.form}>
           <TextInput
             placeholder={t('Forms.phone_number')}
-            onChangeText={handleChange('phoneNumber')}
-            onBlur={() => handleBlur('phoneNumber')}
-            value={values.phoneNumber}
-            errorMsg={errors.phoneNumber}
+            onChangeText={handleChange('email')}
+            onBlur={() => handleBlur('email')}
+            value={values.email}
+            errorMsg={errors.email}
             variant="underlined"
             label={t('Forms.phone_number')}
           />
@@ -56,7 +74,12 @@ export const LoginForm: React.FC = () => {
             actionIcon="eye"
             especialIcon="-sharp"
           />
-          <Button variant="filled" title={t('login.login')} onPress={handleSubmit} />
+          <Button
+            variant="filled"
+            title={t('login.login')}
+            onPress={() => handleSubmit()}
+            isLoading={isLoading}
+          />
         </View>
       )}
     </Formik>

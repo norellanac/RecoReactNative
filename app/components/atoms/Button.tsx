@@ -12,7 +12,7 @@ type ButtonProps = TouchableOpacityProps & {
   title: React.ReactNode;
   isLoading?: boolean;
   disabled?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 export const Button = ({

@@ -23,12 +23,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
 
   const userData = (
     <View style={styles.container}>
-      <Text style={styles.label}>User ID:</Text>
-      <Text style={styles.value}>{authState.user.id}</Text>
-      <Text style={styles.label}>Name:</Text>
-      <Text style={styles.value}>{authState.user.name}</Text>
-      <Text style={styles.label}>Email:</Text>
-      <Text style={styles.value}>{authState.user.email}</Text>
+      <Text style={styles.label}>{JSON.stringify(authState)}</Text>
     </View>
   );
 

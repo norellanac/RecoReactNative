@@ -10,35 +10,36 @@ import {
 import { Text } from '../../../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import introSliderImg1 from '../../../assets/img/intro_sliders/intro_1.png';
+import introSliderImg2 from '../../../assets/img/intro_sliders/intro_2.png';
+import introSliderImg3 from '../../../assets/img/intro_sliders/intro_3.png';
+import introSliderImg4 from '../../../assets/img/intro_sliders/intro_4.png';
+import { Screen } from '@/app/components/templates';
 
 type Slide = {
   title: string;
   image: any;
-  description: string;
 };
-
-
 
 const IntroSlider: React.FC = () => {
   const { t } = useTranslation();
   const slides: Slide[] = [
     {
-      title: t('slider.welcome_app'),
-      image: require('../../../assets/img/Group_4.png'),
-      description: t('slider.description_s1'),
+      image: introSliderImg1,
+      title: t('slider.title_1'),
     },
     {
-      title: t('slider.stay_organized'),
-      image: require('../../../assets/img/Group_4.png'),
-      description: t('slider.description_s2'),
+      image: introSliderImg2,
+      title: t('slider.title_2'),
     },
     {
-      title: t('slider.get_started'),
-      image: require('../../../assets/img/Group_4.png'),
-      description: t('slider.description_s3'),
-
+      image: introSliderImg3,
+      title: t('slider.title_3'),
+    },
+    {
+      image: introSliderImg4,
+      title: t('slider.title_4'),
     },
   ];
   const { width, height } = useWindowDimensions();
@@ -78,98 +79,102 @@ const IntroSlider: React.FC = () => {
   }, [currentIndex, width]);
 
   return (
-    <View style={[styles.container, { width, height }]}>
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={handleSkip}>
+    <Screen
+      statusBarProps={{
+        leftElement: <></>,
+        rightElement: (
           <Text variant="body" size="large" color="secondary">
             {t('slider.skip')}
           </Text>
-        </TouchableOpacity>
-      </View>
+        ),
+        onRightIconPress: handleSkip,
+      }}
+    >
+      <View style={[styles.container, { width, height }]}>
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          {slides.map((slide, index) => (
+            <View key={index} style={[styles.slide, { width }]}>
+              <Text
+                variant="title"
+                size="large"
+                color="info"
+                style={[
+                  styles.description,
+                  { marginTop: isPortrait ? 10 : 30 },
+                ]}
+              >
+                {slide.title}
+              </Text>
+              <Image
+                source={slide.image}
+                style={[
+                  styles.img,
+                  {
+                    width: isPortrait ? 320 : 250,
+                    height: isPortrait ? 370 : 300,
+                  },
+                ]}
+              />
+              {index === slides.length - 1 && (
+                <TouchableOpacity
+                  onPress={handleSkip}
+                  style={styles.getStartedButton}
+                >
+                  <Text variant="title" size="large" color="primary">
+                    {t('slider.get_started')}
+                  </Text>
+                  <Ionicons
+                    name="chevron-forward-outline"
+                    size={18}
+                    color="primary"
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+          ))}
+        </ScrollView>
 
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        contentContainerStyle={styles.scrollViewContent}
-      >
-        {slides.map((slide, index) => (
-          <View key={index} style={[styles.slide, { width }]}>
-            <Text variant="headline" size="large" color="primary">
-              {slide.title}
-            </Text>
-            <Text
-              variant="title"
-              size="large"
-              color="info"
-              style={[styles.description, { marginTop: isPortrait ? 80 : 30 }]}
-            >
-              {slide.description}
-            </Text>
-            <Image
-              source={slide.image}
+        <View style={styles.pagination}>
+          {slides.map((_, index) => (
+            <View
+              key={index}
               style={[
-                styles.img,
-                {
-                  width: isPortrait ? 220 : 150,
-                  height: isPortrait ? 270 : 200,
-                },
+                styles.dot,
+                currentIndex === index ? styles.activeDot : styles.inactiveDot,
               ]}
             />
-            {index === slides.length - 1 && (
-              <TouchableOpacity
-                onPress={handleSkip}
-                style={styles.getStartedButton}
-              >
-                <Text variant="title" size="large" color="primary">
-                  {t('slider.get_started')}
-                </Text>
-                <Ionicons
-                  name="chevron-forward-outline"
-                  size={18}
-                  color="primary"
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </View>
 
-      <View style={styles.pagination}>
-        {slides.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              currentIndex === index ? styles.activeDot : styles.inactiveDot,
-            ]}
-          />
-        ))}
+        <View style={styles.arrows}>
+          <TouchableOpacity onPress={handlePrev} disabled={currentIndex === 0}>
+            <Ionicons
+              name="chevron-back-outline"
+              size={24}
+              color={currentIndex === 0 ? '#E0E0E0' : '#6750A4'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleNext}
+            disabled={currentIndex === slides.length - 1}
+          >
+            <Ionicons
+              name="chevron-forward-outline"
+              size={24}
+              color={currentIndex === slides.length - 1 ? '#E0E0E0' : '#6750A4'}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View style={styles.arrows}>
-        <TouchableOpacity onPress={handlePrev} disabled={currentIndex === 0}>
-          <Ionicons
-            name="chevron-back-outline"
-            size={24}
-            color={currentIndex === 0 ? '#E0E0E0' : '#6750A4'}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleNext}
-          disabled={currentIndex === slides.length - 1}
-        >
-          <Ionicons
-            name="chevron-forward-outline"
-            size={24}
-            color={currentIndex === slides.length - 1 ? '#E0E0E0' : '#6750A4'}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </Screen>
   );
 };
 
@@ -181,7 +186,6 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    padding: 20,
   },
   scrollViewContent: {
     alignItems: 'center',
@@ -223,7 +227,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginVertical: 20,
   },
 });
 

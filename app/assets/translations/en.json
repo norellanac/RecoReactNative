@@ -54,13 +54,11 @@
   },
   "slider":{
     "skip": "Skip",
-    "welcome_app": "Welcome to Workoo",
-    "stay_organized": "Stay Organized",
     "get_started":"Get Started",
-    "description_s1": "Easily manage your tasks and establish a network of preferred on Workoo",
-    "description_s2": "Keep track of your tasks and stay organized with Workoo",
-    "description_s3": "Join Workoo today and start managing your tasks efficiently"
-    
+    "title_1": "Find the expert you need in minutes.",
+    "title_2": "Hire easily and without complications.",
+    "title_3": "Based on user ratings who bought their services.",
+    "title_4": "Explore, compare and schedule in a few steps."
   },
   "login": {
     "have_not_account": "Haven't account, please",

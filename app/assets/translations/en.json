@@ -39,7 +39,11 @@
   },
   "home": {
     "landing_screen": {
-      "welcome": "Welcome to the application"
+        "slider":{
+        "title_1": "Book Now",
+        "title_2": "Book Now!",
+        "title_3": "Book"
+      }
     }
   },
   "welcome_message": "Welcome",

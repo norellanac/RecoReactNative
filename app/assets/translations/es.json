@@ -39,7 +39,11 @@
   },
   "home": {
     "landing_screen": {
-      "welcome": "Bienvenido a la aplicación"
+        "slider":{
+        "title_1": "Reserva Ahora",
+        "title_2": "Reserva Ya!",
+        "title_3": "Reservar"
+      }
     }
   },
   "welcome_message": "Bienvenido",

@@ -90,7 +90,7 @@ const IntroSlider: React.FC = () => {
         onRightIconPress: handleSkip,
       }}
     >
-      <View style={[styles.container, { width, height }]}>
+      <View style={{ flex: 1 }}>
         <ScrollView
           ref={scrollViewRef}
           horizontal
@@ -179,10 +179,6 @@ const IntroSlider: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

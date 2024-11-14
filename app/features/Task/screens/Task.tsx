@@ -13,7 +13,7 @@ export const TaskPage = ({ navigation }: Props) => {
         variant="underlined"
         label="Username"
         placeholder="Enter your username"
-        leftIcon='home'
+        leftIcon="home"
         disabled
       />
 
@@ -21,7 +21,7 @@ export const TaskPage = ({ navigation }: Props) => {
         variant="outlined"
         label="Username"
         placeholder="Enter your username"
-        leftIcon='document'
+        leftIcon="document"
         disabled
       />
 
@@ -29,7 +29,7 @@ export const TaskPage = ({ navigation }: Props) => {
         variant="rounded"
         label="Username"
         placeholder="Enter your username"
-        leftIcon='flag'
+        leftIcon="flag"
         disabled
       />
 
@@ -38,10 +38,9 @@ export const TaskPage = ({ navigation }: Props) => {
         label="Password"
         placeholder="Enter your password"
         leftIcon="shield-half"
-        actionIcon='search'
+        actionIcon="search"
         disabled
       />
-
 
       <Button
         variant="elevated"

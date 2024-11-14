@@ -18,7 +18,6 @@ export const LoginForm: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
 
   const handleLogin = async (values: LoginValues) => {
-    console.error('values:', values);
     try {
       const result = await login({
         email: values.email,
@@ -64,7 +63,7 @@ export const LoginForm: React.FC = () => {
             label={t('Forms.phone_number')}
           />
           <TextInput
-            placeholder={t('Forms.password')} 
+            placeholder={t('Forms.password')}
             onChangeText={handleChange('password')}
             onBlur={() => handleBlur('password')}
             value={values.password}

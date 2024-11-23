@@ -4,7 +4,8 @@
     "slug": "projectx-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "newArchEnabled": true,
+    "icon": "app/assets/img/Reco_logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -26,6 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "useClearTextTraffic": true
-    }
+    },
+    "plugins": ["expo-font"]
   }
 }

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "projectx-mobile",
-    "slug": "projectx-mobile",
-    "version": "1.0.0",
+    "name": "Reco",
+    "slug": "Reco",
+    "version": "0.0.1",
     "orientation": "portrait",
     "newArchEnabled": true,
     "icon": "app/assets/img/Reco_logo.png",
@@ -25,8 +25,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "useClearTextTraffic": true
+      }
     },
     "plugins": ["expo-font"]
   }

@@ -7,32 +7,22 @@ import { Button } from './../../../components/atoms/Button';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { logout, selectAuth } from '@/app/redux/slices/authSlice';
-import { useGetExampleDataQuery } from '@/app/services/api';
 import CategoryCard from '../components/molecules/CategoryCard';
 import Carousel from '../components/molecules/CarouselCard';
+import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
 export const LandingHome = ({ navigation } /** route */ : Props) => {
   const dispatch = useAppDispatch();
   const authState = useAppSelector(selectAuth);
-  const { data } = useGetExampleDataQuery();
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  const categories = [
-    { title: 'Cleaning' },
-    { title: 'Repairing' },
-    { title: 'Painting' },
-    { title: 'Moving' },
-    { title: 'Gardening' },
-    { title: 'Furniture Assembly' },
-    { title: 'Electrician' },
-    { title: 'Plumbing' },
-    { title: 'Carpentry' },
-    { title: 'Handyman' },
-  ];
+  const { data, isLoading, isError } = useGetCategoriesQuery();
+
+  const categories = data?.data || [];
 
   return (
     <Screen statusBarProps={{}} container>
@@ -43,14 +33,14 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
         style={{ height: 150, padding: 0, margin: 0 }}
       >
         {categories.map((category, index) => (
-          <CategoryCard key={index} title={category.title} icon={undefined} />
+          <CategoryCard key={index} title={category.name} icon={undefined} />
         ))}
       </ScrollView>
       <ScrollView style={{ height: 400 }}>
         <Button
           variant="filled"
           title="Display user data from API"
-          onPress={() => Alert.alert('User Data', JSON.stringify(data))}
+          onPress={() => Alert.alert('User Data', JSON.stringify(data?.data))}
         />
         <Text>{JSON.stringify(authState)}</Text>
         <Button variant="filled" title="Logout" onPress={handleLogout} />

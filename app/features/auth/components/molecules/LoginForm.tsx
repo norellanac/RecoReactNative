@@ -9,8 +9,8 @@ import '../../../../../polyfills';
 import { Button } from '../../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { loginSuccess } from '@/app/redux/slices/authSlice';
-import { useLoginMutation } from '@/app/services/api';
 import { LoginValues } from '@/app/types/api/apiResponses';
+import { useLoginMutation } from '@/app/services/authApi';
 
 export const LoginForm: React.FC = () => {
   const { t } = useTranslation();

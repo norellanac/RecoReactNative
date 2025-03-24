@@ -1,8 +1,13 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Button } from './../../../components/atoms/Button';
 import { TextInput } from './../../../components/atoms/TextInput';
+import { Icon } from '@/app/components/atoms/Icon';
+
+const onPressIcon = () => {
+  Alert.alert('Handle Icon Press');
+};
 
 export const TaskPage = ({ navigation }: Props) => {
   return (
@@ -13,33 +18,32 @@ export const TaskPage = ({ navigation }: Props) => {
         variant="underlined"
         label="Username"
         placeholder="Enter your username"
-        leftIcon="home"
-        disabled
+        startAdornment={<Icon name={'search'} onPress={onPressIcon} />}
+        endAdornment={<Icon name={'search'} onPress={onPressIcon} />}
       />
 
       <TextInput
         variant="outlined"
         label="Username"
         placeholder="Enter your username"
-        leftIcon="document"
-        disabled
+        startAdornment={<Icon name={'search'} onPress={onPressIcon} />}
+        endAdornment={<Icon name={'search'} onPress={onPressIcon} />}
       />
 
       <TextInput
         variant="rounded"
         label="Username"
         placeholder="Enter your username"
-        leftIcon="flag"
-        disabled
+        startAdornment={<Icon name={'search'} onPress={onPressIcon} />}
+        endAdornment={<Icon name={'search'} onPress={onPressIcon} />}
       />
 
       <TextInput
         variant="rounded"
         label="Password"
         placeholder="Enter your password"
-        leftIcon="shield-half"
-        actionIcon="search"
-        disabled
+        startAdornment={<Icon name={'search'} onPress={onPressIcon} />}
+        endAdornment={<Icon name={'search'} onPress={onPressIcon} />}
       />
 
       <Button

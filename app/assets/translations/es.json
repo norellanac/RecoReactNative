@@ -51,7 +51,7 @@
     "password": "Contraseña",
     "confirm_password": "Confirme Contraseña",
     "full_name": "Nombre Completo",
-    "phone_number": "Número de telefono",
+    "email": "Correo Electrónico",
     "password_long": "Debe tener al menos 6 caracteres",
     "invalid_email": "Email inválido",
     "required ": "Requerido"

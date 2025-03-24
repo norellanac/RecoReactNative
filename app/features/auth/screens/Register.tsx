@@ -23,7 +23,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
           color="primary"
           style={{ textAlign: 'center' }}
         >
-          Workoo
+          {t('commons.app_name')}
         </Text>
         <RegisterForm />
         <Text

@@ -62,13 +62,13 @@ export const RegisterForm: React.FC = () => {
           />
 
           <TextInput
-            placeholder={t('Forms.phone_number')}
+            placeholder={t('Forms.email')}
             onChangeText={handleChange('phoneNumber')}
             onBlur={() => handleBlur('phoneNumber')}
             value={values.phoneNumber}
             errorMsg={errors.phoneNumber}
             variant="underlined"
-            label={t('Forms.phone_number')}
+            label={t('Forms.email')}
           />
 
           <TextInput
@@ -79,8 +79,6 @@ export const RegisterForm: React.FC = () => {
             errorMsg={errors.password}
             variant="underlined"
             label={t('Forms.password')}
-            actionIcon="eye"
-            especialIcon="-sharp"
           />
 
           <TextInput
@@ -91,8 +89,6 @@ export const RegisterForm: React.FC = () => {
             errorMsg={errors.confirmPassword}
             variant="underlined"
             label={t('Forms.confirm_password')}
-            actionIcon="eye"
-            especialIcon="-sharp"
           />
           <Button
             variant="filled"

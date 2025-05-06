@@ -25,7 +25,7 @@ export const Login = ({ navigation }: Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-            {t('commons.app_name')}
+            {t('commons.app_name', 'Reco')}
           </Text>
           <LoginForm />
           <Text
@@ -34,7 +34,7 @@ export const Login = ({ navigation }: Props) => {
             color="info"
             style={{ textAlign: 'center' }}
           >
-            {t('login.forget_password')}
+            {t('login.forget_password', 'Forgot password?')}
           </Text>
           <View style={styles.msmFood}>
             <Text
@@ -43,11 +43,11 @@ export const Login = ({ navigation }: Props) => {
               color="info"
               style={{ textAlign: 'center' }}
             >
-              {t('login.have_not_account')}
+              {t('login.have_not_account', "Don't have an account?")}
             </Text>
             <Button
               variant="text"
-              title={t('register.sign_up')}
+              title={t('register.sign_up', 'Sign Up')}
               onPress={() => navigation.navigate('Register')}
             />
           </View>

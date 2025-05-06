@@ -27,19 +27,25 @@ const IntroSlider: React.FC = () => {
   const slides: Slide[] = [
     {
       image: introSliderImg1,
-      title: t('slider.title_1'),
+      title: t('slider.title_1', 'Find the expert you need in minutes.'),
     },
     {
       image: introSliderImg2,
-      title: t('slider.title_2'),
+      title: t('slider.title_2', 'Hire easily and without complications.'),
     },
     {
       image: introSliderImg3,
-      title: t('slider.title_3'),
+      title: t(
+        'slider.title_3',
+        'Based on user ratings who bought their services.',
+      ),
     },
     {
       image: introSliderImg4,
-      title: t('slider.title_4'),
+      title: t(
+        'slider.title_4',
+        'Explore, compare and schedule in a few steps.',
+      ),
     },
   ];
   const { width, height } = useWindowDimensions();
@@ -84,7 +90,7 @@ const IntroSlider: React.FC = () => {
         leftElement: <></>,
         rightElement: (
           <Text variant="body" size="large" color="secondary">
-            {t('slider.skip')}
+            {t('slider.skip', 'Skip')}
           </Text>
         ),
         onRightIconPress: handleSkip,
@@ -129,7 +135,7 @@ const IntroSlider: React.FC = () => {
                   style={styles.getStartedButton}
                 >
                   <Text variant="title" size="large" color="primary">
-                    {t('slider.get_started')}
+                    {t('slider.get_started', 'Get Started')}
                   </Text>
                   <Ionicons
                     name="chevron-forward-outline"

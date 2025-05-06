@@ -47,17 +47,17 @@ const Carousel = () => {
   const images = [
     {
       img: slider_1,
-      buttonText: t('home.landing_screen.slider.title_1'),
+      buttonText: t('home.landing_screen.slider.title_1', 'Action 1'),
       onButtonPress: () => alert('Action 1 Pressed'),
     },
     {
       img: slider_1,
-      buttonText: t('home.landing_screen.slider.title_2'),
+      buttonText: t('home.landing_screen.slider.title_2', 'Action 2'),
       onButtonPress: () => alert('Action 2 Pressed'),
     },
     {
       img: slider_1,
-      buttonText: t('home.landing_screen.slider.title_3'),
+      buttonText: t('home.landing_screen.slider.title_3', 'Action 3'),
       onButtonPress: () => alert('Action 3 Pressed'),
     },
   ];

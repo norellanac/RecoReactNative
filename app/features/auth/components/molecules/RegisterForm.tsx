@@ -39,11 +39,33 @@ export const RegisterForm: React.FC = () => {
       }}
       onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        fullName: Yup.string().required(t('Forms.required')),
-        phoneNumber: Yup.string().required(t('Forms.required')),
+        fullName: Yup.string().required(
+          t('validations.required', 'This {{field}} is required', {
+            field: t('auth.register.full_name', 'Full Name'),
+          }),
+        ),
+        phoneNumber: Yup.string().required(
+          t('validations.required', 'This {{field}} is required', {
+            field: t('auth.register.phone_number', 'Phone Number'),
+          }),
+        ),
         password: Yup.string()
-          .min(6, t('Forms.password_long'))
-          .required(t('Forms.required')),
+          .min(
+            6,
+            t(
+              'validations.length',
+              '{{field}} must be at least {{length}} characters',
+              {
+                field: t('Forms.password', 'Password'),
+                length: 6,
+              },
+            ),
+          )
+          .required(
+            t('validations.required', 'This {{field}} is required', {
+              field: t('Forms.password', 'Password'),
+            }),
+          ),
         confirmPassword: Yup.string()
           .min(6, t('Forms.password_long'))
           .required(t('Forms.required')),
@@ -52,47 +74,46 @@ export const RegisterForm: React.FC = () => {
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
         <View style={styles.form}>
           <TextInput
-            placeholder={t('Forms.full_name')}
+            placeholder={t('auth.register.full_name', 'Full Name')}
             onChangeText={handleChange('fullName')}
             onBlur={() => handleBlur('fullName')}
             value={values.fullName}
             errorMsg={errors.fullName}
             variant="underlined"
-            label={t('Forms.full_name')}
           />
 
           <TextInput
-            placeholder={t('Forms.email')}
+            placeholder={t('auth.register.phone_number', 'Phone Number')}
             onChangeText={handleChange('phoneNumber')}
             onBlur={() => handleBlur('phoneNumber')}
             value={values.phoneNumber}
             errorMsg={errors.phoneNumber}
             variant="underlined"
-            label={t('Forms.email')}
           />
 
           <TextInput
-            placeholder={t('Forms.password')}
+            placeholder={t('auth.register.password', 'Password')}
             onChangeText={handleChange('password')}
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
             variant="underlined"
-            label={t('Forms.password')}
           />
 
           <TextInput
-            placeholder={t('Forms.confirm_password')}
+            placeholder={t(
+              'auth.register.confirm_password',
+              'Confirm Password',
+            )}
             onChangeText={handleChange('confirmPassword')}
             onBlur={() => handleBlur('confirmPassword')}
             value={values.confirmPassword}
             errorMsg={errors.confirmPassword}
             variant="underlined"
-            label={t('Forms.confirm_password')}
           />
           <Button
             variant="filled"
-            title={t('register.sign_up')}
+            title={t('register.sign_up', 'Sign Up')}
             onPress={handleSubmit}
           />
         </View>

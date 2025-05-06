@@ -49,7 +49,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
       <TouchableOpacity onPress={onTitlePress} style={styles.titleContainer}>
         {title || (
           <Text variant="headline" size="large" color="primary">
-            {t('commons.app_name')}
+            {t('commons.app_name', 'Reco')}
           </Text>
         )}
       </TouchableOpacity>

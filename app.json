@@ -27,6 +27,9 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      "expo-web-browser"
+    ]
   }
 }

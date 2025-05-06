@@ -1,6 +1,6 @@
 {
   "commons": {
-    "app_name":"Workoo",
+    "app_name": "Reco",
     "start": "Empezar",
     "begin": "Empecemos",
     "next": "Siguiente",
@@ -39,7 +39,7 @@
   },
   "home": {
     "landing_screen": {
-        "slider":{
+      "slider": {
         "title_1": "Reserva Ahora",
         "title_2": "Reserva Ya!",
         "title_3": "Reservar"
@@ -49,14 +49,14 @@
   "welcome_message": "Bienvenido",
   "Forms": {
     "password": "Contraseña",
-    "confirm_password":"Confirme Contraseña",
+    "confirm_password": "Confirme Contraseña",
     "full_name": "Nombre Completo",
-    "phone_number":"Número de telefono",
+    "email": "Correo Electrónico",
     "password_long": "Debe tener al menos 6 caracteres",
     "invalid_email": "Email inválido",
     "required ": "Requerido"
   },
-  "slider":{
+  "slider": {
     "skip": "Saltar",
     "get_started": "Comenzar",
     "title_1": "Encuentra al experto que necesitas en pocos minutos.",
@@ -67,8 +67,7 @@
   "login": {
     "have_not_account": "No tengo cuenta, por favor",
     "login": "Iniciar sesión",
-    "forget_password":"¿Olvidó su contraseña?"
-
+    "forget_password": "¿Olvidó su contraseña?"
   },
   "register": {
     "already_have_an_account": "¿Ya tienes una cuenta?",

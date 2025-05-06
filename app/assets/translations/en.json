@@ -1,6 +1,6 @@
 {
   "commons": {
-    "app_name":"Workoo",
+    "app_name": "Reco",
     "start": "Start",
     "begin": "Getting Started",
     "next": "Next",
@@ -39,7 +39,7 @@
   },
   "home": {
     "landing_screen": {
-        "slider":{
+      "slider": {
         "title_1": "Book Now",
         "title_2": "Book Now!",
         "title_3": "Book"
@@ -49,16 +49,16 @@
   "welcome_message": "Welcome",
   "Forms": {
     "password": "Password",
-    "confirm_password":"Confirm Password",
+    "confirm_password": "Confirm Password",
     "full_name": "Full Name",
-    "phone_number":"Phone Number",
+    "email": "E-mail",
     "password_long": "Must have at least 6 characters",
     "invalid_email": "Invalid e-mail",
     "required": "Required"
   },
-  "slider":{
+  "slider": {
     "skip": "Skip",
-    "get_started":"Get Started",
+    "get_started": "Get Started",
     "title_1": "Find the expert you need in minutes.",
     "title_2": "Hire easily and without complications.",
     "title_3": "Based on user ratings who bought their services.",
@@ -67,12 +67,12 @@
   "login": {
     "have_not_account": "Haven't account, please",
     "login": "Login",
-    "forget_password":"Forget Password?"
+    "forget_password": "Forget Password?"
   },
   "register": {
     "already_have_an_account": "Already hace an account?",
-    "sign_up":"Sign Up",
-    "terms_text":"By signing up you agree to our",
+    "sign_up": "Sign Up",
+    "terms_text": "By signing up you agree to our",
     "terms_service": "Terms of service",
     "privacy_policy": "Privacy Policy"
   }

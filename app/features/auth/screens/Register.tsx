@@ -11,7 +11,7 @@ import { RegisterForm } from '../components/molecules';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Landing'>;
 
-export const Register = ({ navigation } /** route, navigation */: Props) => {
+export const Register = ({ navigation } /** route, navigation */ : Props) => {
   const { t } = useTranslation();
 
   return (
@@ -23,7 +23,7 @@ export const Register = ({ navigation } /** route, navigation */: Props) => {
           color="primary"
           style={{ textAlign: 'center' }}
         >
-          Workoo
+          {t('commons.app_name')}
         </Text>
         <RegisterForm />
         <Text
@@ -41,7 +41,7 @@ export const Register = ({ navigation } /** route, navigation */: Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-          {t('register.terms_service')}
+            {t('register.terms_service')}
           </Text>
           <Text
             variant={'body'}
@@ -49,7 +49,8 @@ export const Register = ({ navigation } /** route, navigation */: Props) => {
             color="info"
             style={{ textAlign: 'center' }}
           >
-            {" "}{ t('commons.and')}{" "}
+            {' '}
+            {t('commons.and')}{' '}
           </Text>
           <Text
             variant={'body'}
@@ -57,7 +58,7 @@ export const Register = ({ navigation } /** route, navigation */: Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-          {t('register.privacy_policy')}
+            {t('register.privacy_policy')}
           </Text>
         </View>
 
@@ -84,7 +85,7 @@ export const Register = ({ navigation } /** route, navigation */: Props) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   terms_policy: {
     textAlign: 'center',

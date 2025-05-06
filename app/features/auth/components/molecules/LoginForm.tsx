@@ -9,16 +9,21 @@ import '../../../../../polyfills';
 import { Button } from '../../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { loginSuccess } from '@/app/redux/slices/authSlice';
-import { useLoginMutation } from '@/app/services/api';
 import { LoginValues } from '@/app/types/api/apiResponses';
+import { useLoginMutation } from '@/app/services/authApi';
+import { Icon } from '@/app/components/atoms/Icon';
 
 export const LoginForm: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
 
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleLogin = async (values: LoginValues) => {
-    console.error('values:', values);
     try {
       const result = await login({
         email: values.email,
@@ -55,24 +60,29 @@ export const LoginForm: React.FC = () => {
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
         <View style={styles.form}>
           <TextInput
-            placeholder={t('Forms.phone_number')}
+            placeholder={t('Forms.email')}
             onChangeText={handleChange('email')}
             onBlur={() => handleBlur('email')}
             value={values.email}
             errorMsg={errors.email}
             variant="underlined"
-            label={t('Forms.phone_number')}
+            label={t('Forms.email')}
           />
           <TextInput
-            placeholder={t('Forms.password')} 
+            placeholder={t('Forms.password')}
             onChangeText={handleChange('password')}
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
             variant="underlined"
             label={t('Forms.password')}
-            actionIcon="eye"
-            especialIcon="-sharp"
+            secureTextEntry={!showPassword}
+            endAdornment={
+              <Icon
+                name={showPassword ? 'eye-off' : 'eye'}
+                onPress={handleShowPassword}
+              />
+            }
           />
           <Button
             variant="filled"

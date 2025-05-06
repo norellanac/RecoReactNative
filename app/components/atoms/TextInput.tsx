@@ -6,39 +6,74 @@ import {
   StyleSheet,
   TextInputProps,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from './../../theme/ThemeProvider';
 import ErrorText from './ErrorText';
 
 type InputProps = TextInputProps & {
-  variant: 'underlined' | 'outlined' | 'rounded';
-  label: string;
-  leftIcon?: React.ReactNode;
+  variant?: 'underlined' | 'outlined' | 'rounded';
+  label?: string;
   disabled?: boolean;
-  actionIcon?: React.ReactNode;
-  especialIcon: string;
   errorMsg?: string;
+  autoComplete?: string;
+  autoFocus?: boolean;
+  color?: 'primary' | 'secondary' | string;
+  defaultValue?: any;
+  disableUnderline?: boolean;
+  endAdornment?: React.ReactNode;
+  error?: boolean;
+  id?: string;
+  inputComponent?: React.ElementType;
+  inputProps?: object;
+  inputRef?: React.Ref<any>;
+  margin?: 'dense' | 'none';
+  maxRows?: number | string;
+  minRows?: number | string;
+  multiline?: boolean;
+  name?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  readOnly?: boolean;
+  required?: boolean;
+  rows?: number | string;
+  startAdornment?: React.ReactNode;
+  type?: string;
+  value?: any;
 };
 
 export const TextInput = ({
-  variant,
+  variant = 'rounded',
   label,
-  leftIcon,
   disabled,
-  actionIcon,
-  especialIcon,
-  style,
   errorMsg,
+  autoComplete,
+  autoFocus,
+  color = 'primary',
+  defaultValue,
+  endAdornment,
+  error,
+  inputProps,
+  inputRef,
+  maxRows,
+  minRows,
+  multiline,
+  name,
+  onChange,
+  placeholder,
+  readOnly,
+  required,
+  rows,
+  startAdornment,
+  type = 'text',
+  value,
+  style,
   ...props
 }: InputProps) => {
   const { theme } = useTheme();
   const { colors, inputVariants } = theme;
   const variantStyles = inputVariants[variant];
-  const colorActive = errorMsg
-    ? colors.error
-    : disabled
-      ? colors.grey
-      : colors.primary;
+  const colorActive =
+    errorMsg || error ? colors.error : disabled ? colors.grey : colors.primary;
+
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -50,27 +85,34 @@ export const TextInput = ({
           { borderColor: colorActive },
         ]}
       >
-        {leftIcon && (
-          <Ionicons
-            name={leftIcon + '-outline'}
-            size={24}
-            style={{
-              color: colorActive,
-              marginLeft: 10,
-            }}
-          />
-        )}
-        <RNTextInput style={[styles.input]} editable={!disabled} {...props} />
-        {actionIcon && (
-          <Ionicons
-            name={actionIcon + (especialIcon ? especialIcon : '-outline')}
-            size={24}
-            style={{
-              color: colorActive,
-              marginRight: 10,
-            }}
-          />
-        )}
+        {startAdornment ? (
+          <View style={styles.iconContainer}>{startAdornment}</View>
+        ) : null}
+        <RNTextInput
+          style={[styles.input, { color: colors.text }]}
+          editable={!disabled}
+          placeholderTextColor={colors.grey}
+          autoComplete={autoComplete}
+          autoFocus={autoFocus}
+          defaultValue={defaultValue}
+          multiline={multiline}
+          numberOfLines={rows ? Number(rows) : undefined}
+          maxLength={maxRows ? Number(maxRows) : undefined}
+          minLength={minRows ? Number(minRows) : undefined}
+          name={name}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          required={required}
+          ref={inputRef}
+          type={type}
+          value={value}
+          {...inputProps}
+          {...props}
+        />
+        {endAdornment ? (
+          <View style={styles.iconContainer}>{endAdornment}</View>
+        ) : null}
       </View>
       {errorMsg && <ErrorText>{errorMsg}</ErrorText>}
     </View>
@@ -81,19 +123,29 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
   },
+  fullWidth: {
+    width: '100%',
+  },
   label: {
     marginBottom: 8,
     fontSize: 16,
-    color: '#000',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  noUnderline: {
+    borderBottomWidth: 0,
   },
   input: {
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
     fontSize: 16,
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

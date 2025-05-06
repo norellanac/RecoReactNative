@@ -43,7 +43,8 @@ export const Login = ({ navigation }: Props) => {
               color="info"
               style={{ textAlign: 'center' }}
             >
-              {t('login.have_not_account')}</Text>
+              {t('login.have_not_account')}
+            </Text>
             <Button
               variant="text"
               title={t('register.sign_up')}

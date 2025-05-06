@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import { Text } from '../../../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import introSliderImg1 from '../../../assets/img/intro_sliders/intro_1.png';
 import introSliderImg2 from '../../../assets/img/intro_sliders/intro_2.png';
 import introSliderImg3 from '../../../assets/img/intro_sliders/intro_3.png';
 import introSliderImg4 from '../../../assets/img/intro_sliders/intro_4.png';
 import { Screen } from '@/app/components/templates';
+import { useNavigation } from '@react-navigation/native';
 
 type Slide = {
   title: string;

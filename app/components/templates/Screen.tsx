@@ -46,6 +46,7 @@ export const Screen: React.FC<ScreenProps> = ({
 
   return (
     <SafeAreaView
+      edges={['top', 'left', 'right']}
       style={{
         backgroundColor: theme.colors.background,
         flex: 1,

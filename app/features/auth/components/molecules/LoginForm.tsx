@@ -51,31 +51,50 @@ export const LoginForm: React.FC = () => {
       initialValues={{ email: '', password: '' }}
       onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        email: Yup.string().required(t('Forms.required')),
+        email: Yup.string()
+          .required(
+            t('validations.required', 'This {{field}} is required', {
+              field: t('Forms.email', 'Email'),
+            }),
+          )
+          .email(
+            t('validations.invalid', 'Invalid {{field}}', {
+              field: t('Forms.email', 'Email'),
+            }),
+          ),
         password: Yup.string()
-          .min(6, t('Forms.password_long'))
-          .required(t('Forms.required')),
+          // .min(6, t('Forms.password_long'))
+          // .required(t('Forms.required')),
+          .required(
+            t('validations.required', 'This {{field}} is required', {
+              field: t('Forms.password', 'Password'),
+            }),
+          )
+          .min(
+            6,
+            t('validations.min_length', 'Minimum {{length}} characters', {
+              length: 6,
+            }),
+          ),
       })}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
         <View style={styles.form}>
           <TextInput
-            placeholder={t('Forms.email')}
+            placeholder={t('Forms.email', 'Email')}
             onChangeText={handleChange('email')}
             onBlur={() => handleBlur('email')}
             value={values.email}
             errorMsg={errors.email}
             variant="underlined"
-            label={t('Forms.email')}
           />
           <TextInput
-            placeholder={t('Forms.password')}
+            placeholder={t('Forms.password', 'Password')}
             onChangeText={handleChange('password')}
             onBlur={() => handleBlur('password')}
             value={values.password}
             errorMsg={errors.password}
             variant="underlined"
-            label={t('Forms.password')}
             secureTextEntry={!showPassword}
             endAdornment={
               <Icon
@@ -86,7 +105,7 @@ export const LoginForm: React.FC = () => {
           />
           <Button
             variant="filled"
-            title={t('login.login')}
+            title={t('login.login', 'Login')}
             onPress={() => handleSubmit()}
             isLoading={isLoading}
           />

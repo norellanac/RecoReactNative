@@ -4,100 +4,124 @@ import {
   Text,
   TouchableOpacityProps,
   ActivityIndicator,
+  View,
+  StyleSheet,
 } from 'react-native';
 import { useTheme } from './../../theme/ThemeProvider';
 
 type ButtonProps = TouchableOpacityProps & {
-  variant: 'filled' | 'outlined' | 'text' | 'elevated' | 'tonal';
-  title: React.ReactNode;
+  variant?: 'contained' | 'outlined' | 'text';
+  title?: React.ReactNode;
   isLoading?: boolean;
   disabled?: boolean;
   onPress?: () => void;
+  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning' | string;
+  disableElevation?: boolean;
+  disableRipple?: boolean;
+  endIcon?: React.ReactNode;
+  fullWidth?: boolean;
+  loading?: boolean;
+  loadingIndicator?: React.ReactNode;
+  loadingPosition?: 'center' | 'end' | 'start';
+  size?: 'small' | 'medium' | 'large' | string;
+  startIcon?: React.ReactNode;
+  sx?: Array<Function | object | boolean> | Function | object;
 };
 
 export const Button = ({
-  variant,
+  variant = 'text',
   title,
   isLoading,
   disabled,
   onPress,
+  color = 'primary',
+  disableElevation,
+  disableRipple,
+  endIcon,
+  fullWidth,
+  loading,
+  loadingIndicator,
+  loadingPosition = 'center',
+  size = 'medium',
+  startIcon,
+  sx,
   style,
   ...props
 }: ButtonProps) => {
   const { theme } = useTheme();
   const { colors, buttonVariants } = theme;
-  const variantStyles =
-    buttonVariants[disabled ? `${variant}_disabled` : variant];
+  const variantStyles = buttonVariants[disabled ? `${variant}_disabled` : variant];
   const textColor =
     variant === 'filled'
       ? colors.white
       : variant === 'tonal'
         ? colors.black
         : colors.primary;
-
-  const renderText = () => {
-    if (isLoading) {
-      return <ActivityIndicator size="small" />;
+  const renderLoadingIndicator = () => {
+    if (loadingIndicator) {
+      return loadingIndicator;
     }
-    if (typeof title === 'string') {
+    return <ActivityIndicator color={textColor} size="small" />;
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      if (loadingPosition === 'center') {
+        return renderLoadingIndicator();
+      }
       return (
-        <Text style={{ color: disabled ? colors.grey : textColor }}>
-          {title}
-        </Text>
+        <View style={styles.loadingContainer}>
+          {loadingPosition === 'start' && renderLoadingIndicator()}
+          <Text style={{ color: disabled ? colors.grey : textColor }}>{title}</Text>
+          {loadingPosition === 'end' && renderLoadingIndicator()}
+        </View>
       );
     }
-    return title;
+
+    return (
+      <View style={styles.contentContainer}>
+        {startIcon && <View style={styles.iconContainer}>{startIcon}</View>}
+        <Text style={{ color: disabled ? colors.grey : textColor }}>{title}</Text>
+        {endIcon && <View style={styles.iconContainer}>{endIcon}</View>}
+      </View>
+    );
   };
 
   return (
     <TouchableOpacity
-      style={[variantStyles, style]}
+      style={[
+        variantStyles,
+        fullWidth && styles.fullWidth,
+        disableElevation && styles.noElevation,
+        style,
+      ]}
       {...props}
-      disabled={disabled || isLoading}
+      disabled={disabled || isLoading || loading}
       onPress={onPress}
     >
-      {renderText()}
+      {renderContent()}
     </TouchableOpacity>
   );
 };
 
-//Example usage:
-<>
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="filled"
-    title={<Text>{'+ Filled Button'}</Text>}
-  />
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="outlined"
-    title="Outlined Button"
-  />
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="text"
-    disabled
-    title="Disabled Text Button"
-  />
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="text"
-    title=" Text Button"
-  />
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="elevated"
-    title="Elevated Button"
-  />
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="elevated"
-    isLoading
-    title="Loading Elevated Button"
-  />
-  <Button
-    onPress={() => console.log('pressed')}
-    variant="tonal"
-    title="Tonal Button"
-  />
-</>;
+const styles = StyleSheet.create({
+  fullWidth: {
+    width: '100%',
+  },
+  noElevation: {
+    elevation: 0,
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconContainer: {
+    marginHorizontal: 4,
+  },
+});

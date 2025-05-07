@@ -23,7 +23,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
           color="primary"
           style={{ textAlign: 'center' }}
         >
-          {t('commons.app_name')}
+          {t('commons.app_name', 'Reco')}
         </Text>
         <RegisterForm />
         <Text
@@ -32,7 +32,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
           color="info"
           style={{ textAlign: 'center' }}
         >
-          {t('register.terms_text')}
+          {t('register.terms_text', 'By signing up, you agree to our')}
         </Text>
         <View style={styles.terms_policy}>
           <Text
@@ -41,7 +41,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-            {t('register.terms_service')}
+            {t('register.terms_service', 'Terms of Service')}
           </Text>
           <Text
             variant={'body'}
@@ -50,7 +50,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             style={{ textAlign: 'center' }}
           >
             {' '}
-            {t('commons.and')}{' '}
+            {t('commons.and', 'and')}{' '}
           </Text>
           <Text
             variant={'body'}
@@ -58,7 +58,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="primary"
             style={{ textAlign: 'center' }}
           >
-            {t('register.privacy_policy')}
+            {t('register.privacy_policy', 'Privacy Policy')}
           </Text>
         </View>
 
@@ -69,7 +69,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="info"
             style={{ textAlign: 'center' }}
           >
-            {t('register.already_have_an_account')}
+            {t('register.already_have_an_account', 'Already have an account?')}
           </Text>
           <Button
             variant="text"

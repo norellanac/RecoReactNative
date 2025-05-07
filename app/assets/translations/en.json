@@ -1,79 +1,55 @@
 {
-  "commons": {
-    "app_name": "Reco",
-    "start": "Start",
-    "begin": "Getting Started",
-    "next": "Next",
-    "continue": "Continue",
-    "decline": "Decline",
-    "back": "Go Back",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "Ok",
-    "go_home": "Go Home",
-    "back_to_top": "Back to Top",
-    "copy": "Copy",
-    "cancel": "Cancel",
-    "loading": "Loading",
-    "loading_ellipsis": "Loading...",
-    "request": "Request",
-    "more_information": "More Information",
-    "accept": "Accept",
-    "available": "Available",
-    "confirm": "Confirm",
-    "error": "Error",
-    "success": "Success!",
-    "general_error": "An error occurred",
-    "view_more": "View more",
-    "view_less": "View less",
-    "maintentance_message": "We are in maintenance",
-    "hasConnection": "Connection has been restored",
-    "lostConnection": "You are not connected to the internet",
-    "and": "and"
-  },
   "auth": {
-    "landing_screen": {
-      "register": "Sign Up",
-      "login": "Log In"
+    "register": {
+      "confirm_password": "Confirm Password",
+      "full_name": "Full Name",
+      "password": "Password",
+      "phone_number": "Phone Number"
     }
+  },
+  "commons": {
+    "and": "and",
+    "app_name": "Reco"
+  },
+  "Forms": {
+    "email": "Email",
+    "password": "Password",
+    "password_long": "",
+    "required": ""
   },
   "home": {
     "landing_screen": {
       "slider": {
-        "title_1": "Book Now",
-        "title_2": "Book Now!",
-        "title_3": "Book"
+        "title_1": "Action 1",
+        "title_2": "Action 2",
+        "title_3": "Action 3"
       }
     }
   },
-  "welcome_message": "Welcome",
-  "Forms": {
-    "password": "Password",
-    "confirm_password": "Confirm Password",
-    "full_name": "Full Name",
-    "email": "E-mail",
-    "password_long": "Must have at least 6 characters",
-    "invalid_email": "Invalid e-mail",
-    "required": "Required"
+  "login": {
+    "forget_password": "Forgot password?",
+    "have_not_account": "Don't have an account?",
+    "login": "Login"
+  },
+  "register": {
+    "already_have_an_account": "Already have an account?",
+    "privacy_policy": "Privacy Policy",
+    "sign_up": "Sign Up",
+    "terms_service": "Terms of Service",
+    "terms_text": "By signing up, you agree to our"
   },
   "slider": {
-    "skip": "Skip",
     "get_started": "Get Started",
+    "skip": "Skip",
     "title_1": "Find the expert you need in minutes.",
     "title_2": "Hire easily and without complications.",
     "title_3": "Based on user ratings who bought their services.",
     "title_4": "Explore, compare and schedule in a few steps."
   },
-  "login": {
-    "have_not_account": "Haven't account, please",
-    "login": "Login",
-    "forget_password": "Forget Password?"
-  },
-  "register": {
-    "already_have_an_account": "Already hace an account?",
-    "sign_up": "Sign Up",
-    "terms_text": "By signing up you agree to our",
-    "terms_service": "Terms of service",
-    "privacy_policy": "Privacy Policy"
+  "validations": {
+    "invalid": "Invalid {{field}}",
+    "length": "{{field}} must be at least {{length}} characters",
+    "min_length": "Minimum {{length}} characters",
+    "required": "This {{field}} is required"
   }
 }

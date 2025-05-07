@@ -10,7 +10,7 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   const [isAppReady, setAppReady] = useState(false);
   const { t } = useTranslation();
 
-  const appName = t('commons.app_name');
+  const appName = t('commons.app_name', 'Reco');
 
   useEffect(() => {
     const prepare = async () => {

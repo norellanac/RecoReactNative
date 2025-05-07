@@ -1,79 +1,55 @@
 {
-  "commons": {
-    "app_name": "Reco",
-    "start": "Empezar",
-    "begin": "Empecemos",
-    "next": "Siguiente",
-    "continue": "Continuar",
-    "decline": "Rechazar",
-    "back": "Volver",
-    "yes": "Sí",
-    "no": "No",
-    "ok": "Ok",
-    "go_home": "Volver al inicio",
-    "back_to_top": "Volver al inicio",
-    "copy": "Copiar",
-    "cancel": "Cancelar",
-    "loading": "Cargando",
-    "loading_ellipsis": "Cargando...",
-    "request": "Solicitar",
-    "more_information": "Más Información",
-    "accept": "Aceptar",
-    "available": "Disponible",
-    "confirm": "Confirmar",
-    "error": "Error",
-    "success": "¡Éxito!",
-    "general_error": "Ocurrió un error",
-    "view_more": "Ver más",
-    "view_less": "Ver menos",
-    "maintentance_message": "Nos encontramos en mantenimiento",
-    "hasConnection": "Se ha restablecido la conexion",
-    "lostConnection": "No tienes conexion a internet",
-    "and": "y"
-  },
   "auth": {
-    "landing_screen": {
-      "register": "Registrarme",
-      "login": "Ingresar"
+    "register": {
+      "confirm_password": "Confirmar contraseña",
+      "full_name": "Nombre completo",
+      "password": "Contraseña",
+      "phone_number": "Número de teléfono"
     }
+  },
+  "commons": {
+    "and": "y",
+    "app_name": "Reco"
+  },
+  "Forms": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "password_long": "",
+    "required": ""
   },
   "home": {
     "landing_screen": {
       "slider": {
-        "title_1": "Reserva Ahora",
-        "title_2": "Reserva Ya!",
-        "title_3": "Reservar"
+        "title_1": "Acción 1",
+        "title_2": "Acción 2",
+        "title_3": "Acción 3"
       }
     }
   },
-  "welcome_message": "Bienvenido",
-  "Forms": {
-    "password": "Contraseña",
-    "confirm_password": "Confirme Contraseña",
-    "full_name": "Nombre Completo",
-    "email": "Correo Electrónico",
-    "password_long": "Debe tener al menos 6 caracteres",
-    "invalid_email": "Email inválido",
-    "required ": "Requerido"
-  },
-  "slider": {
-    "skip": "Saltar",
-    "get_started": "Comenzar",
-    "title_1": "Encuentra al experto que necesitas en pocos minutos.",
-    "title_2": "Contrata fácil y sin complicaciones.",
-    "title_3": "Basado en valoraciones de usuarios que compraron sus servicios.",
-    "title_4": "Explora, compara y agenda en pocos pasos."
-  },
   "login": {
-    "have_not_account": "No tengo cuenta, por favor",
-    "login": "Iniciar sesión",
-    "forget_password": "¿Olvidó su contraseña?"
+    "forget_password": "¿Olvidaste tu contraseña?",
+    "have_not_account": "¿No tienes una cuenta?",
+    "login": "Iniciar sesión"
   },
   "register": {
     "already_have_an_account": "¿Ya tienes una cuenta?",
+    "privacy_policy": "Política de privacidad",
     "sign_up": "Registrarse",
-    "terms_text": "Al registrarse, acepta nuestras ",
-    "terms_service": "Condiciones de servicio",
-    "privacy_policy": "Política de privacidad"
+    "terms_service": "Términos de servicio",
+    "terms_text": "Al registrarte, aceptas nuestros"
+  },
+  "slider": {
+    "get_started": "Comenzar",
+    "skip": "Saltar",
+    "title_1": "Encuentra al experto que necesitas en minutos.",
+    "title_2": "Contrata fácilmente y sin complicaciones.",
+    "title_3": "Basado en las calificaciones de los usuarios que compraron sus servicios.",
+    "title_4": "Explora, compara y programa en pocos pasos."
+  },
+  "validations": {
+    "invalid": "Inválido {{field}}",
+    "length": "{{field}} debe tener al menos {{length}} caracteres",
+    "min_length": "Mínimo {{length}} caracteres",
+    "required": "Este {{field}} es obligatorio"
   }
 }

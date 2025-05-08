@@ -113,9 +113,11 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   image: {
-    borderRadius: 10,
+    borderRadius: 16,
     marginBottom: 10,
     width: '90%',
+
+    resizeMode: 'cover',
   },
   buttonContainer: {
     position: 'absolute',
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
+    marginBottom: 10,
   },
   dot: {
     width: 10,

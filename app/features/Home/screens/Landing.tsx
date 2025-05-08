@@ -1,31 +1,57 @@
 import React from 'react';
-import { Text, Alert, ScrollView } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { Text } from '@/app/components/atoms';
 import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button } from './../../../components/atoms/Button';
-import { useAppDispatch } from '@/app/hooks/useAppDispatch';
-import { useAppSelector } from '@/app/hooks/useAppSelector';
-import { logout, selectAuth } from '@/app/redux/slices/authSlice';
 import CategoryCard from '../components/molecules/CategoryCard';
 import Carousel from '../components/molecules/CarouselCard';
+import ServiceCard from '../components/molecules/ServiceCard';
+import { useGetProductsQuery } from '@/app/services/productApi';
 import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
+import { useTranslation } from 'react-i18next';
+
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
 export const LandingHome = ({ navigation } /** route */ : Props) => {
+  const { t } = useTranslation();
   const [search, setSearch] = React.useState('');
-  const dispatch = useAppDispatch();
-  const authState = useAppSelector(selectAuth);
+  const {
+    data: productsData,
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+  } = useGetProductsQuery();
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
+  const {
+    data: categoriesData,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+  } = useGetCategoriesQuery();
 
-  const { data, isLoading, isError } = useGetCategoriesQuery();
+  const topRatedServices = productsData?.data?.items
+    ?.slice()
+    ?.sort((a: any, b: any) => (b.averageRating || 0) - (a.averageRating || 0))
+    ?.slice(0, 5);
 
-  const categories = data?.data || [];
+  const categories = categoriesData?.data || [];
+
+  if (isProductsLoading || isCategoriesLoading) {
+    return (
+      <Text style={styles.loading}>
+        {t('home_screen.loading', 'Loading data...')}
+      </Text>
+    );
+  }
+
+  if (isProductsError || isCategoriesError) {
+    return (
+      <Text style={styles.error}>
+        {t('home_screen.error', 'An error occurred while loading data.')}.
+      </Text>
+    );
+  }
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -36,36 +62,116 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
   };
 
   return (
-    <Screen statusBarProps={{}} container>
+    <Screen statusBarProps={{}}>
       <TextInput
         variant="outlined"
-        placeholder="Search services that you need"
+        placeholder={t(
+          'home_screen.searchPlaceholder',
+          'Search services that you need',
+        )}
         value={search}
         onChange={handleChangeSearch}
         endAdornment={<Icon name="close" onPress={handleClearSearch} />}
         startAdornment={<Icon name="search" />}
+        style={{
+          //margin: 10,
+          marginLeft: 10,
+          marginRight: 10,
+          backgroundColor: '#fff',
+          borderRadius: 20,
+        }}
       />
-      <Carousel />
       <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ height: 150, padding: 0, margin: 0 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingHorizontal: 10,
+        }}
       >
-        {categories.map((category, index) => (
-          <CategoryCard key={index} title={category.name} icon={undefined} />
-        ))}
-      </ScrollView>
-      <ScrollView style={{ height: 400 }}>
-        <Button
-          variant="filled"
-          title="Display user data from API"
-          isLoading={isLoading}
-          disabled={isLoading}
-          onPress={() => Alert.alert('User Data', JSON.stringify(data?.data))}
-        />
-        <Text>{JSON.stringify(authState)}</Text>
-        <Button variant="filled" title="Logout" onPress={handleLogout} />
+        <Carousel />
+
+        <View
+          style={{
+            paddingVertical: 10,
+          }}
+        >
+          <Text
+            variant="title"
+            size="large"
+            color="secondary"
+            style={{
+              textAlign: 'left',
+              fontWeight: 'bold',
+            }}
+          >
+            {t('home_screen.categoriesTitle', 'Categories')}
+          </Text>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ height: 125, padding: 0, margin: 0 }}
+          >
+            {categories.map((category, index) => (
+              <CategoryCard
+                key={index}
+                title={category.name}
+                icon={undefined}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        <View>
+          <Text
+            variant="title"
+            size="large"
+            color="secondary"
+            style={{
+              textAlign: 'left',
+              fontWeight: 'bold',
+            }}
+          >
+            {t('home_screen.featuredServices', 'Recommended for you')}
+          </Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {topRatedServices.map((service: any) => (
+              <ServiceCard
+                key={service.id}
+                name={
+                  service.name ||
+                  t('home_screen.unnamedService', 'Unnamed Service')
+                }
+                price={`Q${service.price} por día`}
+                rating={service.averageRating || 0}
+                reviews={service.reviews?.length || 0}
+                imageUrl={
+                  service.urlImage
+                    ? `https://dev.recolatam.com/api/v1${service.urlImage}`
+                    : 'https://picsum.photos/200/300'
+                }
+                onPress={() =>
+                  navigation.navigate('ServiceDetails', { id: service.id })
+                }
+              />
+            ))}
+          </ScrollView>
+        </View>
       </ScrollView>
     </Screen>
   );
 };
+
+const styles = StyleSheet.create({
+  loading: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+  },
+  error: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: 'red',
+  },
+});

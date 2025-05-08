@@ -54,6 +54,7 @@ const BottomTabNavigator = React.memo(() => {
           backgroundColor: colors.background,
           paddingVertical: 15,
           minHeight: 70,
+          bottom: 15, // Ajusta la posición desde la parte inferior
         },
         tabBarLabelStyle: {
           display: 'none', // Hide the default label style

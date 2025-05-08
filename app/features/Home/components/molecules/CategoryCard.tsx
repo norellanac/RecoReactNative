@@ -31,9 +31,9 @@ export default function CategoryCard({
         {icon || <Ionicons name={'home'} size={24} color={colors.primary} />}
         <Text
           variant="body"
-          size="large"
+          size="small"
           color="primary"
-          style={{ paddingVertical: 10 }}
+          style={{ paddingVertical: 5, textAlign: 'center' }}
         >
           {title}
         </Text>

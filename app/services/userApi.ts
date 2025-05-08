@@ -23,6 +23,13 @@ export const userApi = createApi({
         body: formData,
       }),
     }),
+    updateUserName: builder.mutation<any, { userId: string; name: string; lastname: string }>({
+      query: ({ userId, name, lastname }) => ({
+        url: `/users/${userId}`,
+        method: 'PUT',
+        body: { name, lastname },
+      }),
+    }),
   }),
 });
 
@@ -30,4 +37,5 @@ export const {
   useGetUsersQuery,
   useCreateUserMutation,
   useUpdateAvatarMutation,
+  useUpdateUserNameMutation,
 } = userApi;

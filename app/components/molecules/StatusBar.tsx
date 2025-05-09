@@ -21,6 +21,7 @@ type StatusBarProps = {
   backgroundColor?: string;
   iconColor?: string;
   containerStyle?: ViewStyle;
+  showBackButton?: boolean;
 };
 
 const StatusBar: React.FC<StatusBarProps> = ({
@@ -33,19 +34,22 @@ const StatusBar: React.FC<StatusBarProps> = ({
   backgroundColor = '#fff',
   iconColor = '#000',
   containerStyle,
+  showBackButton = false,
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   return (
     <View style={[styles.container, { backgroundColor }, containerStyle]}>
-      <TouchableOpacity
-        onPress={onLeftIconPress || navigation.goBack}
-        style={styles.iconContainer}
-      >
-        {leftElement || (
-          <Ionicons name="arrow-back" size={24} color={iconColor} />
-        )}
-      </TouchableOpacity>
+      {showBackButton && (
+        <TouchableOpacity
+          onPress={onLeftIconPress || navigation.goBack}
+          style={styles.iconContainer}
+        >
+          {leftElement || (
+            <Ionicons name="arrow-back" size={24} color={iconColor} />
+          )}
+        </TouchableOpacity>
+      )}
       <TouchableOpacity onPress={onTitlePress} style={styles.titleContainer}>
         {title || (
           <Text variant="headline" size="large" color="primary">

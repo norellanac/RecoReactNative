@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeNavigation } from '../features/Home/screens/HomeStack';
-import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
-import { LandingProfile } from '../features/Profile/screens/Landing';
 import { TaskPage } from '../features/Task/screens/Task';
+import { FavoritesNavigation } from '../features/Favorites/screens/FavoritesStack';
+import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { Text } from '../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +19,7 @@ const BottomTabNavigator = React.memo(() => {
   const iconMapping = {
     Home: ['home', 'home-outline'],
     Task: ['file-tray', 'file-tray-outline'],
-    Tasker: ['heart', 'heart-outline'],
+    Favorites: ['heart', 'heart-outline'],
     Profile: ['person', 'person-outline'],
   };
 
@@ -63,8 +63,8 @@ const BottomTabNavigator = React.memo(() => {
     >
       <Tab.Screen name="Home" component={HomeNavigation} />
       <Tab.Screen name="Task" component={TaskPage} />
-      <Tab.Screen name="Tasker" component={ProfileNavigation} />
-      <Tab.Screen name="Profile" component={LandingProfile} />
+      <Tab.Screen name="Favorites" component={FavoritesNavigation} />
+      <Tab.Screen name="Profile" component={ProfileNavigation} />
     </Tab.Navigator>
   );
 });

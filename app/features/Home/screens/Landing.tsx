@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text } from '@/app/components/atoms';
+import { Button } from '@/app/components/atoms/Button';
 import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -74,7 +75,6 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
         endAdornment={<Icon name="close" onPress={handleClearSearch} />}
         startAdornment={<Icon name="search" />}
         style={{
-          //margin: 10,
           marginLeft: 10,
           marginRight: 10,
           backgroundColor: '#fff',
@@ -89,27 +89,38 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
       >
         <Carousel />
 
-        <View
-          style={{
-            paddingVertical: 10,
-          }}
-        >
-          <Text
-            variant="title"
-            size="large"
-            color="secondary"
+        <View>
+          <View
             style={{
-              textAlign: 'left',
-              fontWeight: 'bold',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
-            {t('home_screen.categoriesTitle', 'Categories')}
-          </Text>
+            <Text
+              variant="title"
+              size="large"
+              color="secondary"
+              style={{
+                textAlign: 'left',
+                fontWeight: 'bold',
+              }}
+            >
+              {t('home_screen.categoriesTitle', 'Categories')}
+            </Text>
+            <Button
+              variant="text"
+              size="large"
+              color="secondary"
+              title={t('home_screen.viewAll', 'View all')}
+              onPress={() => navigation.navigate('AllCategories')}
+            />
+          </View>
 
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={{ height: 125, padding: 0, margin: 0 }}
+            style={{ height: 125, padding: 0, marginBottom: 10 }}
           >
             {categories.map((category, index) => (
               <CategoryCard

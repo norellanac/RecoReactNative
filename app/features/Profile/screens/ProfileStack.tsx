@@ -1,23 +1,23 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LandingProfile } from './Landing';
-import { ExampleProfile } from './Example';
+import { ChangeLanguage } from './ChangeLanguage';
 
 export type ProfileStackParams = {
   Profile: undefined;
-  ExampleProfile: undefined;
+  ChangeLanguage: undefined;
 };
 
-const HomeStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
 export const ProfileNavigation = () => {
   return (
-    <HomeStack.Navigator
+    <ProfileStack.Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="Profile"
     >
-      <HomeStack.Screen name="Profile" component={LandingProfile} />
-      <HomeStack.Screen name="ExampleProfile" component={ExampleProfile} />
-    </HomeStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={LandingProfile} />
+      <ProfileStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
+    </ProfileStack.Navigator>
   );
 };

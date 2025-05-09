@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { Button, Text } from '../../../components/atoms';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Text } from '../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 
 export const ProfileOptions = ({
@@ -15,15 +16,21 @@ export const ProfileOptions = ({
   const options = [
     {
       key: 'email',
-      label: t('userProfile.email', 'Email'),
+      label: t('userProfile.account', 'Account'),
       value: user?.email || 'email@example.com',
-      onPress: null, // No acción para el email
+      onPress: null,
     },
     {
       key: 'changePassword',
       label: t('userProfile.changePassword', 'Change password'),
       value: '',
-      onPress: () => navigation.navigate('PasswordRecovery'), // Navegar a la pantalla de recuperación de contraseña
+      onPress: () => navigation.navigate(''),
+    },
+    {
+      key: 'changeLanguage',
+      label: t('userProfile.changeLanguage', 'Change language'),
+      value: '',
+      onPress: () => navigation.navigate('ChangeLanguage'),
     },
   ];
 
@@ -38,11 +45,20 @@ export const ProfileOptions = ({
             onPress={item.onPress}
             disabled={!item.onPress} // Deshabilitar si no hay acción
           >
-            <Text style={styles.label}>{item.label}</Text>
+            <Text variant="title" size="medium" color="secondary">
+              {item.label}
+            </Text>
             {item.value ? (
-              <Text style={styles.value}>{item.value}</Text>
+              <Text
+                variant="title"
+                size="medium"
+                color="primary"
+                style={styles.value}
+              >
+                {item.value}
+              </Text>
             ) : (
-              <Text style={styles.arrow}>{'>'}</Text> // Flecha para opciones navegables
+              <AntDesign name="rightcircleo" size={24} color="#6750A4" />
             )}
           </TouchableOpacity>
         )}
@@ -63,19 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  value: {
-    fontSize: 16,
-    color: '#666',
-  },
-  arrow: {
-    fontSize: 16,
-    color: '#666',
+    //backgroundColor: '#fff',
   },
   separator: {
     height: 1,

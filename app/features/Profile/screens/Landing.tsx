@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   TextInput,
   Alert,
   Image,
@@ -10,7 +9,6 @@ import {
 } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Button, Text } from '../../../components/atoms';
-import LanguageSwitcher from '@/app/components/molecules/LanguageSwitcher';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import {
@@ -25,6 +23,7 @@ import { useUpdateUserNameMutation } from '@/app/services/userApi';
 import { ProfileStackParams } from './ProfileStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProfileOptions } from '../components/ProfileOptions';
+import Entypo from '@expo/vector-icons/Entypo';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'Profile'>;
 
@@ -89,7 +88,7 @@ export const LandingProfile = ({ navigation }: Props) => {
   };
 
   const handleSaveImage = () => {
-    // Aquí puedes implementar la lógica para guardar la imagen en el servidor
+    // Implementar aquí la lógica para guardar la imagen en el servidor
     Alert.alert(
       t('userProfile.success', 'Success'),
       t('userProfile.imageUpdated', 'Image updated successfully'),
@@ -98,11 +97,8 @@ export const LandingProfile = ({ navigation }: Props) => {
   };
 
   return (
-    <Screen container scrollable>
-      <ScrollView contentContainerStyle={styles.container}>
-        {/* Language Switcher */}
-        <LanguageSwitcher />
-
+    <Screen statusBarProps={{}}>
+      <View style={styles.container}>
         {/* Avatar Upload */}
         <TouchableOpacity onPress={handleImageChange}>
           <Image
@@ -150,6 +146,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           variant="text"
           title={t('userProfile.editName', 'Edit Name')}
           onPress={() => setEditNameModalOpen(true)}
+          endIcon={<Entypo name="edit" size={15} color="gray" />}
         />
         <Modal
           isVisible={editNameModalOpen}
@@ -185,14 +182,12 @@ export const LandingProfile = ({ navigation }: Props) => {
           </View>
         </Modal>
 
-        {/* Profile Options */}
         <ProfileOptions navigation={navigation} user={user} />
 
-        {/* Logout Button */}
         <Button
           variant="outlined"
           title={t('userProfile.publishServices', 'Publish my services')}
-          onPress={handleLogout}
+          onPress={() => navigation.navigate('')}
           style={styles.logoutButton}
         />
         <Button
@@ -201,7 +196,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           onPress={handleLogout}
           style={styles.logoutButton}
         />
-      </ScrollView>
+      </View>
     </Screen>
   );
 };
@@ -209,17 +204,19 @@ export const LandingProfile = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 50,
   },
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 20,
+    width: 125,
+    height: 125,
+    borderRadius: 75,
+    marginBottom: 10,
   },
   userName: {
     fontWeight: 'bold',
+    marginBottom: -10,
   },
+
   input: {
     borderWidth: 1,
     borderColor: '#ccc',

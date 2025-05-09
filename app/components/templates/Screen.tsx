@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 interface ScreenProps {
   children: ReactNode;
   container?: boolean;
-  scrollable?: boolean; // New prop to enable/disable scrolling
+  scrollable?: boolean; // Enable/disable scrolling
   statusBarProps?: {
     leftElement?: React.ReactNode;
     onLeftIconPress?: () => void;
@@ -20,6 +20,7 @@ interface ScreenProps {
     iconColor?: string;
     containerStyle?: ViewStyle;
     textStyle?: TextStyle;
+    showBackButton?: boolean;
   };
 }
 

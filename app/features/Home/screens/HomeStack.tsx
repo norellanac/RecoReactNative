@@ -1,23 +1,23 @@
 import React from 'react';
 import { LandingHome } from './Landing';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ExampleHome } from './Example';
+import { AllCategories } from '../components/molecules/AllCategories';
 
 export type HomeStackParams = {
   Home: undefined;
-  ExampleHome: undefined;
+  AllCategories: undefined;
 };
 
-const HomeStack = createNativeStackNavigator();
+const HomeStack = createNativeStackNavigator<HomeStackParams>();
 
 export const HomeNavigation = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="LandingHome"
+      initialRouteName="Home"
     >
-      <HomeStack.Screen name="LandingHome" component={LandingHome} />
-      <HomeStack.Screen name="ExampleHome" component={ExampleHome} />
+      <HomeStack.Screen name="Home" component={LandingHome} />
+      <HomeStack.Screen name="AllCategories" component={AllCategories} />
     </HomeStack.Navigator>
   );
 };

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { Text } from '../../../components/atoms';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '@/app/components/atoms/Icon';
 
 export const ProfileOptions = ({
   navigation,
@@ -43,9 +43,14 @@ export const ProfileOptions = ({
           <TouchableOpacity
             style={styles.listItem}
             onPress={item.onPress}
-            disabled={!item.onPress} // Deshabilitar si no hay acción
+            disabled={!item.onPress}
           >
-            <Text variant="title" size="medium" color="secondary">
+            <Text
+              variant="title"
+              size="medium"
+              color="secondary"
+              style={styles.label}
+            >
               {item.label}
             </Text>
             {item.value ? (
@@ -58,7 +63,12 @@ export const ProfileOptions = ({
                 {item.value}
               </Text>
             ) : (
-              <AntDesign name="rightcircleo" size={24} color="#6750A4" />
+              <Icon
+                name="chevron-forward"
+                size={24}
+                color="#6750A4"
+                family="Ionicons"
+              />
             )}
           </TouchableOpacity>
         )}
@@ -79,10 +89,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 20,
-    //backgroundColor: '#fff',
   },
   separator: {
     height: 1,
+    width: '90%',
+    alignSelf: 'center',
     backgroundColor: 'rgb(226, 226, 230)',
+  },
+  label: {
+    flex: 1,
+    textAlign: 'left',
+  },
+  value: {
+    marginLeft: 10,
+    textAlign: 'right',
   },
 });

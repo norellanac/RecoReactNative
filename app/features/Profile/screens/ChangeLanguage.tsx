@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { Screen } from '../../../components/templates';
 import LanguageSwitcher from '@/app/components/molecules/LanguageSwitcher';
@@ -8,12 +8,19 @@ import LanguageIcon from '@/app/assets/img/LanguageIcon.png';
 
 export const ChangeLanguage = ({ navigation }: { navigation: any }) => {
   const { t, i18n } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language); // Estado para el idioma seleccionado
 
-  const handleLanguageChange = (language: string) => {
-    setSelectedLanguage(language);
-    i18n.changeLanguage(language);
-  };
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setSelectedLanguage(i18n.language);
+    };
+
+    i18n.on('languageChanged', handleLanguageChange);
+
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, [i18n]);
 
   return (
     <Screen
@@ -32,13 +39,8 @@ export const ChangeLanguage = ({ navigation }: { navigation: any }) => {
         >
           {t('userProfile.changeLanguage', 'Change Language')}
         </Text>
-        <LanguageSwitcher onLanguageChange={handleLanguageChange} />
-        <Text
-          variant="body"
-          size="large"
-          color="secondary"
-          style={styles.selectedLanguageText}
-        >
+        <LanguageSwitcher />
+        <Text style={styles.selectedLanguageText}>
           {t('userProfile.selectedLanguage', 'You have selected:')}{' '}
           {selectedLanguage}
         </Text>
@@ -65,5 +67,7 @@ const styles = StyleSheet.create({
   },
   selectedLanguageText: {
     marginTop: 20,
+    fontSize: 16,
+    color: '#666',
   },
 });

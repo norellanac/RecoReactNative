@@ -14,14 +14,16 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <View style={styles.container}>
       <Button
-        variant="elevated"
+        variant={i18n.language === 'en' ? 'filled' : 'elevated'}
         title="English"
         onPress={() => changeLanguage('en')}
+        style={[styles.button]}
       />
       <Button
-        variant="filled"
+        variant={i18n.language === 'es' ? 'filled' : 'elevated'}
         title="Español"
         onPress={() => changeLanguage('es')}
+        style={[styles.button]}
       />
     </View>
   );
@@ -30,8 +32,11 @@ const LanguageSwitcher: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     padding: 10,
+  },
+  button: {
+    marginHorizontal: 5,
   },
 });
 

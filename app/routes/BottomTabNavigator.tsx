@@ -8,6 +8,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import { Text } from '../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +17,8 @@ const isTablet = Dimensions.get('window').width >= 768;
 const BottomTabNavigator = React.memo(() => {
   const { theme } = useTheme();
   const { colors } = theme;
+  const { t } = useTranslation();
+
   const iconMapping = {
     Home: ['home', 'home-outline'],
     Task: ['file-tray', 'file-tray-outline'],
@@ -43,7 +46,7 @@ const BottomTabNavigator = React.memo(() => {
                 <Ionicons name={iconName} size={size || 24} color={color} />
               </View>
               <Text variant={'body'} size={'medium'} color={'secondary'}>
-                {route.name}
+                {t(`bottomTabs.${route.name.toLowerCase()}`)}{' '}
               </Text>
             </View>
           );
@@ -57,7 +60,7 @@ const BottomTabNavigator = React.memo(() => {
           bottom: 15, // Ajusta la posición desde la parte inferior
         },
         tabBarLabelStyle: {
-          display: 'none', // Hide the default label style
+          display: 'none', // Oculta el estilo de etiqueta predeterminado
         },
       })}
     >
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
   iconLabelContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: isTablet ? 80 : 64, // Adjust width for tablets
+    width: isTablet ? 80 : 64, // Ajusta el ancho para tablets
   },
   iconContainer: {
     justifyContent: 'center',

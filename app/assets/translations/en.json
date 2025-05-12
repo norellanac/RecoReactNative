@@ -1,4 +1,10 @@
 {
+  "bottomTabs": {
+  "home": "Home",
+  "task": "Task",
+  "favorites": "Favorites",
+  "profile": "Profile"
+},
   "auth": {
     "register": {
       "confirm_password": "Confirm Password",
@@ -10,6 +16,9 @@
   "commons": {
     "and": "and",
     "app_name": "Reco"
+  },
+  "favorites": {
+    "title": "Favorites"
   },
   "Forms": {
     "email": "Email",
@@ -25,6 +34,16 @@
         "title_3": "Action 3"
       }
     }
+  },
+  "home_screen": {
+    "all_categories": "All Categories",
+    "categoriesTitle": "Categories",
+    "error": "An error occurred while loading data.",
+    "featuredServices": "Recommended for you",
+    "loading": "Loading data...",
+    "searchPlaceholder": "Search services that you need",
+    "unnamedService": "Unnamed Service",
+    "viewAll": "View all"
   },
   "login": {
     "forget_password": "Forgot password?",
@@ -46,10 +65,31 @@
     "title_3": "Based on user ratings who bought their services.",
     "title_4": "Explore, compare and schedule in a few steps."
   },
+  "userProfile": {
+    "account": "Account",
+    "changeLanguage": "Change Language",
+    "changePassword": "Change password",
+    "changeProfilePhoto": "Change profile photo",
+    "defaultLastname": "Lastname",
+    "defaultName": "Name",
+    "editName": "Edit Name",
+    "editNameTitle": "Edit Name",
+    "error": "Error",
+    "imageUpdated": "Image updated successfully",
+    "lastname": "Lastname",
+    "logout": "Logout",
+    "name": "Name",
+    "nameUpdated": "Name updated successfully",
+    "publishServices": "Publish my services",
+    "save": "Save",
+    "selectedLanguage": "You have selected:",
+    "success": "Success",
+    "updateFailed": "Failed to update name"
+  },
   "validations": {
     "invalid": "Invalid {{field}}",
     "length": "{{field}} must be at least {{length}} characters",
     "min_length": "Minimum {{length}} characters",
     "required": "This {{field}} is required"
-}
+  }
 }

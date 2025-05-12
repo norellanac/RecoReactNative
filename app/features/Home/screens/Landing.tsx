@@ -13,6 +13,7 @@ import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
+import CategoryChipList from '../components/molecules/CategoryChipList';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
@@ -140,6 +141,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
             style={{
               textAlign: 'left',
               fontWeight: 'bold',
+              marginTop: 15,
             }}
           >
             {t('home_screen.featuredServices', 'Recommended for you')}
@@ -167,6 +169,40 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
               />
             ))}
           </ScrollView>
+        </View>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: 15,
+            }}
+          >
+            <Text
+              variant="title"
+              size="large"
+              color="secondary"
+              style={{
+                textAlign: 'left',
+                fontWeight: 'bold',
+              }}
+            >
+              {t('home_screen.featureServices', 'Featured Services')}
+            </Text>
+            <Button
+              variant="text"
+              size="large"
+              color="secondary"
+              title={t('home_screen.viewAll', 'View all')}
+              onPress={() => navigation.navigate('AllCategories')}
+            />
+          </View>
+
+          <CategoryChipList
+            categories={categories}
+            onPress={(category) => {}}
+          />
         </View>
       </ScrollView>
     </Screen>

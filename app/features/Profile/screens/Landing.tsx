@@ -16,14 +16,15 @@ import {
   selectAuth,
   setAuthUserState,
 } from '@/app/redux/slices/authSlice';
-import Modal from 'react-native-modal';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
 import { useUpdateUserNameMutation } from '@/app/services/userApi';
 import { ProfileStackParams } from './ProfileStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProfileOptions } from '../components/ProfileOptions';
+import { Icon } from '@/app/components/atoms/Icon';
 import Entypo from '@expo/vector-icons/Entypo';
+import ModalComponent from '@/app/components/molecules/ModalComponent'; // Importa tu ModalComponent
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'Profile'>;
 
@@ -110,27 +111,17 @@ export const LandingProfile = ({ navigation }: Props) => {
             style={styles.avatar}
           />
         </TouchableOpacity>
-        <Modal
-          isVisible={modalOpen}
-          onBackdropPress={() => setModalOpen(false)}
-          onBackButtonPress={() => setModalOpen(false)}
+        {/* Modal para cambiar foto */}
+        <ModalComponent
+          visible={modalOpen}
+          onClose={() => setModalOpen(false)}
+          title={t('userProfile.changeProfilePhoto', 'Change profile photo')}
+          confirmButtonText={t('userProfile.save', 'Save')}
+          onConfirm={handleSaveImage}
+          hideCancelButton={true}
         >
-          <View style={styles.modalContent}>
-            <Text
-              variant="title"
-              size="large"
-              color="secondary"
-              style={styles.modalTitle}
-            >
-              {t('userProfile.changeProfilePhoto', 'Change profile photo')}
-            </Text>
-            <Button
-              variant="filled"
-              title={t('userProfile.save', 'Save')}
-              onPress={handleSaveImage}
-            />
-          </View>
-        </Modal>
+          {/* Puedes agregar contenido extra aquí si lo necesitas */}
+        </ModalComponent>
 
         {/* User Info */}
         <Text
@@ -146,41 +137,37 @@ export const LandingProfile = ({ navigation }: Props) => {
           variant="text"
           title={t('userProfile.editName', 'Edit Name')}
           onPress={() => setEditNameModalOpen(true)}
-          endIcon={<Entypo name="edit" size={15} color="gray" />}
+          endIcon={
+            <Icon
+              name="mode-edit"
+              size={18}
+              color="#6750A4"
+              family="MaterialIcons"
+            />
+          }
         />
-        <Modal
-          isVisible={editNameModalOpen}
-          onBackdropPress={() => setEditNameModalOpen(false)}
-          onBackButtonPress={() => setEditNameModalOpen(false)}
+        {/* Modal para editar nombre */}
+        <ModalComponent
+          visible={editNameModalOpen}
+          onClose={() => setEditNameModalOpen(false)}
+          title={t('userProfile.editNameTitle', 'Edit Name')}
+          confirmButtonText={t('userProfile.save', 'Save')}
+          onConfirm={handleSaveNameChanges}
+          isConfirmButtonLoading={isLoading}
         >
-          <View style={styles.modalContent}>
-            <Text
-              variant="title"
-              size="large"
-              color="secondary"
-              style={styles.modalTitle}
-            >
-              {t('userProfile.editNameTitle', 'Edit Name')}
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholder={t('userProfile.name', 'Name')}
-              value={name}
-              onChangeText={setName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={t('userProfile.lastname', 'Lastname')}
-              value={lastname}
-              onChangeText={setLastname}
-            />
-            <Button
-              variant="filled"
-              title={t('userProfile.save', 'Save')}
-              onPress={handleSaveNameChanges}
-            />
-          </View>
-        </Modal>
+          <TextInput
+            style={styles.input}
+            placeholder={t('userProfile.name', 'Name')}
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder={t('userProfile.lastname', 'Lastname')}
+            value={lastname}
+            onChangeText={setLastname}
+          />
+        </ModalComponent>
 
         <ProfileOptions navigation={navigation} user={user} />
 
@@ -223,7 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginVertical: 5,
-    width: '100%',
+    width: 300,
   },
   logoutButton: {
     marginTop: 20,

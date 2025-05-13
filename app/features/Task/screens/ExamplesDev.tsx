@@ -111,7 +111,27 @@ export const ButtonExamples = () => (
         variant="elevated"
         title="Full Width Button"
         fullWidth={true}
+        endIcon={<Icon name="arrow-forward" />}
         onPress={onButtonPress}
+      />
+      <Button
+        variant="text"
+        title="text Full Width Button"
+        fullWidth={true}
+        endIcon={<Icon name="arrow-forward" />}
+        onPress={onButtonPress}
+        loading={false}
+        loadingPosition="end"
+      />
+      <Button
+        variant="filled"
+        title="Full Width, with icons"
+        fullWidth={true}
+        startIcon={<Icon name="arrow-forward" color="#ffffff" />}
+        onPress={onButtonPress}
+        endIcon={<Icon name="arrow-forward" color="#ffffff" />}
+        loading={false}
+        loadingPosition="end"
       />
     </View>
   </>

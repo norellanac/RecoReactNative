@@ -10,12 +10,11 @@ import {
 import { useTheme } from './../../theme/ThemeProvider';
 
 type ButtonProps = TouchableOpacityProps & {
-  variant?: 'contained' | 'outlined' | 'text';
+  variant?: 'filled' | 'outlined' | 'text' | 'elevated' | 'tonal';
   title?: React.ReactNode;
   isLoading?: boolean;
   disabled?: boolean;
   onPress?: () => void;
-  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning' | string;
   disableElevation?: boolean;
   disableRipple?: boolean;
   endIcon?: React.ReactNode;
@@ -34,34 +33,42 @@ export const Button = ({
   isLoading,
   disabled,
   onPress,
-  color = 'primary',
   disableElevation,
-  disableRipple,
   endIcon,
   fullWidth,
   loading,
   loadingIndicator,
   loadingPosition = 'center',
-  size = 'medium',
   startIcon,
-  sx,
   style,
   ...props
 }: ButtonProps) => {
   const { theme } = useTheme();
   const { colors, buttonVariants } = theme;
-  const variantStyles = buttonVariants[disabled ? `${variant}_disabled` : variant];
+
+  // Determine the correct style based on the variant and disabled state
+  const variantStyles =
+    buttonVariants[disabled ? `${variant}_disabled` : variant];
+
+  // Determine the text color based on the variant
   const textColor =
     variant === 'filled'
       ? colors.white
       : variant === 'tonal'
         ? colors.black
         : colors.primary;
+
   const renderLoadingIndicator = () => {
     if (loadingIndicator) {
       return loadingIndicator;
     }
-    return <ActivityIndicator color={textColor} size="small" />;
+    return (
+      <ActivityIndicator
+        color={textColor}
+        size="small"
+        style={{ marginHorizontal: 20 }}
+      />
+    );
   };
 
   const renderContent = () => {
@@ -72,16 +79,44 @@ export const Button = ({
       return (
         <View style={styles.loadingContainer}>
           {loadingPosition === 'start' && renderLoadingIndicator()}
-          <Text style={{ color: disabled ? colors.grey : textColor }}>{title}</Text>
+          <Text
+            style={[styles.text, { color: disabled ? colors.grey : textColor }]}
+          >
+            {title}
+          </Text>
           {loadingPosition === 'end' && renderLoadingIndicator()}
         </View>
       );
     }
 
+    // Determine layout based on the presence of startIcon, title, and endIcon
+    const hasStartIcon = !!startIcon;
+    const hasEndIcon = !!endIcon;
+
     return (
-      <View style={styles.contentContainer}>
+      <View
+        style={[
+          styles.contentContainer,
+          fullWidth &&
+            (hasStartIcon && hasEndIcon
+              ? styles.fullWidthContentContainer // Distribute all three elements
+              : hasStartIcon
+                ? styles.fullWidthStartIconContainer // Align startIcon and title
+                : hasEndIcon
+                  ? styles.fullWidthEndIconContainer // Align title and endIcon
+                  : {}),
+        ]}
+      >
         {startIcon && <View style={styles.iconContainer}>{startIcon}</View>}
-        <Text style={{ color: disabled ? colors.grey : textColor }}>{title}</Text>
+        <Text
+          style={[
+            styles.text,
+            { color: disabled ? colors.grey : textColor },
+            fullWidth && (hasStartIcon || hasEndIcon) && styles.fullWidthText,
+          ]}
+        >
+          {title}
+        </Text>
         {endIcon && <View style={styles.iconContainer}>{endIcon}</View>}
       </View>
     );
@@ -121,7 +156,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  fullWidthContentContainer: {
+    justifyContent: 'space-between', // Distribute startIcon, title, and endIcon
+  },
+  fullWidthStartIconContainer: {
+    justifyContent: 'flex-start', // Align startIcon and title
+  },
+  fullWidthEndIconContainer: {
+    justifyContent: 'flex-end', // Align title and endIcon
+  },
   iconContainer: {
-    marginHorizontal: 4,
+    marginHorizontal: 20,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  fullWidthText: {
+    flex: 1, // Allow the text to take up available space
+    textAlign: 'center', // Center the text when only one icon is present
   },
 });

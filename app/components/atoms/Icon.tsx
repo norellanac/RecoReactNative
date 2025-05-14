@@ -2,12 +2,15 @@ import React from 'react';
 import {
   Ionicons,
   MaterialIcons,
+  MaterialCommunityIcons,
   FontAwesome,
   Entypo,
+  FontAwesome5,
+  AntDesign,
 } from '@expo/vector-icons';
 import { useTheme } from '@/app/theme/ThemeProvider';
 
-type IconFamily = 'Ionicons' | 'MaterialIcons' | 'FontAwesome' | 'Entypo';
+type IconFamily = 'Ionicons' | 'MaterialIcons' | 'MaterialCommunityIcons' | 'FontAwesome' | 'Entypo' | 'FontAwesome5' | 'AntDesign';
 
 type IconProps = {
   name: string;
@@ -20,8 +23,11 @@ type IconProps = {
 const iconFamilies: Record<IconFamily, React.ComponentType<VectorIconProps>> = {
   Ionicons,
   MaterialIcons,
+  MaterialCommunityIcons,
   FontAwesome,
+  FontAwesome5,
   Entypo,
+  AntDesign,
 };
 
 export const Icon = ({

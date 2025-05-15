@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -23,8 +23,7 @@ import { ProfileStackParams } from './ProfileStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProfileOptions } from '../components/ProfileOptions';
 import { Icon } from '@/app/components/atoms/Icon';
-import Entypo from '@expo/vector-icons/Entypo';
-import ModalComponent from '@/app/components/molecules/ModalComponent'; // Importa tu ModalComponent
+import ModalComponent from '@/app/components/molecules/ModalComponent';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'Profile'>;
 
@@ -40,9 +39,28 @@ export const LandingProfile = ({ navigation }: Props) => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [avatar, setAvatar] = useState(user?.avatarUrl || '');
+  const [pendingAvatar, setPendingAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAvatar(user?.avatarUrl || '');
+  }, [user?.avatarUrl]);
+
+  const BASE_URL =
+    process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
+    'https://dev.recolatam.com';
 
   const handleLogout = () => {
     dispatch(logout());
+  };
+
+  const getAvatarSource = () => {
+    if (avatar && avatar.startsWith('http')) {
+      return { uri: avatar };
+    }
+    if (avatar && avatar.startsWith('/')) {
+      return { uri: BASE_URL + avatar };
+    }
+    return require('@/app/assets/img/default-Reco-image.png');
   };
 
   const handleSaveNameChanges = async () => {
@@ -88,12 +106,26 @@ export const LandingProfile = ({ navigation }: Props) => {
     }
   };
 
+  // Para mostrar la imagen en el modal:
+  const getModalAvatarSource = () => {
+    if (pendingAvatar) return { uri: pendingAvatar };
+    return getAvatarSource();
+  };
+
   const handleSaveImage = () => {
     // Implementar aquí la lógica para guardar la imagen en el servidor
+    setAvatar(pendingAvatar || avatar); // Solo actualiza si se guardó
+    setPendingAvatar(null);
+    setModalOpen(false);
     Alert.alert(
       t('userProfile.success', 'Success'),
       t('userProfile.imageUpdated', 'Image updated successfully'),
     );
+  };
+
+  // Si se cierra el modal sin guardar:
+  const handleCloseModal = () => {
+    setPendingAvatar(null);
     setModalOpen(false);
   };
 
@@ -102,28 +134,21 @@ export const LandingProfile = ({ navigation }: Props) => {
       <View style={styles.container}>
         {/* Avatar Upload */}
         <TouchableOpacity onPress={handleImageChange}>
-          <Image
-            source={
-              avatar
-                ? { uri: avatar }
-                : require('@/app/assets/img/default-Reco-image.png')
-            }
-            style={styles.avatar}
-          />
+          <Image source={getAvatarSource()} style={styles.avatar} />
         </TouchableOpacity>
         {/* Modal para cambiar foto */}
         <ModalComponent
           visible={modalOpen}
-          onClose={() => setModalOpen(false)}
+          onClose={handleCloseModal}
           title={t('userProfile.changeProfilePhoto', 'Change profile photo')}
           confirmButtonText={t('userProfile.save', 'Save')}
           onConfirm={handleSaveImage}
           hideCancelButton={true}
         >
           {/* Puedes agregar contenido extra aquí si lo necesitas */}
+          <Image source={getModalAvatarSource()} style={styles.avatar} />
         </ModalComponent>
 
-        {/* User Info */}
         <Text
           variant="title"
           size="large"
@@ -146,7 +171,6 @@ export const LandingProfile = ({ navigation }: Props) => {
             />
           }
         />
-        {/* Modal para editar nombre */}
         <ModalComponent
           visible={editNameModalOpen}
           onClose={() => setEditNameModalOpen(false)}

@@ -1,31 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import ModalComponent from '@/app/components/molecules/ModalComponent';
 import {
   View,
   StyleSheet,
   ScrollView,
   Image,
   TouchableOpacity,
-  FlatList,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { ServicesStackParams } from './ServicesStack';
 import { useGetProductByIdQuery } from '@/app/services/productApi';
+import { Screen } from '../../../components/templates';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 
 type ServiceDetailsRouteProp = RouteProp<ServicesStackParams, 'ServiceDetails'>;
 
 const ServiceDetails = () => {
+  const { t } = useTranslation();
   const route = useRoute<ServiceDetailsRouteProp>();
   const navigation = useNavigation();
   const { serviceId } = route.params;
 
   const { data, isLoading } = useGetProductByIdQuery(serviceId);
 
+  const [calendarVisible, setCalendarVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showPicker, setShowPicker] = useState(false);
+
+  const handleBookNow = () => setCalendarVisible(true);
+  const handleConfirm = () => {
+    setCalendarVisible(false);
+  };
+  const handleCancel = () => {
+    setCalendarVisible(false);
+    setSelectedDate(null);
+  };
+
   if (isLoading || !data?.data) {
     return (
       <View style={styles.centered}>
-        <Text>Loading...</Text>
+        <Text
+          variant="title"
+          size="large"
+          color="info"
+          style={{ fontWeight: 'bold' }}
+        >
+          {t('services.serviceDetails.loading', 'Loading...')}
+        </Text>
       </View>
     );
   }
@@ -37,167 +61,331 @@ const ServiceDetails = () => {
     {
       uri: service.urlImage || 'https://picsum.photos/220/200',
     },
-    // Puedes agregar más imágenes si tu API las provee
+    // Agregar más imágenes si la API las provee
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header Image */}
-      <View style={styles.headerImageContainer}>
-        <Image source={images[0]} style={styles.headerImage} />
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-back" family="Ionicons" size={26} color="#fff" />
-        </TouchableOpacity>
-        <View style={styles.carouselDots}>
-          <View style={[styles.dot, { backgroundColor: '#7B61FF' }]} />
-          <View style={styles.dot} />
-          <View style={styles.dot} />
+    <Screen
+      statusBarProps={{
+        showBackButton: true,
+        onLeftIconPress: () => navigation.goBack(),
+      }}
+    >
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        {/* Header Image */}
+        <View style={styles.headerImageContainer}>
+          <Image source={images[0]} style={styles.headerImage} />
+          <View style={styles.carouselDots}>
+            <View style={[styles.dot, { backgroundColor: '#7B61FF' }]} />
+            <View style={styles.dot} />
+            <View style={styles.dot} />
+          </View>
         </View>
-      </View>
 
-      {/* Title & Bookmark */}
-      <View style={styles.titleRow}>
-        <Text style={styles.title}>{service.name}</Text>
-        <Icon
-          name="bookmark-outline"
-          family="MaterialCommunityIcons"
-          size={26}
-          color="#7B61FF"
-        />
-      </View>
+        {/* Title & Bookmark */}
+        <View style={styles.titleRow}>
+          <Text variant="title" size="large" color="info" style={styles.title}>
+            {service.name}
+          </Text>
+          <Icon
+            name="bookmark-outline"
+            family="Ionicons"
+            size={26}
+            color="#7B61FF"
+          />
+        </View>
 
-      {/* Provider, Rating, Location */}
-      <View style={styles.providerRow}>
-        <Text style={styles.providerName}>
-          {provider?.name} {provider?.lastname}
-        </Text>
-        <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />
-        <Text style={styles.ratingText}>
-          {service.averageRating ?? '4.8'} ({reviews.length} reviews)
-        </Text>
-      </View>
-      <View style={styles.infoRow}>
-        <View style={styles.chip}>
-          <Text style={styles.chipText}>
-            {service.categories?.[0]?.name ?? 'Service'}
+        {/* Provider, Rating, Location */}
+        <View style={styles.providerRow}>
+          <Text
+            variant="title"
+            size="medium"
+            color="primary"
+            style={styles.providerName}
+          >
+            {provider?.name} {provider?.lastname}
+          </Text>
+          <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />
+          <Text variant="body" size="medium" color="info">
+            {service.averageRating ?? '0'} ({reviews.length}{' '}
+            {t('services.serviceDetails.reviews', 'reviews')} )
           </Text>
         </View>
-        <Icon
-          name="location-on"
-          family="MaterialIcons"
-          size={16}
-          color="#7B61FF"
-        />
-        <Text style={styles.locationText}>
-          {service.locations?.[0]?.name ?? 'No address'}
-        </Text>
-      </View>
-
-      {/* Price */}
-      <Text style={styles.price}>
-        ${service.price} <Text style={styles.priceNote}>(Floor price)</Text>
-      </Text>
-
-      {/* About me */}
-      <Text style={styles.sectionTitle}>About me</Text>
-      <Text style={styles.aboutText} numberOfLines={3}>
-        {service.description}
-      </Text>
-      <TouchableOpacity>
-        <Text style={styles.readMore}>Read more...</Text>
-      </TouchableOpacity>
-
-      {/* Photos & Videos */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Photos & Videos</Text>
-        <TouchableOpacity>
-          <Text style={styles.seeAll}>See All</Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={images}
-        horizontal
-        keyExtractor={(_, idx) => idx.toString()}
-        renderItem={({ item }) => (
-          <Image source={item} style={styles.mediaImage} />
-        )}
-        showsHorizontalScrollIndicator={false}
-        style={{ marginBottom: 12 }}
-      />
-
-      {/* Reviews */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
-          <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />{' '}
-          {service.averageRating ?? '4.8'} ({reviews.length} reviews)
-        </Text>
-        <TouchableOpacity>
-          <Text style={styles.seeAll}>See All</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Review filters */}
-      <View style={styles.reviewFilters}>
-        <Button title="All" variant="outlined" style={styles.reviewFilterBtn} />
-        <Button title="5" variant="outlined" style={styles.reviewFilterBtn} />
-        <Button title="4" variant="outlined" style={styles.reviewFilterBtn} />
-        <Button title="3" variant="outlined" style={styles.reviewFilterBtn} />
-        <Button title="2" variant="outlined" style={styles.reviewFilterBtn} />
-      </View>
-      {/* Review List */}
-      {reviews.map((review, idx) => (
-        <View key={review.id || idx} style={styles.reviewCard}>
-          <View style={styles.reviewHeader}>
-            <Text style={styles.reviewUser}>{review.user?.name ?? 'User'}</Text>
-            <Button
-              title={`★ ${review.rating}`}
-              variant="outlined"
-              style={styles.reviewRatingBtn}
-              textStyle={{ fontWeight: 'bold', color: '#7B61FF' }}
-            />
+        <View style={styles.infoRow}>
+          <View style={styles.chip}>
+            <Text variant="body" size="small" style={styles.chipText}>
+              {service.categories?.[0]?.name ?? 'Service'}
+            </Text>
           </View>
-          <Text style={styles.reviewText}>{review.comment}</Text>
-          <View style={styles.reviewFooter}>
-            <Icon
-              name="favorite"
-              family="MaterialIcons"
-              size={16}
-              color="#F76B6A"
-            />
-            <Text style={styles.reviewLikes}>{review.likes ?? 0}</Text>
-            <Text style={styles.reviewDate}>3 weeks ago</Text>
-          </View>
+          <Icon
+            name="location-on"
+            family="MaterialIcons"
+            size={16}
+            color="#7B61FF"
+          />
+          <Text variant="body" size="medium" color="secondary">
+            {service.locations?.[0]?.name ?? 'No address'}
+          </Text>
         </View>
-      ))}
 
-      {/* Bottom Buttons */}
-      <View style={styles.bottomButtons}>
-        <Button title="Message" variant="outlined" style={styles.bottomBtn} />
-        <Button title="Book Now" variant="filled" style={styles.bottomBtn} />
-      </View>
-    </ScrollView>
+        {/* Price */}
+        <Text variant="title" size="large" style={styles.price}>
+          Q{service.price}{' '}
+          <Text variant="body" size="small" color="secondary">
+            {t('services.serviceDetails.floorPrice', '(Floor price)')}
+          </Text>
+        </Text>
+
+        {/* Bottom Buttons */}
+        <View style={styles.bottomButtons}>
+          <Button title="Message" variant="outlined" style={styles.bottomBtn} />
+          <Button
+            title="Book Now"
+            variant="filled"
+            style={styles.bottomBtn}
+            onPress={handleBookNow}
+          />
+        </View>
+
+        <ModalComponent
+          visible={calendarVisible}
+          onClose={handleCancel}
+          onConfirm={handleConfirm}
+          title={t(
+            'services.serviceDetails.selectDateTime',
+            'Select date and time',
+          )}
+          confirmButtonText={t('common.confirm', 'Confirm')}
+          cancelButtonText={t('common.cancel', 'Cancel')}
+          isConfirmButtonDisabled={!selectedDate}
+        >
+          <TouchableOpacity
+            style={styles.dateInput}
+            onPress={() => setShowPicker(true)}
+          >
+            <Text style={{ color: selectedDate ? '#222' : '#888' }}>
+              {selectedDate
+                ? selectedDate.toLocaleString()
+                : t(
+                    'services.serviceDetails.selectDate',
+                    'Choose date and time',
+                  )}
+            </Text>
+          </TouchableOpacity>
+          {showPicker && (
+            <DateTimePicker
+              value={selectedDate || new Date()}
+              mode="datetime"
+              display="default"
+              onChange={(_, date) => {
+                setShowPicker(false);
+                if (date) setSelectedDate(date);
+              }}
+              minimumDate={new Date()}
+            />
+          )}
+        </ModalComponent>
+
+        {/* About me */}
+        <Text
+          variant="title"
+          size="medium"
+          color="info"
+          style={styles.sectionTitle}
+        >
+          {t(
+            'services.serviceDetails.skillsAndExperience',
+            'Skills & Experience',
+          )}
+        </Text>
+        <Text
+          variant="body"
+          size="medium"
+          color="secondary"
+          style={styles.aboutText}
+        >
+          {service.description}
+        </Text>
+
+        {/* Reviews */}
+        <View style={styles.sectionReviewsContainer}>
+          <View style={styles.sectionHeader}>
+            <Text
+              variant="title"
+              size="medium"
+              color="info"
+              style={styles.sectionTitle}
+            >
+              {t('services.serviceDetails.reviews', 'Reviews')}
+            </Text>
+            <Button
+              title="See All"
+              variant="text"
+              color="primary"
+              size="large"
+              style={styles.seeAll}
+            ></Button>
+          </View>
+
+          {/* Review List */}
+          {reviews.length === 0 ? (
+            <Text
+              variant="body"
+              size="medium"
+              color="secondary"
+              style={styles.noReviewsText}
+            >
+              {t(
+                'services.serviceDetails.noReviews',
+                'No reviews yet. Be the first to leave a review!',
+              )}
+            </Text>
+          ) : (
+            reviews.map((review, idx) => (
+              <View key={review.id || idx} style={styles.reviewCard}>
+                <View style={styles.reviewHeader}>
+                  <Image
+                    source={
+                      review.user?.avatarUrl
+                        ? {
+                            uri: review.user.avatarUrl.startsWith('/')
+                              ? BASE_URL + review.user.avatarUrl
+                              : review.user.avatarUrl,
+                          }
+                        : require('@/app/assets/img/default-Reco-image.png')
+                    }
+                    style={styles.reviewUserImage}
+                  />
+                  <Text
+                    variant="body"
+                    size="medium"
+                    color="info"
+                    style={styles.reviewUser}
+                  >
+                    {review.user?.name ?? 'Anonymous'}{' '}
+                  </Text>
+                  <View style={styles.reviewRatingBtn}>
+                    <Text
+                      variant="body"
+                      size="medium"
+                      color="primary"
+                      style={{ fontWeight: 'bold' }}
+                    >
+                      ★ {review.rating}
+                    </Text>
+                  </View>
+                </View>
+                <Text
+                  variant="body"
+                  size="medium"
+                  color="secondary"
+                  style={styles.reviewText}
+                >
+                  {review.comment}
+                </Text>
+                <View style={styles.reviewFooter}>
+                  <Icon
+                    name="favorite"
+                    family="MaterialIcons"
+                    size={16}
+                    color="#F76B6A"
+                  />
+                  <Text style={styles.reviewLikes}>{review.likes ?? 0}</Text>
+                  <Text style={styles.reviewDate}>
+                    | {new Date(review.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
+
+        {/* Recents projects */}
+        <View style={styles.sectionHeader}>
+          <Text
+            variant="title"
+            size="medium"
+            color="info"
+            style={styles.sectionTitle}
+          >
+            {t('services.serviceDetails.recentProjects', 'Recent Projects')}
+          </Text>
+        </View>
+        <View style={styles.projectsPlaceholder}>
+          <Text
+            variant="body"
+            size="medium"
+            color="secondary"
+            style={{ textAlign: 'center', marginBottom: 4 }}
+          >
+            {t(
+              'businessProfilePage.profile.noProjects',
+              'There are no completed projects available.',
+            )}
+          </Text>
+          <Text
+            variant="body"
+            size="small"
+            color="secondary"
+            style={{ textAlign: 'center' }}
+          >
+            {t(
+              'businessProfilePage.profile.projectsComingSoon',
+              'You will soon be able to see completed projects here.',
+            )}
+          </Text>
+        </View>
+
+        {/* Other skills */}
+        <View style={styles.sectionHeader}>
+          <Text
+            variant="title"
+            size="medium"
+            color="info"
+            style={styles.sectionTitle}
+          >
+            {t('services.serviceDetails.otherSkills', 'Other Skills')}
+          </Text>
+        </View>
+
+        {!service.details || service.details.length === 0 ? (
+          <View style={styles.projectsPlaceholder}>
+            <Text
+              variant="body"
+              size="medium"
+              color="secondary"
+              style={{ textAlign: 'center', marginBottom: 4 }}
+            >
+              {t('businessProfilePage.profile.noSkills', 'No skills listed')}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.skillsGrid}>
+            {service.details.map((detail, index) => (
+              <View key={index} style={styles.skillCard}>
+                <View style={styles.skillChip}>
+                  <Text style={styles.skillChipText}>{detail.label}</Text>
+                </View>
+                <Text style={styles.skillValue}>{detail.value}</Text>
+                <Text style={styles.skillDescription}>
+                  {detail.description}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  headerImageContainer: { position: 'relative', height: 220, marginBottom: 12 },
+  headerImageContainer: { position: 'relative', height: 250, marginBottom: 12 },
   headerImage: {
     width: '100%',
-    height: 220,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 16,
-    backgroundColor: '#0006',
-    borderRadius: 20,
-    padding: 4,
+    height: 250,
   },
   carouselDots: {
     position: 'absolute',
@@ -220,7 +408,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginTop: 8,
   },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#222' },
+  title: {
+    fontWeight: 'bold',
+  },
   providerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -228,8 +418,10 @@ const styles = StyleSheet.create({
     marginTop: 8,
     gap: 6,
   },
-  providerName: { fontWeight: 'bold', color: '#7B61FF', fontSize: 16 },
-  ratingText: { color: '#222', fontSize: 14 },
+  providerName: {
+    fontWeight: 'bold',
+    //color: '#7B61FF',
+  },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -241,49 +433,66 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
     borderRadius: 8,
     paddingHorizontal: 8,
-    paddingVertical: 2,
+    paddingVertical: 4,
   },
-  chipText: { color: '#7B61FF', fontWeight: 'bold', fontSize: 12 },
-  locationText: { color: '#7B7B7B', fontSize: 14 },
+  chipText: {
+    color: '#7B61FF',
+    fontWeight: 'bold',
+  },
   price: {
     color: '#7B61FF',
     fontWeight: 'bold',
-    fontSize: 22,
     marginHorizontal: 18,
     marginTop: 12,
   },
-  priceNote: { color: '#7B7B7B', fontSize: 13 },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 10,
+    padding: 14,
+    width: 325,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   sectionTitle: {
     fontWeight: 'bold',
-    fontSize: 17,
     marginHorizontal: 18,
-    marginTop: 18,
+    marginTop: 25,
     marginBottom: 6,
   },
-  aboutText: { color: '#444', fontSize: 15, marginHorizontal: 18 },
-  readMore: {
-    color: '#7B61FF',
-    fontWeight: 'bold',
+  aboutText: {
     marginHorizontal: 18,
-    marginTop: 2,
+  },
+  sectionReviewsContainer: {
+    backgroundColor: '#F3ECFF',
+    paddingBottom: 20,
+    marginBottom: 10,
+    marginTop: 30,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 18,
-    marginTop: 18,
+    marginRight: 18,
   },
-  seeAll: { color: '#7B61FF', fontWeight: 'bold', fontSize: 14 },
-  mediaImage: { width: 110, height: 90, borderRadius: 16, marginRight: 10 },
-  reviewFilters: {
-    flexDirection: 'row',
-    gap: 8,
-    marginHorizontal: 18,
-    marginTop: 10,
-    marginBottom: 8,
+  seeAll: {
+    //color: '#7B61FF',
+    fontWeight: 'bold',
   },
-  reviewFilterBtn: { minWidth: 44, paddingHorizontal: 0, borderRadius: 12 },
+  noReviewsText: {
+    textAlign: 'left',
+    marginLeft: 20,
+    marginTop: 12,
+    marginBottom: 12,
+  },
+  mediaImage: {
+    width: 110,
+    height: 90,
+    marginLeft: 18,
+    borderRadius: 16,
+    marginRight: 10,
+  },
+
   reviewCard: {
     backgroundColor: '#F8F8F8',
     borderRadius: 16,
@@ -296,23 +505,93 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  reviewUser: { fontWeight: 'bold', color: '#222', fontSize: 15 },
+  reviewUserImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  reviewUser: {
+    fontWeight: 'bold',
+    flex: 1,
+  },
   reviewRatingBtn: {
     borderColor: '#7B61FF',
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 32,
     paddingHorizontal: 8,
-    paddingVertical: 2,
+    paddingVertical: 4,
   },
-  reviewText: { color: '#444', fontSize: 14, marginTop: 4 },
+  reviewText: {
+    marginTop: 8,
+  },
   reviewFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     marginTop: 6,
   },
-  reviewLikes: { color: '#F76B6A', fontSize: 13 },
-  reviewDate: { color: '#7B7B7B', fontSize: 12, marginLeft: 8 },
+  reviewLikes: {
+    color: '#F76B6A',
+    fontSize: 13,
+  },
+  reviewDate: {
+    color: '#7B7B7B',
+    fontSize: 12,
+    marginLeft: 8,
+  },
+  projectsPlaceholder: {
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#ccc',
+    borderRadius: 12,
+    paddingVertical: 24,
+    paddingHorizontal: 12,
+    marginHorizontal: 18,
+    marginBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FAF8FF',
+  },
+  skillsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginHorizontal: 18,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  skillCard: {
+    flexBasis: '48%',
+    backgroundColor: '#F8F8F8',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#EADDFF',
+  },
+  skillChip: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#EADDFF',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginBottom: 6,
+  },
+  skillChipText: {
+    color: '#6750A4',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  skillValue: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    marginBottom: 2,
+  },
+  skillDescription: {
+    color: '#7B7B7B',
+    fontSize: 13,
+  },
   bottomButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -320,7 +599,11 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     gap: 12,
   },
-  bottomBtn: { flex: 1, marginHorizontal: 4, borderRadius: 16 },
+  bottomBtn: {
+    flex: 1,
+    marginHorizontal: 4,
+    borderRadius: 16,
+  },
 });
 
 export default ServiceDetails;

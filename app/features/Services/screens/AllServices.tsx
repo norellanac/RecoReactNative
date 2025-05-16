@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Text } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
@@ -73,8 +72,20 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
         </Text>
         <View style={styles.ratingRow}>
           <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />
-          <Text style={styles.ratingText}>{item.averageRating ?? '4.5'}</Text>
-          <Text style={styles.reviewsText}>
+          <Text
+            variant="body"
+            size="medium"
+            color="info"
+            style={styles.ratingText}
+          >
+            {item.averageRating ?? '0'}
+          </Text>
+          <Text
+            variant="body"
+            size="small"
+            color="secondary"
+            style={styles.reviewsText}
+          >
             | {item.reviews ? item.reviews.length : 0}{' '}
             {t('services.allServices.reviews', 'reviews')}
           </Text>
@@ -259,13 +270,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   ratingText: {
-    fontSize: 14,
-    color: '#222',
     marginLeft: 4,
   },
   reviewsText: {
-    fontSize: 13,
-    color: '#7B7B7B',
     marginLeft: 8,
   },
   bookmarkIcon: {

@@ -134,18 +134,33 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
         </View>
 
         <View>
-          <Text
-            variant="title"
-            size="large"
-            color="secondary"
+          <View
             style={{
-              textAlign: 'left',
-              fontWeight: 'bold',
-              marginTop: 15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
-            {t('home_screen.featuredServices', 'Recommended for you')}
-          </Text>
+            <Text
+              variant="title"
+              size="large"
+              color="secondary"
+              style={{
+                textAlign: 'left',
+                fontWeight: 'bold',
+                marginTop: 15,
+              }}
+            >
+              {t('home_screen.featuredServices', 'Recommended for you')}
+            </Text>
+            <Button
+              variant="text"
+              size="large"
+              color="secondary"
+              title={t('home_screen.viewAll', 'View all')}
+              onPress={() => navigation.navigate('AllServices')}
+            />
+          </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {topRatedServices.map((service: any) => (

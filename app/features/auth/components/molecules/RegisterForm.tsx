@@ -21,7 +21,7 @@ export const RegisterForm: React.FC = () => {
 
   const handleSubmit = (values: {
     fullName: string;
-    phoneNumber: string;
+    email: string;
     password: string;
     confirmPassword: string;
   }) => {
@@ -33,7 +33,7 @@ export const RegisterForm: React.FC = () => {
     <Formik
       initialValues={{
         fullName: '',
-        phoneNumber: '',
+        email: '',
         password: '',
         confirmPassword: '',
       }}
@@ -44,9 +44,9 @@ export const RegisterForm: React.FC = () => {
             field: t('auth.register.full_name', 'Full Name'),
           }),
         ),
-        phoneNumber: Yup.string().required(
+        email: Yup.string().required(
           t('validations.required', 'This {{field}} is required', {
-            field: t('auth.register.phone_number', 'Phone Number'),
+            field: t('auth.register.email', 'Email'),
           }),
         ),
         password: Yup.string()
@@ -83,7 +83,7 @@ export const RegisterForm: React.FC = () => {
           />
 
           <TextInput
-            placeholder={t('auth.register.phone_number', 'Phone Number')}
+            placeholder={t('auth.register.email', 'Email')}
             onChangeText={handleChange('phoneNumber')}
             onBlur={() => handleBlur('phoneNumber')}
             value={values.phoneNumber}

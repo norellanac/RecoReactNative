@@ -24,11 +24,14 @@ export const LoginForm: React.FC = () => {
   };
 
   const handleLogin = async (values: LoginValues) => {
+    console.log('Login values:', values);
     try {
+      const cleanEmail = values.email.trim();
       const result = await login({
-        email: values.email,
+        email: cleanEmail,
         password: values.password,
       }).unwrap();
+      console.log('Login result:', result); // <-- Y esto
       if (result.success) {
         const token = result.data.token;
         dispatch(

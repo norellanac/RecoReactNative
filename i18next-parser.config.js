@@ -1,5 +1,5 @@
 module.exports = {
-  locales: ['en'], // Define the languages you support
+  locales: ['en', 'es'], // Define the languages you support
   output: 'app/assets/translations/$LOCALE.json', // Path to your translation files
   sort: true, // Sort keys in the translation files
   verbose: true, // Enable verbose logging

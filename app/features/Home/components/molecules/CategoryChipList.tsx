@@ -12,24 +12,21 @@ export default function CategoryChipList({
   onPress,
 }: CategoryChipListProps) {
   const topCategories = categories.slice(0, 5);
+
   return (
     <View style={styles.container}>
-      <FlatList
-        data={topCategories}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        renderItem={({ item }) => (
+      <View style={styles.rowWrap}>
+        {topCategories.map((item) => (
           <Button
+            key={item.id}
             variant="outlined"
             title={item.name}
             onPress={() => onPress?.(item)}
             style={styles.chip}
             textStyle={styles.chipText}
           />
-        )}
-        nestedScrollEnabled={true}
-      />
+        ))}
+      </View>
     </View>
   );
 }
@@ -38,24 +35,26 @@ const styles = StyleSheet.create({
   container: {
     padding: 8,
   },
-  row: {
-    flex: 1,
+  rowWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 12,
   },
   chip: {
-    flex: 1,
-    marginHorizontal: 6,
+    flexBasis: '48%',
+    marginBottom: 12,
     borderRadius: 16,
     minHeight: 48,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
+    marginHorizontal: 2,
   },
   chipText: {
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center',
+    padding: 8,
   },
 });

@@ -6,7 +6,6 @@ import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CategoryCard from '../components/molecules/CategoryCard';
-import Carousel from '../components/molecules/CarouselCard';
 import ServiceCard from '../components/molecules/ServiceCard';
 import { useGetProductsQuery } from '@/app/services/productApi';
 import { useGetCategoriesQuery } from '@/app/services/categoryApi';
@@ -14,6 +13,8 @@ import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
 import CategoryChipList from '../components/molecules/CategoryChipList';
+import Carousel from '@/app/components/molecules/Carousel';
+import { ProductService } from '@/app/types/api/modelTypes';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
@@ -163,23 +164,15 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {topRatedServices.map((service: any) => (
+            {topRatedServices.map((service: ProductService) => (
               <ServiceCard
                 key={service.id}
-                name={
-                  service.name ||
-                  t('home_screen.unnamedService', 'Unnamed Service')
-                }
-                price={`Q${service.price} por día`}
-                rating={service.averageRating || 0}
-                reviews={service.reviews?.length || 0}
-                imageUrl={
-                  service.urlImage
-                    ? `https://dev.recolatam.com/api/v1${service.urlImage}`
-                    : 'https://picsum.photos/200/300'
-                }
+                service={service}
                 onPress={() =>
-                  navigation.navigate('ServiceDetails', { id: service.id })
+                  navigation.navigate('ServicesStack', {
+                    screen: 'ServiceDetails',
+                    params: { productService: service },
+                  })
                 }
               />
             ))}

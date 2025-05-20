@@ -7,14 +7,16 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { ServicesStackParams } from './ServicesStack';
-import { useGetProductByIdQuery } from '@/app/services/productApi';
 import { Screen } from '../../../components/templates';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
+import { getApiImageUrl } from '@/app/utils/Environment';
+import Carousel from '@/app/components/molecules/Carousel';
 
 type ServiceDetailsRouteProp = RouteProp<ServicesStackParams, 'ServiceDetails'>;
 
@@ -22,13 +24,12 @@ const ServiceDetails = () => {
   const { t } = useTranslation();
   const route = useRoute<ServiceDetailsRouteProp>();
   const navigation = useNavigation();
-  const { serviceId } = route.params;
-
-  const { data, isLoading } = useGetProductByIdQuery(serviceId);
+  const { productService } = route.params;
 
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showPicker, setShowPicker] = useState(false);
+  const [currentPickerMode, setCurrentPickerMode] = useState<'date' | 'time'>('date');
 
   const handleBookNow = () => setCalendarVisible(true);
   const handleConfirm = () => {
@@ -39,27 +40,15 @@ const ServiceDetails = () => {
     setSelectedDate(null);
   };
 
-  if (isLoading || !data?.data) {
-    return (
-      <View style={styles.centered}>
-        <Text
-          variant="title"
-          size="large"
-          color="info"
-          style={{ fontWeight: 'bold' }}
-        >
-          {t('services.serviceDetails.loading', 'Loading...')}
-        </Text>
-      </View>
-    );
-  }
-
-  const service = data.data;
+  const service = productService;
   const provider = service.user;
   const reviews = service.reviews || [];
   const images = [
     {
-      uri: service.urlImage || 'https://picsum.photos/220/200',
+      img: getApiImageUrl(service?.urlImage),
+    },
+    {
+      img: getApiImageUrl(service?.urlImage),
     },
     // Agregar más imágenes si la API las provee
   ];
@@ -72,19 +61,17 @@ const ServiceDetails = () => {
       }}
     >
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Header Image */}
-        <View style={styles.headerImageContainer}>
-          <Image source={images[0]} style={styles.headerImage} />
-          <View style={styles.carouselDots}>
-            <View style={[styles.dot, { backgroundColor: '#7B61FF' }]} />
-            <View style={styles.dot} />
-            <View style={styles.dot} />
-          </View>
-        </View>
+        <Carousel images={images} />
 
         {/* Title & Bookmark */}
         <View style={styles.titleRow}>
-          <Text variant="title" size="large" color="info" style={styles.title}>
+          <Text
+            variant="title"
+            size="large"
+            color="info"
+            style={styles.title}
+            numberOfLines={3}
+          >
             {service.name}
           </Text>
           <Icon
@@ -175,11 +162,36 @@ const ServiceDetails = () => {
           {showPicker && (
             <DateTimePicker
               value={selectedDate || new Date()}
-              mode="datetime"
-              display="default"
-              onChange={(_, date) => {
-                setShowPicker(false);
-                if (date) setSelectedDate(date);
+              mode={Platform.OS === 'ios' ? 'datetime' : currentPickerMode}
+              display={Platform.OS === 'ios' ? 'default' : 'default'}
+              onChange={(event, date) => {
+                if (Platform.OS === 'android') {
+                  setShowPicker(false);
+                  if (date) {
+                    if (currentPickerMode === 'date') {
+                      // Keep the selected date and open time picker
+                      const selectedTime = selectedDate || new Date();
+                      const combinedDate = new Date(date.getTime());
+                      combinedDate.setHours(selectedTime.getHours());
+                      combinedDate.setMinutes(selectedTime.getMinutes());
+                      setSelectedDate(combinedDate);
+
+                      // Show time picker next
+                      setCurrentPickerMode('time');
+                      setTimeout(() => setShowPicker(true), 100);
+                    } else {
+                      // Time has been selected, update the final date
+                      const finalDate = new Date(selectedDate.getTime());
+                      finalDate.setHours(date.getHours());
+                      finalDate.setMinutes(date.getMinutes());
+                      setSelectedDate(finalDate);
+                    }
+                  }
+                } else {
+                  // iOS behavior - one step process
+                  setShowPicker(false);
+                  if (date) setSelectedDate(date);
+                }
               }}
               minimumDate={new Date()}
             />
@@ -405,11 +417,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 18,
     marginTop: 8,
   },
   title: {
     fontWeight: 'bold',
+    marginLeft: 18,
   },
   providerRow: {
     flexDirection: 'row',

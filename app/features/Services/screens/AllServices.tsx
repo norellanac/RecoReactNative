@@ -14,12 +14,10 @@ import { Screen } from '../../../components/templates';
 import { useGetProductsQuery } from '@/app/services/productApi';
 import { ServicesStackParams } from './ServicesStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { getApiImageUrl } from '@/app/utils/Environment';
+import { ProductService } from '@/app/types/api/modelTypes';
 
 type Props = NativeStackScreenProps<ServicesStackParams, 'AllServices'>;
-
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
-  'https://dev.recolatam.com';
 
 export const AllServices = ({ navigation } /** route */ : Props) => {
   const { t } = useTranslation();
@@ -27,34 +25,26 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
 
   const { data, isLoading } = useGetProductsQuery({ search });
 
-  const renderServiceCard = ({ item }) => (
+  const renderServiceCard = (productService: ProductService) => (
     <TouchableOpacity
       style={styles.card}
       onPress={() =>
         navigation.navigate('ServicesStack', {
           screen: 'ServiceDetails',
-          params: { serviceId: item.id },
+          params: { productService: productService },
         })
       }
       activeOpacity={0.9}
     >
       <View style={styles.cardImageContainer}>
         <Image
-          source={
-            item.urlImage
-              ? {
-                  uri: item.urlImage.startsWith('/')
-                    ? BASE_URL + item.urlImage
-                    : item.urlImage,
-                }
-              : require('@/app/assets/img/default-Reco-image.png')
-          }
+          source={getApiImageUrl(productService.urlImage)}
           style={styles.cardImage}
         />
       </View>
       <View style={styles.cardContent}>
         <Text variant="body" size="small" style={styles.providerName}>
-          {item.user ? `${item.user.name} ${item.user.lastname}` : ''}
+          {productService.user ? `${productService.user.name} ${productService.user.lastname}` : ''}
         </Text>
         <Text
           variant="title"
@@ -62,10 +52,10 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
           color="info"
           style={styles.serviceTitle}
         >
-          {item.name}
+          {productService.name}
         </Text>
         <Text variant="body" size="medium" color="primary" style={styles.price}>
-          Q{item.price}{' '}
+          Q{productService.price}{' '}
           <Text variant="body" size="small">
             {t('services.allServices.perDay', '/ per day')}
           </Text>
@@ -78,7 +68,7 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
             color="info"
             style={styles.ratingText}
           >
-            {item.averageRating ?? '0'}
+            {productService.averageRating ?? '0'}
           </Text>
           <Text
             variant="body"
@@ -86,7 +76,7 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
             color="secondary"
             style={styles.reviewsText}
           >
-            | {item.reviews ? item.reviews.length : 0}{' '}
+            | {productService.reviews ? productService.reviews.length : 0}{' '}
             {t('services.allServices.reviews', 'reviews')}
           </Text>
         </View>
@@ -156,7 +146,7 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
         <FlatList
           data={data?.data?.items ?? []}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={renderServiceCard}
+          renderItem={({ item }) => renderServiceCard(item)}
           contentContainerStyle={{ paddingBottom: 24 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={

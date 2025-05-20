@@ -1,32 +1,29 @@
+import { ProductService } from '@/app/types/api/modelTypes';
+import { getApiImageUrl } from '@/app/utils/Environment';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 type ServiceCardProps = {
-  name: string;
-  price: string;
-  rating: number;
-  reviews: number;
-  imageUrl: string;
+  service?: ProductService;
   onPress: () => void;
 };
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
-  name,
-  price,
-  rating,
-  reviews,
-  imageUrl,
+  service = {} as ProductService,
   onPress,
 }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: imageUrl }} style={styles.image} />
+        <Image
+          source={getApiImageUrl(service?.urlImage)}
+          style={styles.image}
+        />
       </View>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.price}>{price}</Text>
+      <Text style={styles.name}>{service.name}</Text>
+      <Text style={styles.price}>{service.price}</Text>
       <Text style={styles.rating}>
-        ⭐ {rating} ({reviews} reseñas)
+        ⭐ {service.averageRating} ({service.reviews.length} reseñas)
       </Text>
     </TouchableOpacity>
   );

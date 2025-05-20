@@ -15,6 +15,8 @@ import { useGetProductByIdQuery } from '@/app/services/productApi';
 import { Screen } from '../../../components/templates';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
+import { getApiImageUrl } from '@/app/utils/Environment';
+import Carousel from '@/app/components/molecules/CarouselCard';
 
 type ServiceDetailsRouteProp = RouteProp<ServicesStackParams, 'ServiceDetails'>;
 
@@ -59,7 +61,10 @@ const ServiceDetails = () => {
   const reviews = service.reviews || [];
   const images = [
     {
-      uri: service.urlImage || 'https://picsum.photos/220/200',
+      img: getApiImageUrl(service?.urlImage),
+    },
+    {
+      img: getApiImageUrl(service?.urlImage),
     },
     // Agregar más imágenes si la API las provee
   ];
@@ -72,15 +77,7 @@ const ServiceDetails = () => {
       }}
     >
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Header Image */}
-        <View style={styles.headerImageContainer}>
-          <Image source={images[0]} style={styles.headerImage} />
-          <View style={styles.carouselDots}>
-            <View style={[styles.dot, { backgroundColor: '#7B61FF' }]} />
-            <View style={styles.dot} />
-            <View style={styles.dot} />
-          </View>
-        </View>
+        <Carousel images={images} />
 
         {/* Title & Bookmark */}
         <View style={styles.titleRow}>

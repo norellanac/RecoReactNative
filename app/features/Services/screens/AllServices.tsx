@@ -14,12 +14,9 @@ import { Screen } from '../../../components/templates';
 import { useGetProductsQuery } from '@/app/services/productApi';
 import { ServicesStackParams } from './ServicesStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
 type Props = NativeStackScreenProps<ServicesStackParams, 'AllServices'>;
-
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
-  'https://dev.recolatam.com';
 
 export const AllServices = ({ navigation } /** route */ : Props) => {
   const { t } = useTranslation();
@@ -40,15 +37,7 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
     >
       <View style={styles.cardImageContainer}>
         <Image
-          source={
-            item.urlImage
-              ? {
-                  uri: item.urlImage.startsWith('/')
-                    ? BASE_URL + item.urlImage
-                    : item.urlImage,
-                }
-              : require('@/app/assets/img/default-Reco-image.png')
-          }
+          source={getApiImageUrl(item.urlImage)}
           style={styles.cardImage}
         />
       </View>

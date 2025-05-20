@@ -5,8 +5,9 @@ import { AllCategories } from '../components/molecules/AllCategories';
 import { AllServices } from '../../Services/screens';
 
 export type HomeStackParams = {
-  Home: undefined;
+  LandingHome: undefined;
   AllCategories: undefined;
+  AllServices: undefined;
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParams>();
@@ -15,9 +16,9 @@ export const HomeNavigation = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="Home"
+      initialRouteName="LandingHome"
     >
-      <HomeStack.Screen name="Home" component={LandingHome} />
+      <HomeStack.Screen name="LandingHome" component={LandingHome} />
       <HomeStack.Screen name="AllCategories" component={AllCategories} />
       <HomeStack.Screen name="AllServices" component={AllServices} />
     </HomeStack.Navigator>

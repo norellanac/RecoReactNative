@@ -13,7 +13,8 @@ import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
 import CategoryChipList from '../components/molecules/CategoryChipList';
-import Carousel from '@/app/components/molecules/CarouselCard';
+import Carousel from '@/app/components/molecules/Carousel';
+import { ProductService } from '@/app/types/api/modelTypes';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
@@ -163,12 +164,15 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {topRatedServices.map((service: any) => (
+            {topRatedServices.map((service: ProductService) => (
               <ServiceCard
                 key={service.id}
                 service={service}
                 onPress={() =>
-                  navigation.navigate('ServiceDetails', { id: service.id })
+                  navigation.navigate('ServicesStack', {
+                    screen: 'ServiceDetails',
+                    params: { productService: service },
+                  })
                 }
               />
             ))}

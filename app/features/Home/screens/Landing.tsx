@@ -152,7 +152,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
                 marginTop: 15,
               }}
             >
-              {t('home_screen.featuredServices', 'Recommended for you')}
+              {t('home_screen.servicesAvailable', 'Services Available')}
             </Text>
             <Button
               variant="text"

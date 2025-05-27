@@ -63,7 +63,7 @@ export const ServiceCard: React.FC<Props> = ({ service, onPress }) => {
       <Icon
         name="bookmark-outline"
         family="MaterialCommunityIcons"
-        size={24}
+        size={25}
         color="#7B61FF"
         style={styles.bookmarkIcon}
       />

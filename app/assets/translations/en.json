@@ -39,7 +39,7 @@
     "all_categories": "All Categories",
     "categoriesTitle": "Categories",
     "error": "An error occurred while loading data.",
-    "featuredServices": "Recommended for you",
+    "servicesAvailable": "Available Services",
     "loading": "Loading data...",
     "searchPlaceholder": "Search services that you need",
     "unnamedService": "Unnamed Service",

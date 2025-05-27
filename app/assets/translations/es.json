@@ -39,11 +39,11 @@
     "all_categories": "Todas las Categorías",
     "categoriesTitle": "Categorías",
     "error": "Ocurrió un error al cargar los datos.",
-    "featuredServices": "Recomendado para ti",
+    "servicesAvailable": "Servicios Disponibles",
     "loading": "Cargando datos...",
     "searchPlaceholder": "Busca los servicios que necesitas",
     "unnamedService": "Servicio sin nombre",
-    "viewAll": "Ver todo"
+    "viewAll": "Ver todos"
   },
   "login": {
     "forget_password": "¿Olvidaste tu contraseña?",

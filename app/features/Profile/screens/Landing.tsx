@@ -198,7 +198,7 @@ export const LandingProfile = ({ navigation }: Props) => {
         <Button
           variant="outlined"
           title={t('userProfile.publishServices', 'Publish my services')}
-          onPress={() => navigation.navigate('')}
+          onPress={() => navigation.navigate('BusinessStepper')}
           style={styles.logoutButton}
         />
         <Button

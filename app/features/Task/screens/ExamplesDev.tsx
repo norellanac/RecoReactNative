@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import Tabs from '@/app/components/molecules/Tabs';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 
 const onPressIcon = () => {
   Alert.alert('Handle Icon Press');
@@ -137,6 +138,69 @@ export const ButtonExamples = () => (
   </>
 );
 
+const data = [
+  { label: 'Item 1', value: '1' },
+  { label: 'Item 2', value: '2' },
+  { label: 'Item 3', value: '3' },
+  { label: 'Item 4', value: '4' },
+  { label: 'Item 5', value: '5' },
+  { label: 'Item 6', value: '6' },
+  { label: 'Item 7', value: '7' },
+  { label: 'Item 8', value: '8' },
+];
+
+export const DropdownExample = () => {
+  const [value, setValue] = useState(null);
+  const [selected, setSelected] = useState([]);
+
+  return (
+    <>
+      <Dropdown
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        data={data}
+        search
+        maxHeight={300}
+        labelField="label"
+        valueField="value"
+        placeholder="Select item"
+        searchPlaceholder="Search..."
+        value={value}
+        onChange={(item) => {
+          setValue(item.value);
+        }}
+        renderLeftIcon={() => (
+          <Icon name="Safety" family="AntDesign" size={20} />
+        )}
+      />
+      <MultiSelect
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        search
+        data={data}
+        labelField="label"
+        valueField="value"
+        placeholder="Select multiple items"
+        searchPlaceholder="Search..."
+        value={selected}
+        onChange={(item) => {
+          setSelected(item);
+        }}
+        renderLeftIcon={() => (
+          <Icon family="AntDesign" color="black" name="Safety" size={20} />
+        )}
+        selectedStyle={styles.selectedStyle}
+      />
+    </>
+  );
+};
+
 export const TabsExamples = () => {
   const tabs = [
     {
@@ -154,9 +218,14 @@ export const TabsExamples = () => {
       icon: <Icon name="window-restore" family="FontAwesome" />,
       component: <TabsExamples />,
     },
+    {
+      title: 'Dropdowns',
+      icon: <Icon name="arrow-drop-down" family="MaterialIcons" />,
+      component: <DropdownExample />,
+    },
   ];
 
-  return <Tabs tabs={tabs} scrollable={false} headerBGColor={true} />;
+  return <Tabs tabs={tabs} scrollable={true} headerBGColor={true} />;
 };
 
 const styles = StyleSheet.create({

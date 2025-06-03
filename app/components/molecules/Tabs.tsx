@@ -40,14 +40,17 @@ const Tabs: React.FC<TabsProps> = ({
       <View
         style={[
           styles.tabsContainer,
-          headerBGColor && { backgroundColor: colors.primary },
+          headerBGColor && { backgroundColor: colors.primary_container },
         ]}
       >
         {scrollable ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollableTabs}
+            contentContainerStyle={[
+              styles.scrollableTabs,
+              headerBGColor && { backgroundColor: colors.primary_container },
+            ]}
           >
             {tabs.map((tab, index) => (
               <TouchableOpacity

@@ -7,25 +7,29 @@ import Step3 from '../steps/Step3';
 import Step4 from '../steps/Step4';
 import Step5 from '../steps/Step5';
 import Step6 from '../steps/Step6';
-import { StepperIndicator } from '@/app/components/molecules/StepperIndicator';
+import { useAppSelector } from '@/app/hooks/useAppSelector';
+import { selectStepper } from '@/app/redux/slices/serviceStepperSlice';
+import { StepperIndicator } from '@/app/features/BusinessStepper/steps/StepperIndicator';
 
 const STEPS = [Step1, Step2, Step3, Step4, Step5, Step6];
 
 export const BusinessStepperScreen = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  //const [currentStep, setCurrentStep] = useState(0);
+  //const StepComponent = STEPS[currentStep];
+  const { currentStep } = useAppSelector(selectStepper);
   const StepComponent = STEPS[currentStep];
 
   return (
     <Screen
       statusBarProps={{
         showBackButton: true,
-        onLeftIconPress: () => navigation.goBack(),
+        onLeftIconPress: () => navigation.goBack(''),
       }}
     >
       <View style={{ flex: 1 }}>
-        <StepperIndicator currentStep={currentStep} totalSteps={STEPS.length} />
+        {/* <StepperIndicator currentStep={currentStep} totalSteps={STEPS.length} /> */}
         <StepComponent />
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -43,7 +47,7 @@ export const BusinessStepperScreen = () => {
               setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1))
             }
           />
-        </View>
+        </View> */}
       </View>
     </Screen>
   );

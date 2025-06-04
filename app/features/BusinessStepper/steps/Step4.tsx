@@ -305,24 +305,9 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     marginTop: 8,
-    marginBottom: 24,
+    paddingBottom: 10,
+    marginBottom: 40,
   },
-  addBtnText: {
-    color: '#7B61FF',
-    fontWeight: 'bold',
-  },
-  nextButton: {
-    backgroundColor: '#7B61FF',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 32,
-  },
-  nextButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  nextButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });
 
 export default Step4;

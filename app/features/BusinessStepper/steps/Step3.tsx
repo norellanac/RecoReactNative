@@ -255,6 +255,7 @@ const Step3 = ({ onNext }: { onNext?: () => void }) => {
                   'Search city...',
                 )}
                 onChange={(city) => setFieldValue('city', city.id)}
+                value={values.city}
                 renderLeftIcon={() => (
                   <Icon name="location-outline" family="Ionicons" size={18} />
                 )}
@@ -300,6 +301,7 @@ const Step3 = ({ onNext }: { onNext?: () => void }) => {
                         inputSearchStyle={styles.inputSearchStyle}
                         iconStyle={styles.iconStyle}
                         data={departments}
+                        value={area.department}
                         search
                         maxHeight={300}
                         labelField="name"
@@ -313,8 +315,11 @@ const Step3 = ({ onNext }: { onNext?: () => void }) => {
                           'Search state...',
                         )}
                         onChange={(dept) => {
-                          setFieldValue('department', dept.id);
-                          setFieldValue('city', '');
+                          setFieldValue(
+                            `coverageAreas[${index}].department`,
+                            dept.id,
+                          );
+                          setFieldValue(`coverageAreas[${index}].city`, '');
                         }}
                         renderLeftIcon={() => (
                           <Icon
@@ -339,7 +344,8 @@ const Step3 = ({ onNext }: { onNext?: () => void }) => {
                         selectedTextStyle={styles.selectedTextStyle}
                         inputSearchStyle={styles.inputSearchStyle}
                         iconStyle={styles.iconStyle}
-                        data={getCitiesByDepartment(values.department)}
+                        data={getCitiesByDepartment(area.department)}
+                        value={area.city}
                         search
                         maxHeight={300}
                         labelField="name"
@@ -352,7 +358,9 @@ const Step3 = ({ onNext }: { onNext?: () => void }) => {
                           'businessStepper.step3.searchCity',
                           'Search city...',
                         )}
-                        onChange={(city) => setFieldValue('city', city.id)}
+                        onChange={(city) =>
+                          setFieldValue(`coverageAreas[${index}].city`, city.id)
+                        }
                         renderLeftIcon={() => (
                           <Icon
                             name="location-outline"
@@ -492,6 +500,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     alignItems: 'center',
     marginTop: 8,
+    marginBottom: 32,
   },
   addBtnText: {
     color: '#7B61FF',

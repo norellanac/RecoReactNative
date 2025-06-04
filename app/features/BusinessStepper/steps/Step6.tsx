@@ -5,12 +5,16 @@ import { useTranslation } from 'react-i18next';
 import congratsImage from '@/app/assets/img/stepper/step6_congratsImage.png';
 import { useNavigation } from '@react-navigation/native';
 import CustomStepper from './CustomStepper';
+import { useAppDispatch } from '@/app/hooks/useAppDispatch';
+import { clearStepper } from '@/app/redux/slices/serviceStepperSlice';
 
 const Step6 = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const handleFinish = () => {
+    dispatch(clearStepper());
     navigation.navigate('Profile');
   };
 

@@ -9,18 +9,20 @@ import Step5 from '../steps/Step5';
 import Step6 from '../steps/Step6';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { selectStepper } from '@/app/redux/slices/serviceStepperSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const STEPS = [Step1, Step2, Step3, Step4, Step5, Step6];
 
 export const BusinessStepperScreen = () => {
   const { currentStep } = useAppSelector(selectStepper);
   const StepComponent = STEPS[currentStep];
+  const navigation = useNavigation();
 
   return (
     <Screen
       statusBarProps={{
         showBackButton: true,
-        onLeftIconPress: () => navigation.goBack(''),
+        onLeftIconPress: () => navigation.goBack('Profile'),
       }}
     >
       <View style={{ flex: 1 }}>

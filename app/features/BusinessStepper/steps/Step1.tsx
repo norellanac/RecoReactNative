@@ -12,8 +12,9 @@ import { Text, TextInput } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { launchImageLibrary } from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
+//import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import {
   useCreateProductMutation,
   useUploadProductImageMutation,
@@ -46,17 +47,48 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
     ),
   });
 
+  // const getFileUri = async (uri: string) => {
+  //   if (uri.startsWith('content://')) {
+  //     const fileUri =
+  //       FileSystem.cacheDirectory + (uri.split('/').pop() || 'image.jpg');
+  //     await FileSystem.copyAsync({ from: uri, to: fileUri });
+  //     return fileUri;
+  //   }
+  //   return uri;
+  // };
+
   const handleImageChange = async () => {
-    console.log('Avatar pressed');
+    // Pide permisos en Android antes de abrir la galería
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        t('forms.commons.permissionDenied', 'Permiso denegado'),
+        t(
+          'forms.commons.permissionGallery',
+          'Se requiere acceso a la galería para seleccionar una imagen.',
+        ),
+      );
+      return;
+    }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaType: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
       selectionLimit: 1,
     });
     if (!result.canceled && result.assets && result.assets.length > 0) {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 900 } }], // Puedes ajustar el ancho
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG },
+      );
       setPreviewUrl(result.assets[0].uri);
-      setSelectedImage(result.assets[0]);
+      setSelectedImage({
+        ...result.assets[0],
+        uri: manipResult.uri,
+        type: 'image/jpeg',
+        fileName: result.assets[0].fileName || 'photo.jpg',
+      });
       setImageError(null);
     }
   };
@@ -86,7 +118,6 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
         throw new Error('El backend no devolvió un ID válido');
       }
 
-      // Subir imagen si hay una seleccionada
       if (selectedImage) {
         const formData = new FormData();
         formData.append('file', {

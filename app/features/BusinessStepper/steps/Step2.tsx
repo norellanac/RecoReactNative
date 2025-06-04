@@ -17,6 +17,7 @@ import {
   selectStepper,
   setServiceState,
 } from '@/app/redux/slices/serviceStepperSlice';
+import CustomStepper from './CustomStepper';
 
 const Step2 = ({ onNext }: { onNext?: () => void }) => {
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ const Step2 = ({ onNext }: { onNext?: () => void }) => {
         if (onNext) onNext();
       }
     } catch (err) {
-      // Manejo de errores si es necesario
+      // Manejo de error si lo necesitas
     }
   };
 
@@ -69,71 +70,62 @@ const Step2 = ({ onNext }: { onNext?: () => void }) => {
     );
 
   return (
-    <View style={styles.container}>
-      <Text variant="title" size="medium" color="info" style={styles.heading}>
-        {t('businessStepper.step1.step2', 'Step 2')}
-      </Text>
-      <Text variant="headline" size="small" color="info" style={styles.title}>
-        {t('businessStepper.step2.title', 'Select Categories')}
-      </Text>
-      <Text variant="title" size="medium" color="info" style={styles.heading}>
-        {t(
-          'businessStepper.step2.heading',
-          'What best describes your business?',
-        )}
-      </Text>
-      <Text
-        variant="title"
-        size="small"
-        color="secondary"
-        style={styles.description}
-      >
-        {t(
-          'businessStepper.step2.description',
-          'Choose one or more categories',
-        )}
-      </Text>
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Text variant="title" size="medium" color="info" style={styles.heading}>
+          {t('businessStepper.step1.step2', 'Step 2')}
+        </Text>
+        <Text variant="headline" size="small" color="info" style={styles.title}>
+          {t(
+            'businessStepper.step2.title',
+            'What best describes your business?',
+          )}
+        </Text>
+        <Text
+          variant="title"
+          size="small"
+          color="secondary"
+          style={styles.description}
+        >
+          {t(
+            'businessStepper.step2.description',
+            'Choose one or more categories',
+          )}
+        </Text>
 
-      <ScrollView contentContainerStyle={styles.categoriesContainer}>
-        {categories.map((category: any) => (
-          <TouchableOpacity
-            key={category.id}
-            style={[
-              styles.categoryCard,
-              selectedCategories.includes(category.id) &&
-                styles.categoryCardSelected,
-            ]}
-            onPress={() => handleSelectCategory(category.id)}
-            activeOpacity={0.8}
-          >
-            <Image
-              source={{ uri: category.icon }}
-              style={styles.categoryIcon}
-              resizeMode="contain"
-            />
-            <Text
-              variant="body"
-              size="medium"
-              color="secondary"
-              style={styles.categoryName}
+        <ScrollView contentContainerStyle={styles.categoriesContainer}>
+          {categories.map((category: any) => (
+            <TouchableOpacity
+              key={category.id}
+              style={[
+                styles.categoryCard,
+                selectedCategories.includes(category.id) &&
+                  styles.categoryCardSelected,
+              ]}
+              onPress={() => handleSelectCategory(category.id)}
+              activeOpacity={0.8}
             >
-              {category.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <TouchableOpacity
-        style={[styles.nextButton, !isNextEnabled && styles.nextButtonDisabled]}
-        onPress={handleSubmitCategories}
-        disabled={!isNextEnabled}
-      >
-        {isUpdating ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.nextButtonText}>{t('common.next', 'Next')}</Text>
-        )}
-      </TouchableOpacity>
+              <Image
+                source={{ uri: category.icon }}
+                style={styles.categoryIcon}
+                resizeMode="contain"
+              />
+              <Text
+                variant="body"
+                size="medium"
+                color="secondary"
+                style={styles.categoryName}
+              >
+                {category.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+      <CustomStepper
+        onHandleNext={handleSubmitCategories}
+        isNextEnabled={isNextEnabled}
+      />
     </View>
   );
 };
@@ -141,6 +133,7 @@ const Step2 = ({ onNext }: { onNext?: () => void }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 24,
+    paddingBottom: 0,
     flex: 1,
   },
   title: {
@@ -182,17 +175,6 @@ const styles = StyleSheet.create({
   categoryName: {
     textAlign: 'center',
   },
-  nextButton: {
-    backgroundColor: '#7B61FF',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  nextButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  nextButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });
 
 export default Step2;

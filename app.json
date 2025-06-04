@@ -18,7 +18,9 @@
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSPhotoLibraryUsageDescription": "Necesitamos acceso a tu galería para seleccionar una imagen.",
+        "NSCameraUsageDescription": "Necesitamos acceso a tu cámara para tomar una foto."
       }
     },
     "android": {

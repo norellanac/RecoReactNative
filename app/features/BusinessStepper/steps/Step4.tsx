@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Button, Text, TextInput } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';
 import { Formik, FieldArray } from 'formik';
@@ -17,6 +11,7 @@ import {
   selectStepper,
   setServiceState,
 } from '@/app/redux/slices/serviceStepperSlice';
+import CustomStepper from './CustomStepper';
 
 const Step4 = ({ onNext }: { onNext?: () => void }) => {
   const { t } = useTranslation();
@@ -83,189 +78,177 @@ const Step4 = ({ onNext }: { onNext?: () => void }) => {
         isValid,
         handleSubmit,
       }) => (
-        <ScrollView
-          style={styles.container}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Text
-            variant="title"
-            size="medium"
-            color="info"
-            style={styles.heading}
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            style={styles.container}
+            keyboardShouldPersistTaps="handled"
           >
-            {t('businessStepper.step4.step4', 'Step 4')}
-          </Text>
-          <Text
-            variant="headline"
-            size="small"
-            color="info"
-            style={styles.title}
-          >
-            {t(
-              'businessStepper.step4.title',
-              'Do you offer other services? 🌟',
-            )}
-          </Text>
-          <Text
-            variant="title"
-            size="small"
-            color="secondary"
-            style={styles.description}
-          >
-            {t(
-              'businessStepper.step4.description',
-              'Include all your skills: the more you add, the more clients will find you!',
-            )}
-          </Text>
+            <Text
+              variant="title"
+              size="medium"
+              color="info"
+              style={styles.heading}
+            >
+              {t('businessStepper.step4.step4', 'Step 4')}
+            </Text>
+            <Text
+              variant="headline"
+              size="small"
+              color="info"
+              style={styles.title}
+            >
+              {t(
+                'businessStepper.step4.title',
+                'Do you offer other services? 🌟',
+              )}
+            </Text>
+            <Text
+              variant="title"
+              size="small"
+              color="secondary"
+              style={styles.description}
+            >
+              {t(
+                'businessStepper.step4.description',
+                'Include all your skills: the more you add, the more clients will find you!',
+              )}
+            </Text>
 
-          <FieldArray name="skills">
-            {({ push, remove }) => (
-              <View>
-                {values.skills.map((_, index) => (
-                  <View key={index} style={styles.skillCard}>
-                    <Text
-                      variant="label"
-                      size="large"
-                      color="primary"
-                      style={styles.label}
-                    >
-                      {t('businessStepper.step4.tagsInput', 'Skill Tag')}
-                    </Text>
-                    <TextInput
-                      variant="outlined"
-                      outlineColor="#E0E0E0"
-                      style={styles.input}
-                      placeholder={t(
-                        'businessStepper.step4.tagsTextField',
-                        'e.g. Electrician',
-                      )}
-                      value={values.skills[index].tagsTextField}
-                      onChangeText={(text) =>
-                        setFieldValue(`skills.${index}.tagsTextField`, text)
-                      }
-                    />
-                    {touched.skills?.[index]?.tagsTextField &&
-                      errors.skills?.[index]?.tagsTextField && (
-                        <Text style={styles.error}>
-                          {errors.skills[index].tagsTextField}
-                        </Text>
-                      )}
-
-                    <Text
-                      variant="label"
-                      size="large"
-                      color="primary"
-                      style={styles.label}
-                    >
-                      {t('businessStepper.step4.titleInput', 'Skill Title')}
-                    </Text>
-                    <TextInput
-                      variant="outlined"
-                      outlineColor="#E0E0E0"
-                      style={styles.input}
-                      placeholder={t(
-                        'businessStepper.step4.titleTextField',
-                        'e.g. Home wiring',
-                      )}
-                      value={values.skills[index].titleTextField}
-                      onChangeText={(text) =>
-                        setFieldValue(`skills.${index}.titleTextField`, text)
-                      }
-                    />
-                    {touched.skills?.[index]?.titleTextField &&
-                      errors.skills?.[index]?.titleTextField && (
-                        <Text style={styles.error}>
-                          {errors.skills[index].titleTextField}
-                        </Text>
-                      )}
-
-                    <Text
-                      variant="label"
-                      size="large"
-                      color="primary"
-                      style={styles.label}
-                    >
-                      {t(
-                        'businessStepper.step4.descriptionInput',
-                        'Description',
-                      )}
-                    </Text>
-                    <TextInput
-                      variant="outlined"
-                      outlineColor="#E0E0E0"
-                      style={[styles.input, { height: 80 }]}
-                      placeholder={t(
-                        'businessStepper.step4.descriptionTextField',
-                        'Describe your skill',
-                      )}
-                      value={values.skills[index].descriptionTextField}
-                      onChangeText={(text) =>
-                        setFieldValue(
-                          `skills.${index}.descriptionTextField`,
-                          text,
-                        )
-                      }
-                      multiline
-                    />
-
-                    {values.skills.length > 1 && (
-                      <TouchableOpacity
-                        style={styles.removeBtn}
-                        onPress={() => remove(index)}
+            <FieldArray name="skills">
+              {({ push, remove }) => (
+                <View>
+                  {values.skills.map((_, index) => (
+                    <View key={index} style={styles.skillCard}>
+                      <Text
+                        variant="label"
+                        size="large"
+                        color="primary"
+                        style={styles.label}
                       >
-                        <Text
-                          variant="label"
-                          size="large"
-                          color="error"
-                          style={styles.removeBtnText}
+                        {t('businessStepper.step4.tagsInput', 'Skill Tag')}
+                      </Text>
+                      <TextInput
+                        variant="outlined"
+                        outlineColor="#E0E0E0"
+                        style={styles.input}
+                        placeholder={t(
+                          'businessStepper.step4.tagsTextField',
+                          'e.g. Electrician',
+                        )}
+                        value={values.skills[index].tagsTextField}
+                        onChangeText={(text) =>
+                          setFieldValue(`skills.${index}.tagsTextField`, text)
+                        }
+                      />
+                      {touched.skills?.[index]?.tagsTextField &&
+                        errors.skills?.[index]?.tagsTextField && (
+                          <Text style={styles.error}>
+                            {errors.skills[index].tagsTextField}
+                          </Text>
+                        )}
+
+                      <Text
+                        variant="label"
+                        size="large"
+                        color="primary"
+                        style={styles.label}
+                      >
+                        {t('businessStepper.step4.titleInput', 'Skill Title')}
+                      </Text>
+                      <TextInput
+                        variant="outlined"
+                        outlineColor="#E0E0E0"
+                        style={styles.input}
+                        placeholder={t(
+                          'businessStepper.step4.titleTextField',
+                          'e.g. Home wiring',
+                        )}
+                        value={values.skills[index].titleTextField}
+                        onChangeText={(text) =>
+                          setFieldValue(`skills.${index}.titleTextField`, text)
+                        }
+                      />
+                      {touched.skills?.[index]?.titleTextField &&
+                        errors.skills?.[index]?.titleTextField && (
+                          <Text style={styles.error}>
+                            {errors.skills[index].titleTextField}
+                          </Text>
+                        )}
+
+                      <Text
+                        variant="label"
+                        size="large"
+                        color="primary"
+                        style={styles.label}
+                      >
+                        {t(
+                          'businessStepper.step4.descriptionInput',
+                          'Description',
+                        )}
+                      </Text>
+                      <TextInput
+                        variant="outlined"
+                        outlineColor="#E0E0E0"
+                        style={[styles.input, { height: 80 }]}
+                        placeholder={t(
+                          'businessStepper.step4.descriptionTextField',
+                          'Describe your skill',
+                        )}
+                        value={values.skills[index].descriptionTextField}
+                        onChangeText={(text) =>
+                          setFieldValue(
+                            `skills.${index}.descriptionTextField`,
+                            text,
+                          )
+                        }
+                        multiline
+                      />
+
+                      {values.skills.length > 1 && (
+                        <TouchableOpacity
+                          style={styles.removeBtn}
+                          onPress={() => remove(index)}
                         >
-                          {t(
-                            'businessStepper.step4.deleteSkill',
-                            'Delete skill',
-                          )}
-                        </Text>
-                      </TouchableOpacity>
+                          <Text
+                            variant="label"
+                            size="large"
+                            color="error"
+                            style={styles.removeBtnText}
+                          >
+                            {t(
+                              'businessStepper.step4.deleteSkill',
+                              'Delete skill',
+                            )}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ))}
+
+                  <Button
+                    variant="outlined"
+                    title={t(
+                      'businessStepper.step4.addSkill',
+                      'Add another skill',
                     )}
-                  </View>
-                ))}
-
-                <Button
-                  variant="filled"
-                  title={t(
-                    'businessStepper.step4.addSkill',
-                    'Add another skill',
-                  )}
-                  style={styles.addBtn}
-                  onPress={() =>
-                    push({
-                      tagsTextField: '',
-                      titleTextField: '',
-                      descriptionTextField: '',
-                    })
-                  }
-                ></Button>
-              </View>
-            )}
-          </FieldArray>
-
-          <TouchableOpacity
-            style={[
-              styles.nextButton,
-              !(isValid && !isSubmitting && !isUpdating) &&
-                styles.nextButtonDisabled,
-            ]}
-            onPress={handleSubmit as any}
-            disabled={!(isValid && !isSubmitting && !isUpdating)}
-          >
-            {isUpdating || isSubmitting ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.nextButtonText}>
-                {t('common.next', 'Next')}
-              </Text>
-            )}
-          </TouchableOpacity>
-        </ScrollView>
+                    style={styles.addBtn}
+                    onPress={() =>
+                      push({
+                        tagsTextField: '',
+                        titleTextField: '',
+                        descriptionTextField: '',
+                      })
+                    }
+                  ></Button>
+                </View>
+              )}
+            </FieldArray>
+          </ScrollView>
+          <CustomStepper
+            onHandleNext={handleSubmit as any}
+            isNextEnabled={isValid && !isSubmitting && !isUpdating}
+          />
+        </View>
       )}
     </Formik>
   );
@@ -317,7 +300,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addBtn: {
-    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
     padding: 10,
     alignItems: 'center',
     marginTop: 8,

@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import {
   useCreateProductMutation,
   useUploadProductImageMutation,
@@ -30,6 +31,7 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
 
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [uploadProductImage, { isLoading: isUploading }] =
@@ -45,17 +47,27 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
   });
 
   const handleImageChange = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
+    console.log('Avatar pressed');
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaType: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
       selectionLimit: 1,
     });
-    if (result.assets && result.assets.length > 0) {
-      setPreviewUrl(result.assets[0].uri || null);
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setPreviewUrl(result.assets[0].uri);
       setSelectedImage(result.assets[0]);
+      setImageError(null);
     }
   };
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
+    setImageError(null); // Limpia error previo
+    if (!selectedImage) {
+      setImageError(t('forms.commons.required', 'Required'));
+      setSubmitting(false);
+      return;
+    }
     try {
       const payloadServiceObject = {
         name: values.businessName,
@@ -132,19 +144,12 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
               color="info"
               style={styles.title}
             >
-              {t('businessStepper.step1.title', 'Business Information')}
-            </Text>
-            <Text
-              variant="title"
-              size="medium"
-              color="info"
-              style={styles.heading}
-            >
               {t(
                 'businessStepper.step1.heading',
                 'Let’s start with the basics',
               )}
             </Text>
+
             <Text
               variant="title"
               size="small"
@@ -156,22 +161,6 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
                 'Tell us about your business',
               )}
             </Text>
-
-            <View style={styles.avatarContainer}>
-              <TouchableOpacity onPress={handleImageChange}>
-                <Image
-                  source={
-                    previewUrl
-                      ? { uri: previewUrl }
-                      : require('@/app/assets/img/default-Reco-image.png')
-                  }
-                  style={styles.avatar}
-                />
-                <View style={styles.editIcon}>
-                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>✎</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
 
             <TextInput
               variant="outlined"
@@ -222,11 +211,55 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
             {(isCreating || isUploading || isSubmitting) && (
               <ActivityIndicator style={{ marginVertical: 16 }} />
             )}
+            <View style={styles.avatarRow}>
+              <TouchableOpacity onPress={handleImageChange}>
+                <Image
+                  source={
+                    previewUrl
+                      ? { uri: previewUrl }
+                      : require('@/app/assets/img/default-Reco-image.png')
+                  }
+                  style={styles.avatar}
+                />
+                <View style={styles.editIcon}>
+                  <Text style={{ color: '#6750A4', fontWeight: 'bold' }}>
+                    ✎
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.avatarTextContainer}>
+                <Text
+                  variant="body"
+                  size="medium"
+                  color="secondary"
+                  style={styles.avatarText}
+                >
+                  {t(
+                    'businessStepper.step1.imageDescription',
+                    'Add a photo or logo of your business so your customers can recognize you.',
+                  )}
+                </Text>
+                {imageError && (
+                  <Text
+                    variant="title"
+                    size="small"
+                    color="error"
+                    style={styles.error}
+                  >
+                    {imageError}
+                  </Text>
+                )}
+              </View>
+            </View>
           </ScrollView>
           <CustomStepper
             onHandleNext={handleSubmit}
             isNextEnabled={
-              isValid && !isSubmitting && !isCreating && !isUploading
+              isValid &&
+              !isSubmitting &&
+              !isCreating &&
+              !isUploading &&
+              !!selectedImage
             }
           />
         </View>
@@ -236,7 +269,11 @@ const Step1 = ({ onNext }: { onNext?: (values: any) => void }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 24, flex: 1 },
+  container: {
+    padding: 24,
+    marginTop: 8,
+    flex: 1,
+  },
   title: {
     fontWeight: 'bold',
     marginBottom: 8,
@@ -248,13 +285,30 @@ const styles = StyleSheet.create({
   description: {
     marginBottom: 16,
   },
-  avatarContainer: { alignItems: 'center', marginBottom: 24 },
-  avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#eee' },
+  avatarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  avatarTextContainer: {
+    flex: 1,
+    marginLeft: 16,
+    justifyContent: 'center',
+  },
+  avatar: {
+    width: 90,
+    height: 90,
+    borderRadius: 50,
+    backgroundColor: '#eee',
+  },
+  avatarText: {
+    textAlign: 'left',
+  },
   editIcon: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#7B61FF',
+    backgroundColor: '#EADDFF',
     borderRadius: 12,
     padding: 4,
   },

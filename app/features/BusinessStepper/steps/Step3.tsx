@@ -6,7 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import { Text, TextInput } from '@/app/components/atoms';
+import { Text, TextInput, Button } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';
 import { Formik, FieldArray } from 'formik';
 import * as Yup from 'yup';
@@ -21,6 +21,9 @@ import {
   selectStepper,
   setServiceState,
 } from '@/app/redux/slices/serviceStepperSlice';
+import { Dropdown } from 'react-native-element-dropdown';
+import { Icon } from '@/app/components/atoms/Icon';
+import CustomStepper from './CustomStepper';
 
 const Step3 = ({ onNext }: { onNext?: () => void }) => {
   const { t } = useTranslation();
@@ -112,285 +115,294 @@ const Step3 = ({ onNext }: { onNext?: () => void }) => {
       validationSchema={validationSchema}
       onSubmit={handleUpdate}
     >
-      {({
-        values,
-        errors,
-        touched,
-        isValid,
-        handleSubmit,
-        setFieldValue,
-        isSubmitting,
-      }) => (
-        <ScrollView
-          style={styles.container}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Text
-            variant="title"
-            size="medium"
-            color="info"
-            style={styles.heading}
+      {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            style={styles.container}
+            keyboardShouldPersistTaps="handled"
           >
-            {t('businessStepper.step3.step3', 'Step 3')}
-          </Text>
-          <Text
-            variant="headline"
-            size="small"
-            color="info"
-            style={styles.title}
-          >
-            {t('businessStepper.step3.title', 'Location')}
-          </Text>
-          <Text
-            variant="title"
-            size="medium"
-            color="info"
-            style={styles.heading}
-          >
-            {t(
-              'businessStepper.step3.heading',
-              'Where do you offer your service?',
-            )}
-          </Text>
-          <Text
-            variant="title"
-            size="small"
-            color="secondary"
-            style={styles.description}
-          >
-            {t(
-              'businessStepper.step3.description',
-              'Add your main address and coverage areas',
-            )}
-          </Text>
+            <Text
+              variant="title"
+              size="medium"
+              color="info"
+              style={styles.heading}
+            >
+              {t('businessStepper.step3.step3', 'Step 3')}
+            </Text>
+            <Text
+              variant="headline"
+              size="small"
+              color="info"
+              style={styles.title}
+            >
+              {t(
+                'businessStepper.step3.title',
+                'Where do you offer your service?',
+              )}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 24,
+              }}
+            >
+              <Icon
+                name="map-marker"
+                family="MaterialCommunityIcons"
+                size={20}
+                color="#7B61FF"
+              />
+              <Text variant="title" size="small" color="secondary">
+                {t(
+                  'businessStepper.step3.description',
+                  'Add your main address and coverage areas',
+                )}
+              </Text>
+            </View>
 
-          {/* Dirección principal */}
-          <Text
-            variant="label"
-            size="medium"
-            color="secondary"
-            style={styles.label}
-          >
-            {t('businessStepper.step3.mainDirectionTitle', 'Main Address')}
-          </Text>
-          <TextInput
-            variant="outlined"
-            outlineColor="#E0E0E0"
-            style={styles.input}
-            placeholder={t(
-              'businessStepper.step3.textField',
-              'Where are you located?',
-            )}
-            value={values.mainAddress}
-            onChangeText={(text) => setFieldValue('mainAddress', text)}
-          />
-          {touched.mainAddress && errors.mainAddress && (
-            <Text style={styles.error}>{errors.mainAddress}</Text>
-          )}
+            {/* Dirección principal */}
+            <Text
+              variant="title"
+              size="small"
+              color="primary"
+              style={styles.label}
+            >
+              {t('businessStepper.step3.mainDirectionTitle', 'Main Address')}
+            </Text>
+            <View style={styles.mainAddressContainer}>
+              <TextInput
+                variant="outlined"
+                outlineColor="#E0E0E0"
+                style={styles.input}
+                placeholder={t(
+                  'businessStepper.step3.textField',
+                  'Where are you located?',
+                )}
+                value={values.mainAddress}
+                onChangeText={(text) => setFieldValue('mainAddress', text)}
+              />
+              {touched.mainAddress && errors.mainAddress && (
+                <Text style={styles.error}>{errors.mainAddress}</Text>
+              )}
 
-          {/* Departamento */}
-          <Text
-            variant="label"
-            size="medium"
-            color="secondary"
-            style={styles.label}
-          >
-            {t('businessStepper.step3.inputDeparment', 'Department')}
-          </Text>
-          <ScrollView horizontal style={{ marginBottom: 8 }}>
-            {departments.map((dept) => (
-              <TouchableOpacity
-                key={dept.id}
-                style={[
-                  styles.chip,
-                  values.department === dept.id && styles.chipSelected,
-                ]}
-                onPress={() => {
+              {/* Departamento */}
+              <Text
+                variant="label"
+                size="large"
+                color="secondary"
+                style={styles.label}
+              >
+                {t('businessStepper.step3.inputDeparment', 'Department')}
+              </Text>
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={departments}
+                search
+                maxHeight={300}
+                labelField="name"
+                valueField="id"
+                placeholder={t(
+                  'businessStepper.step3.selectState',
+                  'Select state',
+                )}
+                searchPlaceholder={t(
+                  'businessStepper.step3.searchState',
+                  'Search state...',
+                )}
+                onChange={(dept) => {
                   setFieldValue('department', dept.id);
                   setFieldValue('city', '');
                 }}
+                renderLeftIcon={() => (
+                  <Icon name="location-outline" family="Ionicons" size={18} />
+                )}
+              />
+              {touched.department && errors.department && (
+                <Text style={styles.error}>{errors.department}</Text>
+              )}
+
+              {/* Ciudad */}
+              <Text
+                variant="label"
+                size="large"
+                color="secondary"
+                style={styles.label}
               >
-                <Text
-                  style={
-                    values.department === dept.id
-                      ? styles.chipTextSelected
-                      : styles.chipText
-                  }
-                >
-                  {dept.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          {touched.department && errors.department && (
-            <Text style={styles.error}>{errors.department}</Text>
-          )}
-
-          {/* Ciudad */}
-          <Text style={styles.label}>
-            {t('businessStepper.step3.inputCity', 'City')}
-          </Text>
-          <ScrollView horizontal style={{ marginBottom: 8 }}>
-            {getCitiesByDepartment(values.department).map((city) => (
-              <TouchableOpacity
-                key={city.id}
-                style={[
-                  styles.chip,
-                  values.city === city.id && styles.chipSelected,
-                ]}
-                onPress={() => setFieldValue('city', city.id)}
-              >
-                <Text
-                  style={
-                    values.city === city.id
-                      ? styles.chipTextSelected
-                      : styles.chipText
-                  }
-                >
-                  {city.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          {touched.city && errors.city && (
-            <Text style={styles.error}>{errors.city}</Text>
-          )}
-
-          {/* Áreas de cobertura */}
-          <Text style={styles.label}>
-            {t('businessStepper.step3.secondDirectionTitle', 'Coverage Areas')}
-          </Text>
-          <FieldArray
-            name="coverageAreas"
-            render={(arrayHelpers) => (
-              <View>
-                {values.coverageAreas.map((area, index) => (
-                  <View key={index} style={styles.coverageAreaContainer}>
-                    {/* Departamento cobertura */}
-                    <Text style={styles.label}>
-                      {t('businessStepper.step3.inputDeparment', 'Department')}
-                    </Text>
-                    <ScrollView horizontal style={{ marginBottom: 8 }}>
-                      {departments.map((dept) => (
-                        <TouchableOpacity
-                          key={dept.id}
-                          style={[
-                            styles.chip,
-                            area.department === dept.id && styles.chipSelected,
-                          ]}
-                          onPress={() => {
-                            setFieldValue(
-                              `coverageAreas.${index}.department`,
-                              dept.id,
-                            );
-                            setFieldValue(`coverageAreas.${index}.city`, '');
-                          }}
-                        >
-                          <Text
-                            style={
-                              area.department === dept.id
-                                ? styles.chipTextSelected
-                                : styles.chipText
-                            }
-                          >
-                            {dept.name}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                    {/* Ciudad cobertura */}
-                    <Text style={styles.label}>
-                      {t('businessStepper.step3.inputCity', 'City')}
-                    </Text>
-                    <ScrollView horizontal style={{ marginBottom: 8 }}>
-                      {getCitiesByDepartment(area.department).map((city) => (
-                        <TouchableOpacity
-                          key={city.id}
-                          style={[
-                            styles.chip,
-                            area.city === city.id && styles.chipSelected,
-                          ]}
-                          onPress={() =>
-                            setFieldValue(
-                              `coverageAreas.${index}.city`,
-                              city.id,
-                            )
-                          }
-                        >
-                          <Text
-                            style={
-                              area.city === city.id
-                                ? styles.chipTextSelected
-                                : styles.chipText
-                            }
-                          >
-                            {city.name}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                    {/* Botón eliminar */}
-                    {index > 0 && (
-                      <TouchableOpacity
-                        style={styles.removeBtn}
-                        onPress={() => arrayHelpers.remove(index)}
-                      >
-                        <Text style={styles.removeBtnText}>
-                          {t('forms.commons.remove', 'Remove')}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                ))}
-                {/* Botón agregar */}
-                <TouchableOpacity
-                  style={styles.addBtn}
-                  onPress={() =>
-                    arrayHelpers.push({
-                      department: '',
-                      city: '',
-                      cityId: null,
-                    })
-                  }
-                >
-                  <Text style={styles.addBtnText}>
-                    {t('forms.commons.addAnother', 'Add another')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-
-          {/* Botón siguiente */}
-          <TouchableOpacity
-            style={[
-              styles.nextButton,
-              !(
-                values.mainAddress &&
-                values.department &&
-                values.city &&
-                !isUpdating
-              ) && styles.nextButtonDisabled,
-            ]}
-            onPress={handleSubmit as any}
-            disabled={
-              !(
-                values.mainAddress &&
-                values.department &&
-                values.city &&
-                !isUpdating
-              )
-            }
-          >
-            {isUpdating || isSubmitting ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.nextButtonText}>
-                {t('common.next', 'Next')}
+                {t('businessStepper.step3.inputCity', 'City')}
               </Text>
-            )}
-          </TouchableOpacity>
-        </ScrollView>
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={getCitiesByDepartment(values.department)}
+                search
+                maxHeight={300}
+                labelField="name"
+                valueField="id"
+                placeholder={t(
+                  'businessStepper.step3.selectCity',
+                  'Select city',
+                )}
+                searchPlaceholder={t(
+                  'businessStepper.step3.searchCity',
+                  'Search city...',
+                )}
+                onChange={(city) => setFieldValue('city', city.id)}
+                renderLeftIcon={() => (
+                  <Icon name="location-outline" family="Ionicons" size={18} />
+                )}
+              />
+              {touched.city && errors.city && (
+                <Text style={styles.error}>{errors.city}</Text>
+              )}
+            </View>
+            {/* Áreas de cobertura */}
+            <Text
+              variant="title"
+              size="small"
+              color="primary"
+              style={styles.label}
+            >
+              {t(
+                'businessStepper.step3.secondDirectionTitle',
+                'Coverage Areas',
+              )}
+            </Text>
+            <FieldArray
+              name="coverageAreas"
+              render={(arrayHelpers) => (
+                <View>
+                  {values.coverageAreas.map((area, index) => (
+                    <View key={index} style={styles.coverageAreaContainer}>
+                      {/* Departamento cobertura */}
+                      <Text
+                        variant="label"
+                        size="large"
+                        color="secondary"
+                        style={styles.label}
+                      >
+                        {t(
+                          'businessStepper.step3.inputDeparment',
+                          'Department',
+                        )}
+                      </Text>
+                      <Dropdown
+                        style={styles.dropdown}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={departments}
+                        search
+                        maxHeight={300}
+                        labelField="name"
+                        valueField="id"
+                        placeholder={t(
+                          'businessStepper.step3.selectState',
+                          'Select state',
+                        )}
+                        searchPlaceholder={t(
+                          'businessStepper.step3.searchState',
+                          'Search state...',
+                        )}
+                        onChange={(dept) => {
+                          setFieldValue('department', dept.id);
+                          setFieldValue('city', '');
+                        }}
+                        renderLeftIcon={() => (
+                          <Icon
+                            name="location-outline"
+                            family="Ionicons"
+                            size={20}
+                          />
+                        )}
+                      />
+                      {/* Ciudad cobertura */}
+                      <Text
+                        variant="label"
+                        size="large"
+                        color="secondary"
+                        style={styles.label}
+                      >
+                        {t('businessStepper.step3.inputCity', 'City')}
+                      </Text>
+                      <Dropdown
+                        style={styles.dropdown}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={getCitiesByDepartment(values.department)}
+                        search
+                        maxHeight={300}
+                        labelField="name"
+                        valueField="id"
+                        placeholder={t(
+                          'businessStepper.step3.selectCity',
+                          'Select city',
+                        )}
+                        searchPlaceholder={t(
+                          'businessStepper.step3.searchCity',
+                          'Search city...',
+                        )}
+                        onChange={(city) => setFieldValue('city', city.id)}
+                        renderLeftIcon={() => (
+                          <Icon
+                            name="location-outline"
+                            family="Ionicons"
+                            size={20}
+                          />
+                        )}
+                      />
+
+                      {/* Botón eliminar */}
+                      {index > 0 && (
+                        <TouchableOpacity
+                          style={styles.removeBtn}
+                          onPress={() => arrayHelpers.remove(index)}
+                        >
+                          <Text style={styles.removeBtnText}>
+                            {t('forms.commons.remove', 'Remove')}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ))}
+                  {/* Botón agregar */}
+                  <Button
+                    variant="outlined"
+                    title={t('forms.commons.addAnother', '+  Add another')}
+                    disabled={isUpdating}
+                    style={styles.addBtn}
+                    onPress={() =>
+                      arrayHelpers.push({
+                        department: '',
+                        city: '',
+                        cityId: null,
+                      })
+                    }
+                  ></Button>
+                </View>
+              )}
+            />
+          </ScrollView>
+          <CustomStepper
+            onHandleNext={handleSubmit}
+            isNextEnabled={
+              !!values.mainAddress &&
+              !!values.department &&
+              !!values.city &&
+              !isUpdating
+            }
+          />
+        </View>
       )}
     </Formik>
   );
@@ -405,50 +417,68 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
+  description: {
+    marginLeft: 2,
+    marginBottom: 12,
+  },
   heading: {
     fontWeight: '600',
     marginBottom: 8,
   },
-  description: {
-    color: '#666',
-    marginBottom: 16,
-  },
   label: {
     fontWeight: 'bold',
-    marginTop: 12,
     marginBottom: 4,
   },
+  mainAddressContainer: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 24,
+    backgroundColor: '#FAF8FF',
+  },
   input: {
+    marginTop: 8,
     borderRadius: 8,
     backgroundColor: '#fff',
   },
   error: { color: 'red', marginBottom: 8 },
-  chip: {
-    backgroundColor: '#F3ECFF',
-    borderRadius: 16,
+  dropdown: {
+    height: 50,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
+    borderRadius: 8,
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 4,
+    backgroundColor: '#fff',
+    marginBottom: 12,
   },
-  chipSelected: {
-    backgroundColor: '#7B61FF',
+  placeholderStyle: {
+    marginLeft: 8,
+    color: '#999',
   },
-  chipText: {
-    color: '#7B61FF',
-    fontWeight: 'bold',
+  selectedTextStyle: {
+    marginLeft: 8,
+    color: '#333',
   },
-  chipTextSelected: {
-    color: '#fff',
-    fontWeight: 'bold',
+  inputSearchStyle: {
+    marginLeft: 8,
+    height: 40,
+    fontSize: 16,
+    color: '#333',
   },
+  iconStyle: {
+    width: 20,
+    height: 20,
+    tintColor: '#7B61FF',
+  },
+
   coverageAreaContainer: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
-    backgroundColor: '#FAF8FF',
+    backgroundColor: '#FCFCFC',
   },
   removeBtn: {
     marginTop: 8,
@@ -459,9 +489,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addBtn: {
-    backgroundColor: '#EADDFF',
-    borderRadius: 8,
-    padding: 10,
+    borderColor: '#ccc',
     alignItems: 'center',
     marginTop: 8,
   },

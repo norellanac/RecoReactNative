@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { Text, Button, Icon } from '@/app/components/atoms';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { Text, Button } from '@/app/components/atoms';
 import { MaterialIcons } from '@expo/vector-icons'; // O usa 'react-native-vector-icons/MaterialIcons'
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
@@ -58,6 +58,9 @@ const CustomStepper: React.FC<CustomStepperProps> = ({
                   <MaterialIcons name="check" size={24} color="#fff" />
                 ) : (
                   <Text
+                    variant="body"
+                    size="large"
+                    color="gray"
                     style={[
                       styles.stepText,
                       idx === currentStep && styles.stepTextActive,
@@ -82,34 +85,32 @@ const CustomStepper: React.FC<CustomStepperProps> = ({
         ))}
       </View>
       <View style={styles.buttonRow}>
-        <TouchableOpacity
+        <Button
+          variant="filled"
+          title="Back"
           style={[styles.button, currentStep === 0 && styles.buttonDisabled]}
           onPress={handleBackStep}
           disabled={currentStep === 0}
-        >
-          <Text style={styles.buttonText}>BACK</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        ></Button>
+        <Button
+          variant="filled"
+          title={currentStep === totalSteps - 1 ? 'Finish' : 'Next'}
           style={[styles.button, !isNextEnabled && styles.buttonDisabled]}
           onPress={handleNextStep}
           disabled={!isNextEnabled}
-        >
-          <Text style={styles.buttonText}>
-            {currentStep === totalSteps - 1 ? 'FINISH' : 'NEXT'}
-          </Text>
-        </TouchableOpacity>
+        ></Button>
       </View>
     </View>
   );
 };
 
-const CIRCLE_SIZE = 40;
+const CIRCLE_SIZE = 35;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     paddingTop: 24,
-    paddingBottom: 24,
+    paddingBottom: 8,
     borderTopWidth: 1,
     borderTopColor: '#F3ECFF',
     alignItems: 'center',
@@ -120,7 +121,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
-
     width: '100%',
   },
   stepContainer: {
@@ -138,12 +138,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
   },
   circleActive: {
-    backgroundColor: '#white',
+    backgroundColor: '#FFFFFF',
     borderWidth: 2,
-    borderColor: '#7B61FF',
+    borderColor: '#6750A4',
   },
   circleCompleted: {
-    backgroundColor: '#7B61FF',
+    backgroundColor: '#6750A4',
   },
   circleInactive: {
     backgroundColor: '#F0F0F0',
@@ -151,19 +151,17 @@ const styles = StyleSheet.create({
   stepText: {
     color: 'gray',
     fontWeight: 'bold',
-    fontSize: 18,
   },
   stepTextActive: {
-    color: '#7B61FF',
+    color: '#6750A4',
   },
   line: {
-    width: 32,
+    width: 30,
     height: 2,
-    backgroundColor: '#E0E0E0',
-    marginHorizontal: 2,
+    marginHorizontal: 3,
   },
   lineCompleted: {
-    backgroundColor: '#7B61FF',
+    backgroundColor: '#6750A4',
   },
   lineInactive: {
     backgroundColor: '#E0E0E0',
@@ -174,19 +172,19 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   button: {
-    backgroundColor: '#7B61FF',
+    backgroundColor: '#6750A4',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 24,
     alignItems: 'center',
     minWidth: 120,
     marginHorizontal: 8,
-    shadowColor: '#7B61FF',
+    shadowColor: '#6750A4',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
     shadowRadius: 4,
     elevation: 2,
-    marginBottom: 24,
+    marginBottom: 16,
   },
   buttonDisabled: {
     backgroundColor: '#ccc',

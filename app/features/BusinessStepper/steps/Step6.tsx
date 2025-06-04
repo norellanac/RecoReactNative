@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { Text } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';
-import congratsImage from '@/app/assets/img/stepper/step6_congratsImage.png'; // Usa PNG/JPG, o adapta si tienes SVG
+import congratsImage from '@/app/assets/img/stepper/step6_congratsImage.png';
 import { useNavigation } from '@react-navigation/native';
+import CustomStepper from './CustomStepper';
 
 const Step6 = () => {
   const { t } = useTranslation();
@@ -14,45 +15,43 @@ const Step6 = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={congratsImage}
-        style={styles.image}
-        resizeMode="contain"
-        accessible
-        accessibilityLabel="Congratulations illustration"
-      />
-      <Text
-        variant="headline"
-        size="small"
-        color="primary"
-        style={styles.heading}
-      >
-        {t('businessStepper.step6.heading', 'Congratulations!')}
-      </Text>
-      <Text
-        variant="title"
-        size="medium"
-        color="secondary"
-        style={styles.description}
-      >
-        {t(
-          'businessStepper.step6.description',
-          'You have completed your business profile.',
-        )}
-      </Text>
-      <View style={styles.divider} />
-      <Text variant="label" size="large" color="secondary" style={styles.tip}>
-        {t(
-          'businessStepper.step6.tip',
-          'Tip: You can edit your profile at any time.',
-        )}
-      </Text>
-      <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
-        <Text style={styles.finishButtonText}>
-          {t('businessStepper.step6.ctaBottom', 'Go to my profile')}
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Image
+          source={congratsImage}
+          style={styles.image}
+          resizeMode="contain"
+          accessible
+          accessibilityLabel="Congratulations illustration"
+        />
+        <Text
+          variant="headline"
+          size="small"
+          color="primary"
+          style={styles.heading}
+        >
+          {t('businessStepper.step6.heading', 'Congratulations!')}
         </Text>
-      </TouchableOpacity>
+        <Text
+          variant="title"
+          size="medium"
+          color="secondary"
+          style={styles.description}
+        >
+          {t(
+            'businessStepper.step6.description',
+            'You have completed your business profile.',
+          )}
+        </Text>
+        <View style={styles.divider} />
+        <Text variant="label" size="large" color="secondary" style={styles.tip}>
+          {t(
+            'businessStepper.step6.tip',
+            'Tip: You can edit your profile at any time.',
+          )}
+        </Text>
+      </View>
+      <CustomStepper onHandleNext={handleFinish} isNextEnabled={true} />
     </View>
   );
 };
@@ -90,18 +89,6 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 32,
     textAlign: 'center',
-  },
-  finishButton: {
-    backgroundColor: '#7B61FF',
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  finishButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
 });
 

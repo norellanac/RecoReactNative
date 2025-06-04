@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Text, TextInput } from '@/app/components/atoms';
 import dollarImage from '@/app/assets/img/stepper/step5_dollarImage.png';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +12,7 @@ import {
   selectStepper,
   setServiceState,
 } from '@/app/redux/slices/serviceStepperSlice';
+import CustomStepper from './CustomStepper';
 
 const Step5 = ({ onNext }: { onNext?: () => void }) => {
   const { t } = useTranslation();
@@ -50,7 +44,7 @@ const Step5 = ({ onNext }: { onNext?: () => void }) => {
 
   return (
     <Formik
-      initialValues={{ price: '' }}
+      initialValues={{ price: undefined }}
       validationSchema={validationSchema}
       onSubmit={handleUpdate}
     >
@@ -63,104 +57,90 @@ const Step5 = ({ onNext }: { onNext?: () => void }) => {
         values,
         setFieldValue,
       }) => (
-        <ScrollView
-          style={styles.container}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Text
-            variant="title"
-            size="medium"
-            color="info"
-            style={styles.heading}
-          >
-            {t('businessStepper.step5.step5', 'Step 5 of 5')}
-          </Text>
-          <Text
-            variant="headline"
-            size="small"
-            color="info"
-            style={styles.title}
-          >
-            {t(
-              'businessStepper.step5.title',
-              'How much do you charge per day? 💰',
-            )}
-          </Text>
-          <Text
-            variant="title"
-            size="small"
-            color="secondary"
-            style={styles.description}
-          >
-            {t(
-              'businessStepper.step5.description',
-              "Indicate your approximate daily rate. Don't worry, you can adjust it later based on each job",
-            )}
-          </Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              variant="outlined"
-              outlineColor="#E0E0E0"
-              style={styles.input}
-              placeholder={t(
-                'businessStepper.step5.priceTextField',
-                'Price Eg. 350',
-              )}
-              keyboardType="numeric"
-              value={values.price.toString()}
-              onChangeText={(text) =>
-                setFieldValue('price', text.replace(/[^0-9.]/g, ''))
-              }
-            />
-            {touched.price && errors.price && (
-              <Text
-                variant="label"
-                size="large"
-                color="error"
-                style={styles.error}
-              >
-                {errors.price}
-              </Text>
-            )}
+        <View style={{ flex: 1 }}>
+          <ScrollView style={styles.container}>
             <Text
-              variant="body"
+              variant="title"
               size="medium"
-              color="primary"
-              style={styles.note}
+              color="info"
+              style={styles.heading}
+            >
+              {t('businessStepper.step5.step5', 'Step 5')}
+            </Text>
+            <Text
+              variant="headline"
+              size="small"
+              color="info"
+              style={styles.title}
             >
               {t(
-                'businessStepper.step5.note',
-                'Note: You can update your price at any time.',
+                'businessStepper.step5.title',
+                'How much do you charge per day? 💰',
               )}
             </Text>
-            <View style={styles.illustrationContainer}>
-              <Image
-                source={dollarImage}
-                style={styles.illustration}
-                resizeMode="contain"
-                accessible
-                accessibilityLabel="Dollar illustration"
+            <Text
+              variant="title"
+              size="small"
+              color="secondary"
+              style={styles.description}
+            >
+              {t(
+                'businessStepper.step5.description',
+                "Indicate your approximate daily rate. Don't worry, you can adjust it later based on each job",
+              )}
+            </Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                variant="rounded"
+                outlineColor="#E0E0E0"
+                style={styles.input}
+                placeholder={t(
+                  'businessStepper.step5.priceTextField',
+                  'Price Eg. 350',
+                )}
+                keyboardType="numeric"
+                value={values.price?.toString() || ''}
+                onChangeText={(text) =>
+                  setFieldValue('price', text.replace(/[^0-9.]/g, ''))
+                }
               />
-            </View>
-          </View>
-          <TouchableOpacity
-            style={[
-              styles.nextButton,
-              !(isValid && !isSubmitting && !isUpdating) &&
-                styles.nextButtonDisabled,
-            ]}
-            onPress={handleSubmit as any}
-            disabled={!(isValid && !isSubmitting && !isUpdating)}
-          >
-            {isUpdating || isSubmitting ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.nextButtonText}>
-                {t('common.next', 'Next')}
+              {touched.price && errors.price && (
+                <Text
+                  variant="label"
+                  size="large"
+                  color="error"
+                  style={styles.error}
+                >
+                  {errors.price}
+                </Text>
+              )}
+              <Text
+                variant="body"
+                size="medium"
+                color="primary"
+                style={styles.note}
+              >
+                {t(
+                  'businessStepper.step5.note',
+                  'Note: You can update your price at any time.',
+                )}
               </Text>
-            )}
-          </TouchableOpacity>
-        </ScrollView>
+              <View style={styles.illustrationContainer}>
+                <Image
+                  source={dollarImage}
+                  style={styles.illustration}
+                  resizeMode="contain"
+                  accessible
+                  accessibilityLabel="Dollar illustration"
+                />
+              </View>
+            </View>
+          </ScrollView>
+          <CustomStepper
+            onHandleNext={handleSubmit}
+            isNextEnabled={isValid && !isSubmitting && !isUpdating}
+          />
+        </View>
       )}
     </Formik>
   );
@@ -186,8 +166,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 8,
     padding: 12,
   },
   error: {

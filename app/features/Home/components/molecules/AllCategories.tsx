@@ -54,10 +54,15 @@ export const AllCategories = ({ navigation }: { navigation: any }) => {
     <Screen
       statusBarProps={{
         showBackButton: true,
+        title: (
+          <Text variant="headline" size="medium" color="info">
+            {t('home_screen.all_categories', 'All Categories')}
+          </Text>
+        ),
         onLeftIconPress: () => navigation.goBack(),
       }}
     >
-      <Text
+      {/* <Text
         variant="headline"
         size="small"
         color="info"
@@ -70,7 +75,7 @@ export const AllCategories = ({ navigation }: { navigation: any }) => {
         }}
       >
         {t('home_screen.all_categories', 'All Categories')}
-      </Text>
+      </Text> */}
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id.toString()}

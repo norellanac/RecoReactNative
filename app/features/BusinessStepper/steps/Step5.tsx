@@ -44,7 +44,7 @@ const Step5 = ({ onNext }: { onNext?: () => void }) => {
 
   return (
     <Formik
-      initialValues={{ price: undefined }}
+      initialValues={{ price: '' }}
       validationSchema={validationSchema}
       onSubmit={handleUpdate}
     >
@@ -96,10 +96,10 @@ const Step5 = ({ onNext }: { onNext?: () => void }) => {
                 style={styles.input}
                 placeholder={t(
                   'businessStepper.step5.priceTextField',
-                  'Price Eg. 350',
+                  'Price Eg. 349.99',
                 )}
-                keyboardType="numeric"
-                value={values.price?.toString() || ''}
+                keyboardType="decimal-pad"
+                value={values.price}
                 onChangeText={(text) =>
                   setFieldValue('price', text.replace(/[^0-9.]/g, ''))
                 }

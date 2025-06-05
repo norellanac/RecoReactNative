@@ -151,15 +151,14 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    gap: 12,
   },
   categoryCard: {
-    width: '46%',
+    flexBasis: '48%',
     backgroundColor: '#F3ECFF',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
-    margin: '2%',
     borderWidth: 2,
     borderColor: 'transparent',
   },

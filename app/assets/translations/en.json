@@ -102,8 +102,7 @@
   },
   "Forms": {
     "email": "Email",
-    "password": "Password",
-    "password_long": ""
+    "password": "Password"
   },
   "home_screen": {
     "all": "All",
@@ -112,7 +111,7 @@
     "error": "An error occurred while loading data.",
     "loading": "Loading data...",
     "searchPlaceholder": "Search services that you need",
-    "servicesAvailable": "Available Services",
+    "servicesAvailable": "Services Available",
     "viewAll": "View all"
   },
   "login": {

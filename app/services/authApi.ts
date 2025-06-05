@@ -1,14 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { UserResponseType, ApiResponseType } from '../types/api/apiResponses';
+import { ApiResponseType } from '../types/api/apiResponses';
 import { LoginValues } from '../types/api/apiRequests';
 import baseQueryWithReauth from './baseQueryWithReauth';
+import { User } from '../types/api/modelTypes';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     login: builder.mutation<
-      ApiResponseType<{ user: UserResponseType; token: string; refreshToken: string }>,
+      ApiResponseType<{ user: User; token: string; refreshToken: string }>,
       LoginValues
     >({
       query: (credentials) => ({

@@ -1,15 +1,17 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import baseQueryWithReauth from './baseQueryWithReauth';
+import { ApiResponseType } from '../types/api/apiResponses';
+import { ProductService } from '../types/api/modelTypes';
 
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    getProducts: builder.query({
-      query: () => 'public/products/',
+    getProducts: builder.query<ApiResponseType<{items: ProductService[]}>, void>({
+      query: () => 'public/products?limit=50&offset=1',
     }),
     getProductById: builder.query({
-      query: (id) => `/products/${id}/`,
+      query: (id) => `public/products/${id}/`,
     }),
     createProduct: builder.mutation({
       query: (productData) => ({

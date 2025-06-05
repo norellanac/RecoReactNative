@@ -9,6 +9,7 @@ import { Text } from '../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTranslation } from 'react-i18next';
+import { BusinessStepperScreen } from '../features/BusinessStepper/screens/BusinessStepperScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,11 +20,20 @@ const BottomTabNavigator = React.memo(() => {
   const { colors } = theme;
   const { t } = useTranslation();
 
+  {
+    t('bottomTabs.home', 'Home'),
+      t('bottomTabs.task', 'Task'),
+      t('bottomTabs.favorites', 'Favorites'),
+      t('bottomTabs.profile', 'Profile'),
+      t('bottomTabs.products', 'Products');
+  }
+
   const iconMapping = {
     Home: ['home', 'home-outline'],
     Task: ['file-tray', 'file-tray-outline'],
     Favorites: ['heart', 'heart-outline'],
     Profile: ['person', 'person-outline'],
+    Products: ['cart', 'cart-outline'],
   };
 
   return (
@@ -64,6 +74,7 @@ const BottomTabNavigator = React.memo(() => {
       })}
     >
       <Tab.Screen name="Home" component={HomeNavigation} />
+      <Tab.Screen name="Products" component={BusinessStepperScreen} />
       <Tab.Screen name="Task" component={TaskPage} />
       <Tab.Screen name="Favorites" component={FavoritesNavigation} />
       <Tab.Screen name="Profile" component={ProfileNavigation} />

@@ -2,10 +2,10 @@
   "expo": {
     "name": "Reco",
     "slug": "Reco",
-    "version": "0.0.1",
+    "version": "0.2.0",
     "orientation": "portrait",
     "newArchEnabled": true,
-    "icon": "app/assets/img/Reco_logo.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -31,13 +31,34 @@
           "CAMERA"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "gt.com.reco.app"
     },
     "plugins": [
       "expo-font",
-      "expo-web-browser"
-    ]
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "ios": {
+            "backgroundColor": "#ffffff",
+            "image": "./assets/images/icon.png",
+            "resizeMode": "cover"
+          },
+          "android": {
+            "backgroundColor": "#ffffff",
+            "image": "./assets/images/icon.png",
+            "imageWidth": 240
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "98712f33-47b0-4bf5-b2cc-d91b0524ad16"
+      }
+    }
   }
 }

@@ -1,9 +1,10 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../redux/store/store';
 import { selectAuth, logout } from '../redux/slices/authSlice';
+import { BASE_URL } from '../utils/Environment';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.EXPO_PUBLIC_API_URL,
+  baseUrl: BASE_URL,
   prepareHeaders: (headers, { getState }) => {
     const authState = selectAuth(getState() as RootState);
     const token = authState.token;

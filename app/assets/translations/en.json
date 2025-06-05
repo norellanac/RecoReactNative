@@ -1,17 +1,86 @@
 {
-  "bottomTabs": {
-  "home": "Home",
-  "task": "Task",
-  "favorites": "Favorites",
-  "profile": "Profile"
-},
+  "APIs": {
+    "categories": {
+      "error": "Error loading categories"
+    }
+  },
   "auth": {
     "register": {
       "confirm_password": "Confirm Password",
+      "email": "Email",
       "full_name": "Full Name",
-      "password": "Password",
-      "phone_number": "Phone Number"
+      "password": "Password"
     }
+  },
+  "bottomTabs": {
+    "favorites": "Favorites",
+    "home": "Home",
+    "products": "Products",
+    "profile": "Profile",
+    "task": "Task"
+  },
+  "businessProfilePage": {
+    "profile": {
+      "noSkills": "No skills listed"
+    }
+  },
+  "businessStepper": {
+    "step1": {
+      "businessDescriptionPlaceholder": "Business description",
+      "businessNamePlaceholder": "Business name",
+      "description": "Tell us about your business",
+      "heading": "Let’s start with the basics",
+      "imageDescription": "Add a photo or logo of your business so your customers can recognize you.",
+      "step1": "Step 1",
+      "step2": "Step 2"
+    },
+    "step2": {
+      "description": "Choose one or more categories",
+      "title": "What best describes your business?"
+    },
+    "step3": {
+      "description": "Add your main address and coverage areas",
+      "inputCity": "City",
+      "inputDeparment": "Department",
+      "mainDirectionTitle": "Main Address",
+      "searchCity": "Search city...",
+      "searchState": "Search state...",
+      "secondDirectionTitle": "Coverage Areas",
+      "selectCity": "Select city",
+      "selectState": "Select state",
+      "step3": "Step 3",
+      "textField": "Where are you located?",
+      "title": "Where do you offer your service?"
+    },
+    "step4": {
+      "addSkill": "Add another skill",
+      "deleteSkill": "Delete skill",
+      "description": "Include all your skills: the more you add, the more clients will find you!",
+      "descriptionInput": "Description",
+      "descriptionTextField": "Describe your skill",
+      "step4": "Step 4",
+      "tagsInput": "Skill Tag",
+      "tagsTextField": "e.g. Electrician",
+      "title": "Do you offer other services? 🌟",
+      "titleInput": "Skill Title",
+      "titleTextField": "e.g. Home wiring"
+    },
+    "step5": {
+      "description": "Indicate your approximate daily rate. Don't worry, you can adjust it later based on each job",
+      "note": "Note: You can update your price at any time.",
+      "priceTextField": "Price Eg. 349.99",
+      "step5": "Step 5",
+      "title": "How much do you charge per day? 💰"
+    },
+    "step6": {
+      "description": "You have completed your business profile.",
+      "heading": "Congratulations!",
+      "tip": "Tip: You can edit your profile at any time."
+    }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "commons": {
     "and": "and",
@@ -20,29 +89,30 @@
   "favorites": {
     "title": "Favorites"
   },
+  "forms": {
+    "commons": {
+      "addAnother": "+  Add another",
+      "error": "Error",
+      "mustBeNumber": "Must be a number",
+      "permissionDenied": "Permiso denegado",
+      "permissionGallery": "Se requiere acceso a la galería para seleccionar una imagen.",
+      "remove": "Remove",
+      "required": "Required"
+    }
+  },
   "Forms": {
     "email": "Email",
     "password": "Password",
-    "password_long": "",
-    "required": ""
-  },
-  "home": {
-    "landing_screen": {
-      "slider": {
-        "title_1": "Action 1",
-        "title_2": "Action 2",
-        "title_3": "Action 3"
-      }
-    }
+    "password_long": ""
   },
   "home_screen": {
+    "all": "All",
     "all_categories": "All Categories",
     "categoriesTitle": "Categories",
     "error": "An error occurred while loading data.",
-    "servicesAvailable": "Available Services",
     "loading": "Loading data...",
     "searchPlaceholder": "Search services that you need",
-    "unnamedService": "Unnamed Service",
+    "servicesAvailable": "Available Services",
     "viewAll": "View all"
   },
   "login": {
@@ -56,6 +126,26 @@
     "sign_up": "Sign Up",
     "terms_service": "Terms of Service",
     "terms_text": "By signing up, you agree to our"
+  },
+  "services": {
+    "allServices": {
+      "founds": "founds",
+      "noResults": "No services found",
+      "perDay": "/ per day",
+      "resultsFor": "Results for",
+      "reviews": "reviews",
+      "searchPlaceholder": "Search services that you need"
+    },
+    "serviceDetails": {
+      "floorPrice": "(Floor price)",
+      "noReviews": "No reviews yet. Be the first to leave a review!",
+      "otherSkills": "Other Skills",
+      "reviews": "reviews",
+      "seeAll": "See All",
+      "selectDate": "Choose date and time",
+      "selectDateTime": "Select date and time",
+      "skillsAndExperience": "Skills & Experience"
+    }
   },
   "slider": {
     "get_started": "Get Started",

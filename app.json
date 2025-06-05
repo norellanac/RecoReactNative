@@ -18,10 +18,18 @@
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSPhotoLibraryUsageDescription": "Necesitamos acceso a tu galería para seleccionar una imagen.",
+        "NSCameraUsageDescription": "Necesitamos acceso a tu cámara para tomar una foto."
       }
     },
     "android": {
+        "permissions": [
+          "READ_MEDIA_IMAGES",
+          "READ_EXTERNAL_STORAGE",
+          "WRITE_EXTERNAL_STORAGE",
+          "CAMERA"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

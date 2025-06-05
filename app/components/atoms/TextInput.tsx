@@ -10,6 +10,7 @@ import { useTheme } from './../../theme/ThemeProvider';
 import ErrorText from './ErrorText';
 
 type InputProps = TextInputProps & {
+  outlineColor?: string;
   variant?: 'underlined' | 'outlined' | 'rounded';
   label?: string;
   disabled?: boolean;
@@ -48,6 +49,7 @@ export const TextInput = ({
   autoComplete,
   autoFocus,
   color = 'primary',
+  outlineColor,
   defaultValue,
   endAdornment,
   error,
@@ -72,7 +74,12 @@ export const TextInput = ({
   const { colors, inputVariants } = theme;
   const variantStyles = inputVariants[variant];
   const colorActive =
-    errorMsg || error ? colors.error : disabled ? colors.grey : colors.primary;
+    outlineColor ||
+    (errorMsg || error
+      ? colors.error
+      : disabled
+        ? colors.grey
+        : colors.primary);
 
   return (
     <View style={styles.container}>

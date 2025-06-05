@@ -2,10 +2,12 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LandingProfile } from './Landing';
 import { ChangeLanguage } from './ChangeLanguage';
+import { BusinessStepperScreen } from '@/app/features/BusinessStepper/screens/BusinessStepperScreen';
 
 export type ProfileStackParams = {
   Profile: undefined;
   ChangeLanguage: undefined;
+  BusinessStepper: undefined;
 };
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
@@ -18,6 +20,10 @@ export const ProfileNavigation = () => {
     >
       <ProfileStack.Screen name="Profile" component={LandingProfile} />
       <ProfileStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
+      <ProfileStack.Screen
+        name="BusinessStepper"
+        component={BusinessStepperScreen}
+      />
     </ProfileStack.Navigator>
   );
 };

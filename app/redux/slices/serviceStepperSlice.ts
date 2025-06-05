@@ -1,31 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store/store';
-
-export type Service = {
-  id:            number;
-  name:          string;
-  description:   string;
-  urlImage:      null;
-  type:          number;
-  price:         number;
-  specialPrice:  null;
-  location:      null;
-  latitude:      null;
-  longitude:     null;
-  userId:        number;
-  averageRating: null;
-  deletedAt:     null;
-  createdAt:     Date;
-  updatedAt:     Date;
-}
+import { ProductService } from '../../types/api/modelTypes';
 
 interface StepperState { 
-  service?: Service;
+  service?: ProductService
     currentStep: number;
   }
 
   const initialState: StepperState = {
-    service: undefined,
+    service: {} as ProductService,
     currentStep: 0,
   };
 
@@ -36,7 +19,7 @@ interface StepperState {
       setCurrentStep      (state, action: PayloadAction<number>) {
         state.currentStep = action.payload;
       },
-      setServiceState      (state, action: PayloadAction<Service>) {
+      setServiceState      (state, action: PayloadAction<ProductService>) {
         state.service = action.payload;
       },
       clearStepper(state) {

@@ -3,6 +3,7 @@ import AllServices from './AllServices';
 import ServiceDetails from './ServiceDetails';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ProductService } from '@/app/types/api/modelTypes';
+import TaskDetailsScreen from './TaskDetailsScreen';
 
 export type ServicesStackParams = {
   AllServices: undefined;
@@ -19,6 +20,7 @@ export const ServicesStackNavigation = () => {
     >
       <ServicesStack.Screen name="AllServices" component={AllServices} />
       <ServicesStack.Screen name="ServiceDetails" component={ServiceDetails} />
+      <ServicesStack.Screen name="TaskDetails" component={TaskDetailsScreen} />
     </ServicesStack.Navigator>
   );
 };

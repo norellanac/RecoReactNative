@@ -5,7 +5,6 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  Image,
   TouchableOpacity,
   Platform,
 } from 'react-native';
@@ -37,6 +36,11 @@ const ServiceDetails = () => {
   const handleBookNow = () => setCalendarVisible(true);
   const handleConfirm = () => {
     setCalendarVisible(false);
+    navigation.navigate('TaskDetails', {
+      service: productService,
+      dateTime: selectedDate?.toISOString(),
+      imageUrl: productService?.urlImage,
+    });
   };
   const handleCancel = () => {
     setCalendarVisible(false);
@@ -53,7 +57,6 @@ const ServiceDetails = () => {
     {
       img: getApiImageUrl(service?.urlImage),
     },
-    // Agregar más imágenes si la API las provee
   ];
 
   return (
@@ -148,12 +151,23 @@ const ServiceDetails = () => {
           confirmButtonText={t('common.confirm', 'Confirm')}
           cancelButtonText={t('common.cancel', 'Cancel')}
           isConfirmButtonDisabled={!selectedDate}
+          confirmButtonStyle={{
+            backgroundColor: !selectedDate ? '#E0E0E0' : '#6750A4',
+          }}
+          confirmButtonTextStyle={{
+            color: !selectedDate ? '#B0B0B0' : '#fff',
+            fontWeight: 'bold',
+          }}
         >
           <TouchableOpacity
             style={styles.dateInput}
             onPress={() => setShowPicker(true)}
           >
-            <Text style={{ color: selectedDate ? '#222' : '#888' }}>
+            <Text
+              variant="body"
+              size="medium"
+              style={{ color: selectedDate ? '#222' : '#888' }}
+            >
               {selectedDate
                 ? selectedDate.toLocaleString()
                 : t(

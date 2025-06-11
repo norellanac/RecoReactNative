@@ -16,6 +16,8 @@ interface ModalComponentProps {
   title: string;
   children: React.ReactNode;
   confirmButtonText?: string;
+  confirmButtonStyle?: object;
+  confirmButtonTextStyle?: object;
   cancelButtonText?: string;
   isConfirmButtonDisabled?: boolean;
   isConfirmButtonLoading?: boolean;
@@ -29,6 +31,8 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   title,
   children,
   confirmButtonText = 'Confirm',
+  confirmButtonStyle,
+  confirmButtonTextStyle,
   cancelButtonText = 'Cancel',
   isConfirmButtonDisabled = false,
   isConfirmButtonLoading = false,
@@ -65,7 +69,13 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                 title={confirmButtonText}
                 onPress={onConfirm}
                 disabled={isConfirmButtonDisabled || isConfirmButtonLoading}
-                style={styles.button}
+                style={[
+                  styles.button,
+                  confirmButtonStyle,
+                  isConfirmButtonDisabled && { backgroundColor: '#E0E0E0' },
+                  confirmButtonTextStyle,
+                  isConfirmButtonDisabled && { color: '#B0B0B0' },
+                ]}
                 endIcon={
                   isConfirmButtonLoading ? (
                     <ActivityIndicator size={18} color="#fff" />

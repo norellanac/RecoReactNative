@@ -27,6 +27,16 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
     <Screen
       statusBarProps={{
         showBackButton: true,
+        title: (
+          <Text
+            variant="headline"
+            size="small"
+            color="info"
+            style={{ marginTop: 8 }}
+          >
+            {t('services.allServices.title', 'All Services')}
+          </Text>
+        ),
         onLeftIconPress: () => navigation.goBack(),
       }}
     >

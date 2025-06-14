@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BottomTabNavigator from './BottomTabNavigator';
 import ServicesStackNavigation from '@/app/features/Services/screens/ServicesStack';
+import TaskStack from '@/app/features/Task/screens/TaskStack';
 
 const AuthorizedAppStack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ const AuthorizedApp = () => {
         name="ServicesStack"
         component={ServicesStackNavigation}
       />
+      <AuthorizedAppStack.Screen name="TaskStack" component={TaskStack} />
       {/* Other authenticated screens can be added here */}
     </AuthorizedAppStack.Navigator>
   );

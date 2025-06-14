@@ -8,7 +8,6 @@ export const TaskPage = ({ navigation }: Props) => {
   const { t } = useTranslation();
   return (
     <Screen
-      scrollable
       statusBarProps={{
         showBackButton: true,
         title: (

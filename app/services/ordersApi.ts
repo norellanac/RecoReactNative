@@ -9,6 +9,9 @@ export const ordersApi = createApi({
     getOrders: builder.query<ApiResponseType<[]>, void>({
       query: () => 'orders/',
     }),
+        getOrderById: builder.query({
+      query: (id: number | string) => `orders/${id}`,
+    }),
     createOrder: builder.mutation({
         query: (body) => ({
           url: 'orders/',
@@ -21,5 +24,6 @@ export const ordersApi = createApi({
 
 export const {
     useGetOrdersQuery,
+    useGetOrderByIdQuery,
     useCreateOrderMutation,
 } = ordersApi;

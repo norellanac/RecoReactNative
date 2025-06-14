@@ -3,17 +3,19 @@ import TaskList from '../components/TaskList';
 import EmptyState from './EmptyState';
 import { useGetOrdersQuery } from '@/app/services/ordersApi';
 
-const CompletedTasks = () => {
+const InProgressTasks = () => {
   const { data, isLoading, isError } = useGetOrdersQuery();
 
   const orders = data?.data || [];
 
-  const CompletedTasks = orders.filter((order) => order.status === 3);
+  const InProgressTasks = orders.filter((order) => order.status === 2);
 
   if (isLoading) return null; // Agregar un indicador de carga si es necesario
   if (isError) return <EmptyState />;
 
-  return <TaskList data={CompletedTasks} ListEmptyComponent={<EmptyState />} />;
+  return (
+    <TaskList data={InProgressTasks} ListEmptyComponent={<EmptyState />} />
+  );
 };
 
-export default CompletedTasks;
+export default InProgressTasks;

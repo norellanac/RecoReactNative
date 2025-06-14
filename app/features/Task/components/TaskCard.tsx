@@ -2,8 +2,12 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const TaskCard = ({ task }) => {
+  const navigation = useNavigation();
+  const { t } = useTranslation();
   // Servicio y usuario
   const detail = task.details?.[0];
   const service = detail?.productService;
@@ -78,15 +82,20 @@ const TaskCard = ({ task }) => {
       <View style={styles.actionsRow}>
         <Button
           variant="text"
-          title="Chat"
+          title={t('taskCard.viewDetails', 'View details')}
           style={styles.actionButton}
           textStyle={styles.actionButtonText}
-          onPress={() => {}}
+          onPress={() =>
+            navigation.navigate('TaskStack', {
+              screen: 'TaskOrderDetailsScreen',
+              params: { orderId: task.id },
+            })
+          }
         />
         <View style={styles.verticalDivider} />
         <Button
           variant="text"
-          title="Book"
+          title={t('taskCard.chat', 'Chat')}
           style={styles.actionButton}
           textStyle={styles.actionButtonText}
           onPress={() => {}}

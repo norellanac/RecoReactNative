@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
-import { Text, Button, Icon } from '@/app/components/atoms';
+import { Icon } from '@/app/components/atoms/Icon';
+import { Text, Button } from '@/app/components/atoms';
 import { Screen } from '../../../components/templates';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
 import { getApiImageUrl } from '@/app/utils/Environment';
 import { useCreateOrderMutation } from '@/app/services/ordersApi';
-import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '@/app/redux/slices/authSlice';
@@ -58,8 +58,10 @@ const TaskDetailsScreen = () => {
         params: { orderId: createdOrder.data.id },
       });
     } catch (error) {
-      // Maneja el error (puedes mostrar un mensaje)
-      console.error('Error creating order:', error);
+      setModalVisible(false);
+      alert(
+        t('taskDetails.orderError', 'Error creating order. Please try again.'),
+      );
     }
   };
 
@@ -92,6 +94,14 @@ const TaskDetailsScreen = () => {
           <View style={styles.headerRow}>
             <Image source={getApiImageUrl(imageUrl)} style={styles.image} />
             <View style={styles.titleContainer}>
+              <Text
+                variant="title"
+                size="medium"
+                color="info"
+                style={styles.sectionTitle}
+              >
+                {t('taskDetails.tasker', 'Tasker')}
+              </Text>
               <Text
                 variant="title"
                 size="medium"
@@ -131,11 +141,11 @@ const TaskDetailsScreen = () => {
             {t('taskDetails.timeAndDate', 'Time and date')}
           </Text>
           <View style={styles.timeRow}>
-            <Ionicons
+            <Icon
               name="calendar-outline"
               size={20}
+              family="Ionicons"
               color="#7B61FF"
-              style={{ marginRight: 6 }}
             />
             <Text
               variant="body"
@@ -145,11 +155,11 @@ const TaskDetailsScreen = () => {
             >
               {formattedDate}
             </Text>
-            <Ionicons
+            <Icon
               name="time-outline"
               size={20}
+              family="Ionicons"
               color="#7B61FF"
-              style={{ marginLeft: 18, marginRight: 6 }}
             />
             <Text
               variant="body"
@@ -260,7 +270,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   timeText: {
-    marginRight: 8,
+    marginRight: 18,
+    marginLeft: 6,
   },
   input: {
     borderWidth: 1,

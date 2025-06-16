@@ -6,6 +6,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { useGetOrderByIdQuery } from '@/app/services/ordersApi'; // Ajusta el import según tu estructura
 import { getApiImageUrl } from '@/app/utils/Environment';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 
 const TaskOrderDetailsScreen = () => {
   const { t } = useTranslation();
@@ -56,7 +57,7 @@ const TaskOrderDetailsScreen = () => {
             {t('services.taskDetails', 'Task Details')}
           </Text>
         ),
-        onLeftIconPress: () => navigation.goBack(),
+        onLeftIconPress: () => navigation.navigate('Task'),
       }}
     >
       <ScrollView contentContainerStyle={styles.container}>
@@ -72,6 +73,14 @@ const TaskOrderDetailsScreen = () => {
                 variant="title"
                 size="medium"
                 color="info"
+                style={styles.sectionTitle}
+              >
+                Task assigned to
+              </Text>
+              <Text
+                variant="title"
+                size="medium"
+                color="info"
                 style={styles.title}
                 numberOfLines={2}
               >
@@ -82,8 +91,8 @@ const TaskOrderDetailsScreen = () => {
 
           {/* Descripción de la tarea */}
           <Text
-            variant="headline"
-            size="small"
+            variant="title"
+            size="medium"
             color="info"
             style={styles.sectionTitle}
           >
@@ -108,6 +117,12 @@ const TaskOrderDetailsScreen = () => {
             Time and date
           </Text>
           <View style={styles.timeRow}>
+            <Ionicons
+              name="calendar-outline"
+              size={20}
+              color="#7B61FF"
+              style={{ marginRight: 6 }}
+            />
             <Text
               variant="body"
               size="medium"
@@ -116,6 +131,12 @@ const TaskOrderDetailsScreen = () => {
             >
               {formattedDate}
             </Text>
+            <Ionicons
+              name="time-outline"
+              size={20}
+              color="#7B61FF"
+              style={{ marginLeft: 18, marginRight: 6 }}
+            />
             <Text
               variant="body"
               size="medium"
@@ -128,18 +149,22 @@ const TaskOrderDetailsScreen = () => {
 
           {/* Botones */}
           <Button
-            title="Find a new professional"
-            variant="filled"
-            style={styles.button}
-            onPress={() => navigation.navigate('AllServices')}
+            title="Chat with provider"
+            variant="outlined"
+            style={[styles.button, { marginTop: 12 }]}
+            onPress={() => {}}
           />
           <Button
             title="Cancel Task"
             variant="outlined"
             style={[styles.button, { marginTop: 12 }]}
-            onPress={() => {
-              // Aquí puedes abrir un modal de confirmación o llamar a tu endpoint de cancelación
-            }}
+            onPress={() => {}}
+          />
+          <Button
+            title="Find a new professional"
+            variant="filled"
+            style={styles.button}
+            onPress={() => navigation.navigate('AllServices')}
           />
         </View>
       </ScrollView>
@@ -197,7 +222,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     alignSelf: 'flex-start',
-    gap: 16,
   },
   timeText: {
     marginRight: 8,

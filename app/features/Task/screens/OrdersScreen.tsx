@@ -1,16 +1,13 @@
 import React from 'react';
 import Tabs from '@/app/components/molecules/Tabs';
-import ScheduledTasks from '../components/ScheduledTasks';
-import InProgressTasks from '../components/InProgressTasks';
-import CompletedTasks from '../components/CompletedTasks';
-import CanceledTasks from '../components/CanceledTasks';
+import TasksByStatus from '../components/TasksByStatus';
 
 const OrdersScreen = () => {
   const tabs = [
-    { title: 'Scheduled', component: <ScheduledTasks /> },
-    { title: 'In Progress', component: <InProgressTasks /> },
-    { title: 'Completed', component: <CompletedTasks /> },
-    { title: 'Canceled', component: <CanceledTasks /> },
+    { title: 'Scheduled', render: () => <TasksByStatus status={1} /> },
+    { title: 'In Progress', render: () => <TasksByStatus status={2} /> },
+    { title: 'Completed', render: () => <TasksByStatus status={3} /> },
+    { title: 'Canceled', render: () => <TasksByStatus status={4} /> },
   ];
   return <Tabs tabs={tabs} scrollable={false} />;
 };

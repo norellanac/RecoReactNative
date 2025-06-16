@@ -5,7 +5,7 @@ import TaskCard from './TaskCard';
 const TaskList = ({ data, ListEmptyComponent }) => (
   <FlatList
     data={data}
-    keyExtractor={(item) => item.id}
+    keyExtractor={(item) => item.id.toString()}
     renderItem={({ item }) => <TaskCard task={item} />}
     contentContainerStyle={{ padding: 16, flexGrow: 1 }}
     ListEmptyComponent={ListEmptyComponent}

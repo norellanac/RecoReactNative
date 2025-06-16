@@ -43,6 +43,99 @@ const TaskOrderDetailsScreen = () => {
     minute: '2-digit',
   });
 
+  const renderActions = () => {
+    switch (order.status) {
+      case 1: // Scheduled
+        return (
+          <>
+            <Button
+              title="Chat with provider"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+            <Button
+              title="Cancel Task"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+            <Button
+              title="Find a new professional"
+              variant="filled"
+              style={styles.button}
+              onPress={() => navigation.navigate('AllServices')}
+            />
+            <Button
+              title="Not interested"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+          </>
+        );
+      case 2: // In Progress
+        return (
+          <>
+            <Button
+              title="Chat with provider"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+            <Button
+              title="Cancel Task"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+            <Button
+              title="Mark as completed"
+              variant="filled"
+              style={styles.button}
+              onPress={() => {}}
+            />
+          </>
+        );
+      case 3: // Completed
+        return (
+          <>
+            <Button
+              title="Rate"
+              variant="filled"
+              style={styles.button}
+              onPress={() => {}}
+            />
+            <Button
+              title="Chat with provider"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+          </>
+        );
+      case 4: // Canceled
+        return (
+          <>
+            <Button
+              title="Chat with provider"
+              variant="outlined"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+            <Button
+              title="Rate"
+              variant="filled"
+              style={styles.button}
+              onPress={() => {}}
+            />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Screen
       statusBarProps={{
@@ -148,24 +241,7 @@ const TaskOrderDetailsScreen = () => {
           </View>
 
           {/* Botones */}
-          <Button
-            title="Chat with provider"
-            variant="outlined"
-            style={[styles.button, { marginTop: 12 }]}
-            onPress={() => {}}
-          />
-          <Button
-            title="Cancel Task"
-            variant="outlined"
-            style={[styles.button, { marginTop: 12 }]}
-            onPress={() => {}}
-          />
-          <Button
-            title="Find a new professional"
-            variant="filled"
-            style={styles.button}
-            onPress={() => navigation.navigate('AllServices')}
-          />
+          {renderActions()}
         </View>
       </ScrollView>
     </Screen>

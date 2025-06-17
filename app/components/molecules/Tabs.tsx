@@ -11,7 +11,7 @@ import {
 interface TabItem {
   title: string;
   icon?: React.ReactNode;
-  component: React.ReactNode;
+  render: () => React.ReactNode;
 }
 
 interface TabsProps {
@@ -33,7 +33,7 @@ const Tabs: React.FC<TabsProps> = ({
     setActiveTab(index);
   };
 
-  const TabContent = tabs[activeTab]?.component;
+  const TabContent = tabs[activeTab]?.render();
 
   return (
     <View style={styles.container}>

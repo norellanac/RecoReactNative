@@ -2,14 +2,17 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
+import { getApiImageUrl } from '@/app/utils/Environment';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const TaskCard = ({ task }) => {
-  // Servicio y usuario
+  const navigation = useNavigation();
+  const { t } = useTranslation();
+
   const detail = task.details?.[0];
   const service = detail?.productService;
-  const user = task.user;
 
-  // Fecha y hora (usando startDate)
   const dateObj = new Date(task.startDate);
   const date = dateObj.toLocaleDateString();
   const time = dateObj.toLocaleTimeString([], {
@@ -22,8 +25,8 @@ const TaskCard = ({ task }) => {
       <View style={styles.cardContent}>
         <View style={{ flex: 1 }}>
           <Text
-            variant="title"
-            size="small"
+            variant="body"
+            size="medium"
             color="secondary"
             style={styles.cardTitle}
           >
@@ -63,30 +66,31 @@ const TaskCard = ({ task }) => {
           </View>
         </View>
         <View style={styles.avatarContainer}>
-          <Image source={{ uri: user?.avatarUrl }} style={styles.avatar} />
-          <Text
-            variant="body"
-            size="medium"
-            color="secondary"
-            style={styles.userName}
-          >
-            {user?.name} {user?.lastname}
-          </Text>
+          <Image
+            source={getApiImageUrl(service?.urlImage)}
+            //source={{ uri: getApiImageUrl(service?.urlImage) }}
+            style={styles.avatar}
+          />
         </View>
       </View>
       <View style={styles.divider} />
       <View style={styles.actionsRow}>
         <Button
           variant="text"
-          title="Chat"
+          title={t('taskCard.viewDetails', 'View details')}
           style={styles.actionButton}
           textStyle={styles.actionButtonText}
-          onPress={() => {}}
+          onPress={() =>
+            navigation.navigate('TaskStack', {
+              screen: 'TaskOrderDetailsScreen',
+              params: { orderId: task.id },
+            })
+          }
         />
         <View style={styles.verticalDivider} />
         <Button
           variant="text"
-          title="Book"
+          title={t('taskCard.chat', 'Chat')}
           style={styles.actionButton}
           textStyle={styles.actionButtonText}
           onPress={() => {}}
@@ -95,8 +99,6 @@ const TaskCard = ({ task }) => {
     </View>
   );
 };
-
-// ...styles igual...
 
 export default TaskCard;
 
@@ -119,6 +121,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   cardTitle: {
+    fontWeight: 'bold',
     marginBottom: 8,
   },
   row: {
@@ -134,9 +137,10 @@ const styles = StyleSheet.create({
     marginLeft: 18,
   },
   avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    marginRight: 8,
     marginBottom: 4,
     backgroundColor: '#eee',
   },

@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
-import { Text, Button, Icon } from '@/app/components/atoms';
+import { Icon } from '@/app/components/atoms/Icon';
+import { Text, Button } from '@/app/components/atoms';
 import { Screen } from '../../../components/templates';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
 import { getApiImageUrl } from '@/app/utils/Environment';
-import { Ionicons } from '@expo/vector-icons';
+import { useCreateOrderMutation } from '@/app/services/ordersApi';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '@/app/redux/slices/authSlice';
 
 const TaskDetailsScreen = () => {
   const { t } = useTranslation();
   const route = useRoute();
   const navigation = useNavigation();
+  const { user } = useSelector(selectAuth);
+  const userId = user?.id;
   const { service, dateTime, imageUrl } = route.params || {};
   const [userText, setUserText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
 
   if (!service || !dateTime) {
     return <Text>{t('taskDetails.noData', 'No data available')}</Text>;
@@ -25,9 +31,38 @@ const TaskDetailsScreen = () => {
   };
 
   const handleSendOrder = async () => {
-    // Aquí va tu lógica para enviar la orden al endpoint de orders
-    setModalVisible(false);
-    navigation.navigate('Tasks');
+    try {
+      const orderBody = {
+        userId: userId,
+        totalAmount: service.price,
+        status: 1,
+        comment: userText,
+        startDate: dateTime,
+        endDate: dateTime,
+        details: [
+          {
+            productServiceId: service.id,
+            quantity: 1,
+            price: service.price,
+            discount: 0,
+            charge: 0,
+            comment: userText,
+          },
+        ],
+      };
+
+      const createdOrder = await createOrder(orderBody).unwrap();
+      setModalVisible(false);
+      navigation.navigate('TaskStack', {
+        screen: 'TaskOrderDetailsScreen',
+        params: { orderId: createdOrder.data.id },
+      });
+    } catch (error) {
+      setModalVisible(false);
+      alert(
+        t('taskDetails.orderError', 'Error creating order. Please try again.'),
+      );
+    }
   };
 
   const dateObj = new Date(dateTime);
@@ -59,6 +94,14 @@ const TaskDetailsScreen = () => {
           <View style={styles.headerRow}>
             <Image source={getApiImageUrl(imageUrl)} style={styles.image} />
             <View style={styles.titleContainer}>
+              <Text
+                variant="title"
+                size="medium"
+                color="info"
+                style={styles.sectionTitle}
+              >
+                {t('taskDetails.tasker', 'Tasker')}
+              </Text>
               <Text
                 variant="title"
                 size="medium"
@@ -98,11 +141,11 @@ const TaskDetailsScreen = () => {
             {t('taskDetails.timeAndDate', 'Time and date')}
           </Text>
           <View style={styles.timeRow}>
-            <Ionicons
+            <Icon
               name="calendar-outline"
               size={20}
+              family="Ionicons"
               color="#7B61FF"
-              style={{ marginRight: 6 }}
             />
             <Text
               variant="body"
@@ -112,11 +155,11 @@ const TaskDetailsScreen = () => {
             >
               {formattedDate}
             </Text>
-            <Ionicons
+            <Icon
               name="time-outline"
               size={20}
+              family="Ionicons"
               color="#7B61FF"
-              style={{ marginLeft: 18, marginRight: 6 }}
             />
             <Text
               variant="body"
@@ -227,7 +270,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   timeText: {
-    marginRight: 8,
+    marginRight: 18,
+    marginLeft: 6,
   },
   input: {
     borderWidth: 1,

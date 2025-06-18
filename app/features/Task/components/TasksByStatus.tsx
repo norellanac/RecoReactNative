@@ -22,12 +22,6 @@ const TasksByStatus = ({ status }) => {
         order.userId === userId && Number(order.status) === Number(status),
     ) || [];
 
-  //   console.log('status prop:', status, typeof status);
-  //   console.log('orders from backend:', data?.data);
-  //   console.log('filtered orders:', orders);
-
-  //   console.log('orders:', data?.data);
-
   if (isLoading) return null;
   if (isError) return <EmptyState />;
 

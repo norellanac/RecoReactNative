@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Text, Button } from '@/app/components/atoms';
 import { Screen } from '@/app/components/templates';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useGetOrderByIdQuery } from '@/app/services/ordersApi'; // Ajusta el import según tu estructura
+import { useGetOrderByIdQuery } from '@/app/services/ordersApi';
 import { getApiImageUrl } from '@/app/utils/Environment';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -50,25 +50,19 @@ const TaskOrderDetailsScreen = () => {
           <>
             <Button
               title="Chat with provider"
-              variant="outlined"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
-            />
-            <Button
-              title="Cancel Task"
-              variant="outlined"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
-            />
-            <Button
-              title="Find a new professional"
               variant="filled"
               style={styles.button}
               onPress={() => navigation.navigate('AllServices')}
             />
             <Button
               title="Not interested"
-              variant="outlined"
+              variant="tonal"
+              style={[styles.button, { marginTop: 12 }]}
+              onPress={() => {}}
+            />
+            <Button
+              title="Find a new professional"
+              variant="text"
               style={[styles.button, { marginTop: 12 }]}
               onPress={() => {}}
             />
@@ -79,13 +73,7 @@ const TaskOrderDetailsScreen = () => {
           <>
             <Button
               title="Chat with provider"
-              variant="outlined"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
-            />
-            <Button
-              title="Cancel Task"
-              variant="outlined"
+              variant="tonal"
               style={[styles.button, { marginTop: 12 }]}
               onPress={() => {}}
             />
@@ -93,6 +81,12 @@ const TaskOrderDetailsScreen = () => {
               title="Mark as completed"
               variant="filled"
               style={styles.button}
+              onPress={() => {}}
+            />
+            <Button
+              title="Cancel Task"
+              variant="text"
+              style={[styles.button, { marginTop: 12 }]}
               onPress={() => {}}
             />
           </>
@@ -104,11 +98,19 @@ const TaskOrderDetailsScreen = () => {
               title="Rate"
               variant="filled"
               style={styles.button}
-              onPress={() => {}}
+              onPress={() =>
+                navigation.navigate('RateScreen', {
+                  service: {
+                    id: service?.id,
+                    urlImage: service?.urlImage,
+                    name: service?.name,
+                  },
+                })
+              }
             />
             <Button
               title="Chat with provider"
-              variant="outlined"
+              variant="tonal"
               style={[styles.button, { marginTop: 12 }]}
               onPress={() => {}}
             />
@@ -118,15 +120,23 @@ const TaskOrderDetailsScreen = () => {
         return (
           <>
             <Button
-              title="Chat with provider"
-              variant="outlined"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
-            />
-            <Button
               title="Rate"
               variant="filled"
               style={styles.button}
+              onPress={() =>
+                navigation.navigate('RateScreen', {
+                  service: {
+                    id: service?.id,
+                    urlImage: service?.urlImage,
+                    name: service?.name,
+                  },
+                })
+              }
+            />
+            <Button
+              title="Chat with provider"
+              variant="tonal"
+              style={[styles.button, { marginTop: 12 }]}
               onPress={() => {}}
             />
           </>

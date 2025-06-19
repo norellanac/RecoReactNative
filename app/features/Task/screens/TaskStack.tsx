@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TaskPage } from './Task';
 import TaskOrderDetailsScreen from './TaskOrderDetailsScreen';
+import RateScreen from '../components/RateScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +13,7 @@ const TaskStack = () => (
       name="TaskOrderDetailsScreen"
       component={TaskOrderDetailsScreen}
     />
+    <Stack.Screen name="RateScreen" component={RateScreen} />
   </Stack.Navigator>
 );
 

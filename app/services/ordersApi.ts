@@ -5,25 +5,28 @@ import { ApiResponseType } from '../types/api/apiResponses';
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
   baseQuery: baseQueryWithReauth,
+  tagTypes: ['Orders'],
   endpoints: (builder) => ({
     getOrders: builder.query<ApiResponseType<[]>, void>({
       query: () => 'orders/',
+      providesTags: ['Orders'],
     }),
-        getOrderById: builder.query({
+    getOrderById: builder.query({
       query: (id: number | string) => `orders/${id}`,
     }),
     createOrder: builder.mutation({
-        query: (body) => ({
-          url: 'orders/',
-          method: 'POST',
-          body,
-        }),
+      query: (body) => ({
+        url: 'orders/',
+        method: 'POST',
+        body,
       }),
+      invalidatesTags: ['Orders'],
+    }),
   }),
 });
 
 export const {
-    useGetOrdersQuery,
-    useGetOrderByIdQuery,
-    useCreateOrderMutation,
+  useGetOrdersQuery,
+  useGetOrderByIdQuery,
+  useCreateOrderMutation,
 } = ordersApi;

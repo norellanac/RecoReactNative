@@ -9,9 +9,18 @@ import { useTranslation } from 'react-i18next';
 type Props = {
   service: ProductService;
   onPress: () => void;
+  showBookmark?: boolean;
+  showProvider?: boolean;
+  rightAction?: React.ReactNode;
 };
 
-export const ServiceCard: React.FC<Props> = ({ service, onPress }) => {
+export const ServiceCard: React.FC<Props> = ({
+  service,
+  onPress,
+  showBookmark = true,
+  showProvider = true,
+  rightAction,
+}) => {
   const { t } = useTranslation();
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
@@ -22,9 +31,13 @@ export const ServiceCard: React.FC<Props> = ({ service, onPress }) => {
         />
       </View>
       <View style={styles.cardContent}>
-        <Text variant="body" size="small" style={styles.providerName}>
-          {service.user ? `${service.user.name} ${service.user.lastname}` : ''}
-        </Text>
+        {showProvider && (
+          <Text variant="body" size="small" style={styles.providerName}>
+            {service.user
+              ? `${service.user.name} ${service.user.lastname}`
+              : ''}
+          </Text>
+        )}
         <Text
           variant="title"
           size="medium"
@@ -60,13 +73,19 @@ export const ServiceCard: React.FC<Props> = ({ service, onPress }) => {
           </Text>
         </View>
       </View>
-      <Icon
-        name="bookmark-outline"
-        family="MaterialCommunityIcons"
-        size={25}
-        color="#7B61FF"
-        style={styles.bookmarkIcon}
-      />
+      {rightAction ? (
+        <View style={styles.rightAction}>{rightAction}</View>
+      ) : (
+        showBookmark && (
+          <Icon
+            name="bookmark-outline"
+            family="MaterialCommunityIcons"
+            size={25}
+            color="#7B61FF"
+            style={styles.bookmarkIcon}
+          />
+        )
+      )}
     </TouchableOpacity>
   );
 };
@@ -131,6 +150,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 18,
     right: 18,
+  },
+  rightAction: {
+    position: 'absolute',
+    top: 18,
+    right: 18,
+    // Puedes ajustar el estilo según el tamaño del botón/ícono
   },
 });
 

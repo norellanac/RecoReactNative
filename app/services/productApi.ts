@@ -6,12 +6,15 @@ import { ProductService } from '../types/api/modelTypes';
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: baseQueryWithReauth,
+  //tagTypes: ['Products', 'ProductsById'],
   endpoints: (builder) => ({
     getProducts: builder.query<ApiResponseType<{items: ProductService[]}>, void>({
-      query: () => 'public/products?limit=50&offset=1',
+      query: () => 'public/products?limit=50&offset=0',
+    //  invalidatesTags: ['Products'],
     }),
     getProductById: builder.query({
       query: (id) => `public/products/${id}/`,
+      //invalidatesTags: ['ProductsById'],
     }),
     createProduct: builder.mutation({
       query: (productData) => ({
@@ -26,6 +29,7 @@ export const productApi = createApi({
         method: 'PUT',
         body: productData,
       }),
+      //invalidatesTags: ['Products'],
     }),
     uploadProductImage: builder.mutation({
       query: ({ productId, formData }) => ({
@@ -34,6 +38,7 @@ export const productApi = createApi({
         body: formData,
         formData: true,
       }),
+      //invalidatesTags: ['Products'],
     }),
   }),
 });

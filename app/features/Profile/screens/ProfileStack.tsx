@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LandingProfile } from './Landing';
 import { ChangeLanguage } from './ChangeLanguage';
-import { BusinessStepperScreen } from '@/app/features/BusinessStepper/screens/BusinessStepperScreen';
+import { BusinessStepperScreen } from '@/app/features/Business/screens/BusinessStepperScreen';
 
 export type ProfileStackParams = {
   Profile: undefined;

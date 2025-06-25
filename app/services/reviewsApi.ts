@@ -4,6 +4,7 @@ import baseQueryWithReauth from './baseQueryWithReauth';
 export const reviewsApi = createApi({
   reducerPath: 'reviewsApi',
   baseQuery: baseQueryWithReauth,
+  //tagTypes: ['Reviews', 'Products', 'ProductsById'],
   endpoints: (builder) => ({
     addProductReview: builder.mutation({
       query: ({ productServiceId, userId, rating, comment }) => ({
@@ -11,6 +12,10 @@ export const reviewsApi = createApi({
         method: 'POST',
         body: { productServiceId, userId, rating, comment },
       }),
+  //     invalidatesTags: [
+  //       { type: 'Products' },
+  //       { type: 'ProductsById' },
+  // ],
     }),
   }),
 });

@@ -9,7 +9,7 @@ import { Text } from '../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTranslation } from 'react-i18next';
-import { BusinessStepperScreen } from '../features/BusinessStepper/screens/BusinessStepperScreen';
+import { BusinessNavigation } from '@/app/features/Business/screens/BusinessStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,7 +74,7 @@ const BottomTabNavigator = React.memo(() => {
       })}
     >
       <Tab.Screen name="Home" component={HomeNavigation} />
-      <Tab.Screen name="Products" component={BusinessStepperScreen} />
+      <Tab.Screen name="Products" component={BusinessNavigation} />
       <Tab.Screen name="Task" component={TaskPage} />
       <Tab.Screen name="Favorites" component={FavoritesNavigation} />
       <Tab.Screen name="Profile" component={ProfileNavigation} />

@@ -24,7 +24,8 @@ const RateScreen = ({ route, navigation }) => {
   const { user } = useSelector(selectAuth);
   const userId = user?.id;
   const { service } = route.params || {};
-  const [rating, setRating] = useState(4.5);
+  const [rating, setRating] = useState(0);
+  const [error, setError] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [feedback, setFeedback] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -40,15 +41,14 @@ const RateScreen = ({ route, navigation }) => {
   const handleRate = (value) => setRating(value);
 
   const handleSubmit = async () => {
+    if (rating === 0) {
+      setError('Please select a rating before submitting.');
+      return;
+    }
+    setError('');
     const tagsString =
       selectedTags.length > 0 ? `\n\nTags: ${selectedTags.join(', ')}` : '';
     const fullComment = feedback + tagsString;
-    // console.log('Enviando payload:', {
-    //   productServiceId: service.id,
-    //   userId: user.id,
-    //   rating,
-    //   comment: fullComment,
-    // });
     try {
       await addProductReview({
         productServiceId: service?.id,
@@ -57,9 +57,7 @@ const RateScreen = ({ route, navigation }) => {
         comment: fullComment,
       }).unwrap();
       setShowModal(true);
-    } catch (e) {
-      // Maneja el error
-    }
+    } catch (e) {}
   };
 
   return (
@@ -176,6 +174,9 @@ const RateScreen = ({ route, navigation }) => {
             onChangeText={setFeedback}
             multiline
           />
+          {error ? (
+            <Text style={{ color: 'red', marginBottom: 8 }}>{error}</Text>
+          ) : null}
           <Button
             title={t('rateScreen.submit', 'Submit')}
             variant="filled"

@@ -128,7 +128,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
               <CategoryCard
                 key={index}
                 title={category.name}
-                icon={undefined}
+                icon={category.icon}
               />
             ))}
           </ScrollView>

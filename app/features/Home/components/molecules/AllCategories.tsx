@@ -5,6 +5,7 @@ import { Screen } from '../../../../components/templates';
 import { Text } from '../../../../components/atoms/Text';
 import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 import { useTranslation } from 'react-i18next';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
 export const AllCategories = ({ navigation }: { navigation: any }) => {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ export const AllCategories = ({ navigation }: { navigation: any }) => {
       <View style={styles.iconContainer}>
         {item.icon && (
           <Image
-            source={{ uri: item.icon }}
+            source={getApiImageUrl(item.icon)}
             style={styles.iconImage}
             resizeMode="contain"
           />

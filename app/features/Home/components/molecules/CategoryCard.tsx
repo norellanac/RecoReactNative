@@ -1,12 +1,13 @@
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Image, Pressable, View } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/app/theme/ThemeProvider';
 import { Text } from '@/app/components/atoms';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
 type CategoryCardProps = {
   title: string;
-  icon: React.ReactNode;
+  icon: string;
 };
 
 export default function CategoryCard({
@@ -28,7 +29,11 @@ export default function CategoryCard({
           backgroundColor: colors.secondary_container,
         }}
       >
-        {icon || <Ionicons name={'home'} size={24} color={colors.primary} />}
+        <Image
+          source={getApiImageUrl(icon)}
+          resizeMode="contain"
+          style={{ height: 24, width: 24, marginBottom: 5 }}
+        />
         <Text
           variant="body"
           size="small"

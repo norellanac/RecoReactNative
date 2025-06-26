@@ -18,6 +18,7 @@ import {
   setServiceState,
 } from '@/app/redux/slices/serviceStepperSlice';
 import CustomStepper from './CustomStepper';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
 const Step2 = ({ onNext }: { onNext?: () => void }) => {
   const { t } = useTranslation();
@@ -106,7 +107,7 @@ const Step2 = ({ onNext }: { onNext?: () => void }) => {
               activeOpacity={0.8}
             >
               <Image
-                source={{ uri: category.icon }}
+                source={getApiImageUrl(category.icon)}
                 style={styles.categoryIcon}
                 resizeMode="contain"
               />
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   categoryCard: {
-    flexBasis: '48%',
+    width: '46%',
     backgroundColor: '#F3ECFF',
     borderRadius: 8,
     padding: 16,
@@ -167,8 +168,8 @@ const styles = StyleSheet.create({
     borderColor: '#7B61FF',
   },
   categoryIcon: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     marginBottom: 8,
   },
   categoryName: {

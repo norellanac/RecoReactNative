@@ -13,6 +13,7 @@ import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
 import CategoryChipList from '../components/molecules/CategoryChipList';
+import slider_1 from '../../../assets/img/home_sliders/slider_1.png';
 import Carousel from '@/app/components/molecules/Carousel';
 import { ProductService } from '@/app/types/api/modelTypes';
 
@@ -89,7 +90,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           paddingHorizontal: 10,
         }}
       >
-        <Carousel />
+        <Carousel images={[{ img: slider_1 }, { img: slider_1 }]} />
 
         <View>
           <View
@@ -128,7 +129,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
               <CategoryCard
                 key={index}
                 title={category.name}
-                icon={undefined}
+                icon={category.icon}
               />
             ))}
           </ScrollView>

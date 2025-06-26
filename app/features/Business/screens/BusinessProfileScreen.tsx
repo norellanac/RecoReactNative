@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '../../../components/atoms';
 import { Screen } from '../../../components/templates';
@@ -9,14 +9,25 @@ import { useTranslation } from 'react-i18next';
 
 export const BusinessProfileScreen = ({ navigation }) => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState(0);
+
+  const switchToRegisterTab = () => {
+    setActiveTab(0);
+  };
+
   const tabs = [
     {
-      title: 'Mis servicios',
-      render: () => <MyServices navigation={navigation} />,
+      title: t('business.tabs.register', 'Register new service'),
+      render: () => <BusinessStepperScreen navigation={navigation} />,
     },
     {
-      title: 'Registrar servicio',
-      render: () => <BusinessStepperScreen navigation={navigation} />,
+      title: t('business.tabs.myServices', 'My services'),
+      render: () => (
+        <MyServices
+          navigation={navigation}
+          onRegisterService={switchToRegisterTab}
+        />
+      ),
     },
   ];
 
@@ -38,7 +49,7 @@ export const BusinessProfileScreen = ({ navigation }) => {
       }}
     >
       <View style={styles.container}>
-        <Tabs tabs={tabs} />
+        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
       </View>
     </Screen>
   );

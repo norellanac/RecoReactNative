@@ -93,12 +93,12 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
         <Carousel
           images={[
             {
-              img: slider_1,
+              img: slider_2,
               //buttonText: 'Busca servicios de confianza',
               onButtonPress: () => navigation.navigate('AllServices'),
             },
             {
-              img: slider_2,
+              img: slider_1,
               //buttonText: 'Explora categorías',
               onButtonPress: () => navigation.navigate('AllCategories'),
             },

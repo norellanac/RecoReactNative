@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { Text } from '@/app/components/atoms';
 import { Button } from '@/app/components/atoms/Button';
 import { Screen } from '../../../components/templates';
@@ -12,8 +12,8 @@ import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
-import CategoryChipList from '../components/molecules/CategoryChipList';
-import slider_1 from '../../../assets/img/home_sliders/slider_1.png';
+import slider_1 from '../../../assets/img/home_sliders/slider_1_Reco.png';
+import slider_2 from '../../../assets/img/home_sliders/slider_2_Reco.png';
 import Carousel from '@/app/components/molecules/Carousel';
 import { ProductService } from '@/app/types/api/modelTypes';
 
@@ -90,7 +90,21 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           paddingHorizontal: 10,
         }}
       >
-        <Carousel images={[{ img: slider_1 }, { img: slider_1 }]} />
+        <Carousel
+          images={[
+            {
+              img: slider_1,
+              //buttonText: 'Busca servicios de confianza',
+              onButtonPress: () => navigation.navigate('AllServices'),
+            },
+            {
+              img: slider_2,
+              //buttonText: 'Explora categorías',
+              onButtonPress: () => navigation.navigate('AllCategories'),
+            },
+          ]}
+          autoScroll={true}
+        />
 
         <View>
           <View

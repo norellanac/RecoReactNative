@@ -3,6 +3,7 @@ import { Screen } from '../../../components/templates';
 import { Text } from '../../../components/atoms';
 import OrdersScreen from './OrdersScreen';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
 export const TaskPage = ({ navigation }: Props) => {
   const { t } = useTranslation();
@@ -23,7 +24,17 @@ export const TaskPage = ({ navigation }: Props) => {
         onLeftIconPress: () => navigation.goBack(),
       }}
     >
-      <OrdersScreen />
+      <View style={Styles.container}>
+        <OrdersScreen />
+      </View>
     </Screen>
   );
+};
+
+const Styles = {
+  container: {
+    marginTop: 16,
+    flex: 1,
+    backgroundColor: '#fffff',
+  },
 };

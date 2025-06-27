@@ -8,6 +8,11 @@ import TaskDetailsScreen from './TaskDetailsScreen';
 export type ServicesStackParams = {
   AllServices: undefined;
   ServiceDetails: { productService: ProductService };
+  TaskDetails: {
+    service: ProductService;
+    dateTime: string;
+    imageUrl?: string;
+  };
 };
 
 const ServicesStack = createNativeStackNavigator<ServicesStackParams>();

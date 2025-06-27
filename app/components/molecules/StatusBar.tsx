@@ -4,12 +4,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
-  TextStyle,
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Text } from '../atoms';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import RecoLogo from '@/app/assets/img/Reco_logo.png';
 
@@ -25,6 +22,7 @@ type StatusBarProps = {
   containerStyle?: ViewStyle;
   showBackButton?: boolean;
   backText?: string;
+  showBottomLine?: boolean;
 };
 
 const StatusBar: React.FC<StatusBarProps> = ({
@@ -38,52 +36,66 @@ const StatusBar: React.FC<StatusBarProps> = ({
   iconColor = '#000',
   containerStyle,
   showBackButton = false,
+  showBottomLine = true,
 }) => {
-  const { t } = useTranslation();
   const navigation = useNavigation();
   return (
     <View style={[styles.container, { backgroundColor }, containerStyle]}>
-      {showBackButton ? (
-        <TouchableOpacity
-          onPress={onLeftIconPress || navigation.goBack}
-          style={styles.iconContainer}
-        >
-          {leftElement || (
-            <Ionicons name="arrow-back" size={24} color={iconColor} />
+      <View style={styles.content}>
+        {showBackButton ? (
+          <TouchableOpacity
+            onPress={onLeftIconPress || navigation.goBack}
+            style={styles.iconContainer}
+          >
+            {leftElement || (
+              <Ionicons name="arrow-back" size={24} color={iconColor} />
+            )}
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.iconContainer} />
+        )}
+        <TouchableOpacity onPress={onTitlePress} style={styles.titleContainer}>
+          {title || (
+            <Image
+              source={RecoLogo}
+              style={{
+                width: 100,
+                height: 28,
+                resizeMode: 'contain',
+                marginTop: 5,
+                marginBottom: 5,
+              }}
+              accessibilityLabel="Reco logo"
+            />
           )}
         </TouchableOpacity>
-      ) : (
-        <View style={styles.iconContainer} />
-      )}
-      <TouchableOpacity onPress={onTitlePress} style={styles.titleContainer}>
-        {title || (
-          <Image
-            source={RecoLogo}
-            style={{
-              width: 100,
-              height: 28,
-              resizeMode: 'contain',
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-            accessibilityLabel="Reco logo"
-          />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onRightIconPress} style={styles.iconContainer}>
-        {rightElement}
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onRightIconPress}
+          style={styles.iconContainer}
+        >
+          {rightElement}
+        </TouchableOpacity>
+      </View>
+      {showBottomLine && <View style={styles.bottomLine} />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#fff',
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     paddingBottom: 10,
+  },
+  bottomLine: {
+    height: 1,
+    backgroundColor: '#E5E5E5',
+    opacity: 0.5,
   },
   iconContainer: {
     width: 50,

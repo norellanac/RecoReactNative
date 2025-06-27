@@ -10,20 +10,30 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
-import { ServicesStackParams } from './ServicesStack';
 import { Screen } from '../../../components/templates';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { getApiImageUrl } from '@/app/utils/Environment';
 import Carousel from '@/app/components/molecules/Carousel';
 import ReviewsSection from '@/app/components/molecules/ReviewsSection';
+import { ProductService } from '@/app/types/api/modelTypes';
 
-type ServiceDetailsRouteProp = RouteProp<ServicesStackParams, 'ServiceDetails'>;
+// Define a generic type for any stack that includes ServiceDetails
+type ServiceDetailsParams = {
+  productService: ProductService;
+};
+
+type NavigationProp = {
+  navigate: (screen: string, params?: any) => void;
+  goBack: () => void;
+};
+
+type ServiceDetailsRouteProp = RouteProp<Record<string, ServiceDetailsParams>, 'ServiceDetails'>;
 
 const ServiceDetails = () => {
   const { t } = useTranslation();
   const route = useRoute<ServiceDetailsRouteProp>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>(); // Using any to work across multiple stacks
   const { productService } = route.params;
 
   const [calendarVisible, setCalendarVisible] = useState(false);

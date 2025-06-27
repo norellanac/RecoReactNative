@@ -78,6 +78,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
         endAdornment={<Icon name="close" onPress={handleClearSearch} />}
         startAdornment={<Icon name="search" />}
         style={{
+          marginTop: 16,
           marginLeft: 10,
           marginRight: 10,
           backgroundColor: '#fff',

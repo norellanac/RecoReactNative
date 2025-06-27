@@ -12,6 +12,9 @@ type Props = {
   showBookmark?: boolean;
   showProvider?: boolean;
   rightAction?: React.ReactNode;
+  showFavorite?: boolean;
+  isFavorite?: boolean;
+  onFavoritePress?: () => void;
 };
 
 export const ServiceCard: React.FC<Props> = ({
@@ -20,6 +23,9 @@ export const ServiceCard: React.FC<Props> = ({
   showBookmark = true,
   showProvider = true,
   rightAction,
+  showFavorite = false,
+  isFavorite = false,
+  onFavoritePress,
 }) => {
   const { t } = useTranslation();
   return (
@@ -75,15 +81,25 @@ export const ServiceCard: React.FC<Props> = ({
       </View>
       {rightAction ? (
         <View style={styles.rightAction}>{rightAction}</View>
-      ) : (
-        showBookmark && (
+      ) : showFavorite ? (
+        <TouchableOpacity style={styles.rightAction} onPress={onFavoritePress}>
           <Icon
-            name="bookmark-outline"
+            name={isFavorite ? 'heart' : 'heart-outline'}
             family="MaterialCommunityIcons"
             size={25}
-            color="#7B61FF"
-            style={styles.bookmarkIcon}
+            color={isFavorite ? '#FF4757' : '#7B61FF'}
           />
+        </TouchableOpacity>
+      ) : (
+        showBookmark && (
+          <View style={styles.rightAction}>
+            <Icon
+              name="bookmark-outline"
+              family="MaterialCommunityIcons"
+              size={25}
+              color="#7B61FF"
+            />
+          </View>
         )
       )}
     </TouchableOpacity>
@@ -145,11 +161,6 @@ const styles = StyleSheet.create({
   },
   reviewsText: {
     marginLeft: 8,
-  },
-  bookmarkIcon: {
-    position: 'absolute',
-    top: 18,
-    right: 18,
   },
   rightAction: {
     position: 'absolute',

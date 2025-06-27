@@ -94,7 +94,9 @@
     "app_name": "Reco"
   },
   "favorites": {
-    "title": "Favorites"
+    "title": "My Favorites",
+    "empty": "You don't have favorite services yet",
+    "emptyDescription": "Add services to favorites from the services screen"
   },
   "forms": {
     "commons": {

@@ -57,6 +57,7 @@ export const BusinessProfileScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 16,
     flex: 1,
     backgroundColor: '#FAF8FF',
   },

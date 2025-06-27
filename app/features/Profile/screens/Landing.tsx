@@ -25,7 +25,7 @@ import { ProfileOptions } from '../components/ProfileOptions';
 import { Icon } from '@/app/components/atoms/Icon';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
 
-type Props = NativeStackScreenProps<ProfileStackParams, 'Profile'>;
+type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
 export const LandingProfile = ({ navigation }: Props) => {
   const { t } = useTranslation();
@@ -130,7 +130,21 @@ export const LandingProfile = ({ navigation }: Props) => {
   };
 
   return (
-    <Screen statusBarProps={{}}>
+    <Screen
+      statusBarProps={{
+        showBackButton: true,
+        title: (
+          <Text
+            variant="headline"
+            size="small"
+            color="info"
+            style={{ marginTop: 8 }}
+          >
+            {t('userProfile.title', 'Profile')}
+          </Text>
+        ),
+      }}
+    >
       <View style={styles.container}>
         {/* Avatar Upload */}
         <TouchableOpacity onPress={handleImageChange}>

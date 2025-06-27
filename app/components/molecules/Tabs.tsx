@@ -18,19 +18,30 @@ interface TabsProps {
   tabs: TabItem[];
   scrollable?: boolean;
   headerBGColor?: boolean;
+  activeTab?: number;
+  onTabChange?: (index: number) => void;
 }
 
 const Tabs: React.FC<TabsProps> = ({
   tabs,
   scrollable = false,
   headerBGColor = false,
+  activeTab: controlledActiveTab,
+  onTabChange,
 }) => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [internalActiveTab, setInternalActiveTab] = useState(0);
   const { theme } = useTheme();
   const { colors } = theme;
 
+  // Use controlled activeTab if provided, otherwise use internal state
+  const activeTab = controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
+
   const handleTabPress = (index: number) => {
-    setActiveTab(index);
+    if (onTabChange) {
+      onTabChange(index);
+    } else {
+      setInternalActiveTab(index);
+    }
   };
 
   const TabContent = tabs[activeTab]?.render();

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '@/app/redux/slices/authSlice';
 import ServiceCard from '@/app/components/molecules/ServiceCard';
 
-const MyServices = ({ navigation }) => {
+const MyServices = ({ navigation, onRegisterService }) => {
   const { user } = useSelector(selectAuth);
   const userId = user?.id;
   const { data, isLoading } = useGetProductsQuery();
@@ -50,7 +50,7 @@ const MyServices = ({ navigation }) => {
         title="Registrar nuevo servicio"
         variant="filled"
         style={styles.addButton}
-        onPress={() => navigation.navigate('BusinessStepper')}
+        onPress={onRegisterService}
       />
     </ScrollView>
   );

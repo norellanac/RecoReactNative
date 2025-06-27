@@ -19,6 +19,13 @@
     "profile": "Profile",
     "task": "Task"
   },
+  "business": {
+    "title": "My Services",
+    "tabs": {
+      "register": "Register service",
+      "myServices": "My services"
+    }
+  },
   "businessProfilePage": {
     "profile": {
       "noSkills": "No skills listed"

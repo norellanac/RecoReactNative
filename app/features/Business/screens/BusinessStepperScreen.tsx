@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Screen } from '../../../components/templates';
 import Step1 from '../steps/Step1';
 import Step2 from '../steps/Step2';
 import Step3 from '../steps/Step3';
@@ -19,15 +18,8 @@ export const BusinessStepperScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <Screen
-      statusBarProps={{
-        showBackButton: true,
-        onLeftIconPress: () => navigation.goBack('Profile'),
-      }}
-    >
-      <View style={{ flex: 1 }}>
-        <StepComponent />
-      </View>
-    </Screen>
+    <View style={{ flex: 1 }}>
+      <StepComponent />
+    </View>
   );
 };

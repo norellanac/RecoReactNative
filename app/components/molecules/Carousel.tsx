@@ -10,7 +10,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import { Button } from '@/app/components/atoms';
-import slider_1 from '../../assets/img/home_sliders/slider_1.png';
+import slider_1 from '../../assets/img/home_sliders/slider_1_Reco.png';
+import slider_2 from '../../assets/img/home_sliders/slider_2_Reco.png';
 import { useTheme } from '@/app/theme/ThemeProvider';
 
 const { width } = Dimensions.get('window');
@@ -38,21 +39,16 @@ const defaultImages = [
     onButtonPress: () => alert('Action 1 Pressed'),
   },
   {
-    img: slider_1,
+    img: slider_2,
     buttonText: 'Action 2',
     onButtonPress: () => alert('Action 2 Pressed'),
-  },
-  {
-    img: slider_1,
-    buttonText: 'Action 3',
-    onButtonPress: () => alert('Action 3 Pressed'),
   },
 ];
 
 const Carousel: React.FC<CarouselProps> = ({
   images = defaultImages,
   autoScroll = true,
-  interval = 3000,
+  interval = 3500,
   imageStyle,
   cardStyle,
 }) => {
@@ -120,23 +116,16 @@ const Carousel: React.FC<CarouselProps> = ({
         {images.map((image, index) => (
           <View
             key={index}
-            style={[
-              styles.card,
-              { width: width - 20 },
-              cardStyle, // Apply custom card style if provided
-            ]}
+            style={[styles.card, { width: width - 20 }, cardStyle]}
           >
             <Image
               source={image.img}
-              style={[
-                styles.image,
-                imageStyle, // Apply custom image style if provided
-              ]}
+              style={[styles.image, imageStyle]}
               defaultSource={slider_1}
               onError={() => handleImageError(index)}
             />
             {image.buttonText && (
-              <View style={styles.buttonContainer}>
+              <View style={styles.buttonOverlay}>
                 <Button
                   variant="filled"
                   title={image.buttonText}
@@ -172,19 +161,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    height: 240,
   },
   image: {
     borderRadius: 16,
     marginBottom: 10,
-    width: '85%',
-    height: 250,
+    width: '95%',
+    height: 220,
     resizeMode: 'cover',
   },
-  buttonContainer: {
+  buttonOverlay: {
     position: 'absolute',
     bottom: 20,
     left: 25,
     padding: 15,
+    zIndex: 2,
   },
   dotsContainer: {
     flexDirection: 'row',

@@ -19,6 +19,13 @@
     "profile": "Perfil",
     "task": "Tareas"
   },
+  "business": {
+    "title": "Mis Servicios",
+    "tabs": {
+      "register": "Registrar nuevo servicio",
+      "myServices": "Servicios registrados"
+    }
+  },
   "businessProfilePage": {
     "profile": {
       "noSkills": "No hay habilidades listadas"

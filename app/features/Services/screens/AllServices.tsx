@@ -7,17 +7,48 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Text } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { Screen } from '../../../components/templates';
 import { useGetProductsQuery } from '@/app/services/productApi';
-import { ServicesStackParams } from './ServicesStack';
+import { HomeStackParams } from '../../Home/screens/HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ServiceCard from '@/app/components/molecules/ServiceCard';
+import {
+  toggleFavorite,
+  selectIsFavorite,
+} from '@/app/redux/slices/favoritesSlice';
 
-type Props = NativeStackScreenProps<ServicesStackParams, 'AllServices'>;
+type Props = NativeStackScreenProps<HomeStackParams, 'AllServices'>;
 
-export const AllServices = ({ navigation } /** route */ : Props) => {
+const ServiceItem = ({ item, navigation }: { item: any; navigation: any }) => {
+  const dispatch = useDispatch();
+  const isFavorite = useSelector((state: any) =>
+    selectIsFavorite(state, item.id),
+  );
+
+  const handleFavoriteToggle = () => {
+    dispatch(toggleFavorite(item));
+  };
+
+  return (
+    <ServiceCard
+      service={item}
+      onPress={() =>
+        navigation.navigate('ServiceDetails', {
+          productService: item,
+        })
+      }
+      showFavorite={true}
+      showBookmark={false}
+      isFavorite={isFavorite}
+      onFavoritePress={handleFavoriteToggle}
+    />
+  );
+};
+
+export const AllServices = ({ navigation }: Props) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
@@ -99,24 +130,20 @@ export const AllServices = ({ navigation } /** route */ : Props) => {
           data={data?.data?.items ?? []}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <ServiceCard
-              service={item}
-              onPress={() =>
-                navigation.navigate('ServicesStack', {
-                  screen: 'ServiceDetails',
-                  params: { productService: item },
-                })
-              }
-            />
+            <ServiceItem item={item} navigation={navigation} />
           )}
           contentContainerStyle={{ paddingBottom: 24 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            !isLoading && (
-              <Text style={{ textAlign: 'center', marginTop: 40 }}>
+            !isLoading ? (
+              <Text
+                variant="body"
+                size="medium"
+                style={{ textAlign: 'center', marginTop: 40 }}
+              >
                 {t('services.allServices.noResults', 'No services found')}
               </Text>
-            )
+            ) : null
           }
         />
       </View>

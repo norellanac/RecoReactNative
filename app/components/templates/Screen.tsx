@@ -1,4 +1,3 @@
-import { useTheme } from './../../theme/ThemeProvider';
 import React, { ReactNode } from 'react';
 import { ViewStyle, TextStyle, ScrollView } from 'react-native';
 import StatusBar from '../molecules/StatusBar';
@@ -8,6 +7,7 @@ interface ScreenProps {
   children: ReactNode;
   container?: boolean;
   scrollable?: boolean; // Enable/disable scrolling
+  safeAreaBackground?: string; // Custom background for SafeAreaView
   statusBarProps?: {
     leftElement?: React.ReactNode;
     onLeftIconPress?: () => void;
@@ -29,8 +29,19 @@ export const Screen: React.FC<ScreenProps> = ({
   statusBarProps,
   container = false,
   scrollable = false, // Default to non-scrollable
+  safeAreaBackground, // Custom background prop
 }) => {
-  const { theme } = useTheme();
+  // Determinar el color de fondo del SafeAreaView
+  const getSafeAreaBackground = () => {
+    // 1. Si se proporciona un color personalizado, usarlo
+    if (safeAreaBackground) return safeAreaBackground;
+
+    // 2. Si hay StatusBar, usar su color de fondo
+    if (statusBarProps?.backgroundColor) return statusBarProps.backgroundColor;
+
+    // 3. Por defecto, usar blanco para mayor consistencia
+    return '#FFFFFF';
+  };
 
   const content = scrollable ? (
     <ScrollView
@@ -49,7 +60,7 @@ export const Screen: React.FC<ScreenProps> = ({
     <SafeAreaView
       edges={['top', 'left', 'right']}
       style={{
-        backgroundColor: theme.colors.background,
+        backgroundColor: getSafeAreaBackground(),
         flex: 1,
       }}
     >

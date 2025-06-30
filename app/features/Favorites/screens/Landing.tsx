@@ -1,46 +1,113 @@
 import React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { Screen } from '../../../components/templates';
 import { FavoritesStackParams } from './FavoritesStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text } from '../../../components/atoms';
-import { FavoriteItem } from '../components/molecules/FavoriteItem';
+import { Text, Button } from '../../../components/atoms';
+import { Icon } from '@/app/components/atoms/Icon';
+import ServiceCard from '@/app/components/molecules/ServiceCard';
 import { useTranslation } from 'react-i18next';
+import {
+  selectFavorites,
+  toggleFavorite,
+  selectIsFavorite,
+} from '@/app/redux/slices/favoritesSlice';
 
-type Props = NativeStackScreenProps<FavoritesStackParams, 'Favorites'>;
+type Props = NativeStackScreenProps<FavoritesStackParams, 'FavoritesList'>;
 
-const mockFavorites = [
-  { id: '1', title: 'Favorite Item 1', description: 'Description of item 1' },
-  { id: '2', title: 'Favorite Item 2', description: 'Description of item 2' },
-  { id: '3', title: 'Favorite Item 3', description: 'Description of item 3' },
-  { id: '4', title: 'Favorite Item 4', description: 'Description of item 4' },
-];
+const FavoriteItem = ({ item, navigation }: { item: any; navigation: any }) => {
+  const dispatch = useDispatch();
+  const isFavorite = useSelector((state: any) =>
+    selectIsFavorite(state, item.id),
+  );
+
+  const handleFavoriteToggle = () => {
+    dispatch(toggleFavorite(item));
+  };
+
+  return (
+    <ServiceCard
+      service={item}
+      onPress={() =>
+        navigation.navigate('ServiceDetails', {
+          productService: item,
+        })
+      }
+      showFavorite={true}
+      showBookmark={false}
+      isFavorite={isFavorite}
+      onFavoritePress={handleFavoriteToggle}
+    />
+  );
+};
 
 export const LandingFavorites = ({ navigation }: Props) => {
   const { t } = useTranslation();
-
-  const renderFavoriteItem = ({
-    item,
-  }: {
-    item: (typeof mockFavorites)[0];
-  }) => (
-    <FavoriteItem
-      title={item.title}
-      description={item.description}
-      onPress={() => console.log(`Navigate to details of ${item.title}`)}
-    />
-  );
+  const favoriteServices = useSelector(selectFavorites);
 
   return (
-    <Screen statusBarProps={{}}>
+    <Screen
+      statusBarProps={{
+        showBackButton: true,
+        title: (
+          <Text
+            variant="headline"
+            size="small"
+            color="info"
+            style={{ marginTop: 8 }}
+          >
+            {t('favorites.title', 'My favorites')}
+          </Text>
+        ),
+      }}
+    >
       <View style={styles.container}>
-        <Text style={styles.title}>{t('favorites.title', 'Favorites')}</Text>
-        <FlatList
-          data={mockFavorites}
-          keyExtractor={(item) => item.id}
-          renderItem={renderFavoriteItem}
-          contentContainerStyle={styles.list}
-        />
+        {favoriteServices.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Icon
+              name="heart-broken"
+              family="MaterialCommunityIcons"
+              size={75}
+              color="#ccc"
+            />
+            <Text
+              variant="body"
+              size="large"
+              color="info"
+              style={styles.emptyText}
+            >
+              {t('favorites.empty', 'No favorites yet')}
+            </Text>
+            <Text
+              variant="body"
+              size="medium"
+              color="secondary"
+              style={styles.emptySubtext}
+            >
+              {t(
+                'favorites.emptyDescription',
+                'Add services to your favorites to see them here.',
+              )}
+            </Text>
+            <Button
+              title={t('favorites.addFirst', 'Add your first favorite')}
+              variant="filled"
+              style={styles.button}
+              onPress={() => navigation.navigate('AllServices')}
+            />
+          </View>
+        ) : (
+          <FlatList
+            data={favoriteServices}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <FavoriteItem item={item} navigation={navigation} />
+            )}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </Screen>
   );
@@ -49,33 +116,31 @@ export const LandingFavorites = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 16,
+    paddingTop: 24,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+    marginTop: -80,
+  },
+  emptyText: {
     textAlign: 'center',
+    marginTop: 16,
+    marginBottom: 8,
+    color: '#333',
+  },
+  emptySubtext: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  button: {
+    marginTop: 16,
+    width: '80%',
   },
   list: {
-    flexGrow: 1,
-  },
-  favoriteItem: {
-    padding: 15,
-    marginBottom: 10,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  favoriteTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  favoriteDescription: {
-    fontSize: 14,
-    color: '#666',
+    paddingBottom: 24,
   },
 });

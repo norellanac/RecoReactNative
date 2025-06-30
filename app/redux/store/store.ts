@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers } from 'redux';
 import authReducer from '../slices/authSlice';
 import serviceStepperReducer from '../slices/serviceStepperSlice';
+import favoritesReducer from '../slices/favoritesSlice';
 import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
@@ -16,6 +17,7 @@ import { reviewsApi } from '@/app/services/reviewsApi';
 const rootReducer = combineReducers({
   auth: authReducer,
   serviceStepper: serviceStepperReducer,
+  favorites: favoritesReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,

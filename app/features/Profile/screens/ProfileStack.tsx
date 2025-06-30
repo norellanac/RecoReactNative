@@ -5,7 +5,7 @@ import { ChangeLanguage } from './ChangeLanguage';
 import { BusinessStepperScreen } from '@/app/features/Business/screens/BusinessStepperScreen';
 
 export type ProfileStackParams = {
-  Profile: undefined;
+  ProfileHome: undefined;
   ChangeLanguage: undefined;
   BusinessStepper: undefined;
 };
@@ -16,9 +16,9 @@ export const ProfileNavigation = () => {
   return (
     <ProfileStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="Profile"
+      initialRouteName="ProfileHome"
     >
-      <ProfileStack.Screen name="Profile" component={LandingProfile} />
+      <ProfileStack.Screen name="ProfileHome" component={LandingProfile} />
       <ProfileStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
       <ProfileStack.Screen
         name="BusinessStepper"

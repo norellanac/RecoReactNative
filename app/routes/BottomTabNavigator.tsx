@@ -10,6 +10,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTranslation } from 'react-i18next';
 import { BusinessNavigation } from '@/app/features/Business/screens/BusinessStack';
+import { useGetOrdersQuery } from '@/app/services/ordersApi';
+import { useAppSelector } from '../hooks/useAppSelector';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +38,21 @@ const BottomTabNavigator = React.memo(() => {
     Products: ['cart', 'cart-outline'],
   };
 
+  const authUser = useAppSelector((state) => state.auth.user);
+  const { data } = useGetOrdersQuery();
+  const orders = data?.data || [];
+
+  const scheduledCount = orders.filter(
+    (o) => o.status === 1 && authUser && o.userId === authUser.id,
+  ).length;
+
+  const TaskBadge = ({ count }: { count: number }) =>
+    count > 0 ? (
+      <View style={styles.badge}>
+        <Text style={styles.badgeText}>{count}</Text>
+      </View>
+    ) : null;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -55,7 +72,7 @@ const BottomTabNavigator = React.memo(() => {
               >
                 <Ionicons name={iconName} size={size || 24} color={color} />
               </View>
-              <Text variant={'body'} size={'medium'} color={'secondary'}>
+              <Text variant={'body'} size={'small'} color={'secondary'}>
                 {t(`bottomTabs.${route.name.toLowerCase()}`)}{' '}
               </Text>
             </View>
@@ -75,7 +92,16 @@ const BottomTabNavigator = React.memo(() => {
     >
       <Tab.Screen name="Home" component={HomeNavigation} />
       <Tab.Screen name="Products" component={BusinessNavigation} />
-      <Tab.Screen name="Task" component={TaskPage} />
+      <Tab.Screen
+        name="Task"
+        component={TaskPage}
+        options={{
+          tabBarBadge:
+            scheduledCount > 0 ? (
+              <TaskBadge count={scheduledCount} />
+            ) : undefined,
+        }}
+      />
       <Tab.Screen name="Favorites" component={FavoritesNavigation} />
       <Tab.Screen name="Profile" component={ProfileNavigation} />
     </Tab.Navigator>
@@ -94,6 +120,23 @@ const styles = StyleSheet.create({
     width: 70,
     height: 32,
     borderRadius: 16,
+  },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -18,
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    zIndex: 10,
+  },
+  badgeText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
 });
 

@@ -1,18 +1,80 @@
 import React from 'react';
-import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { Text, Button } from '@/app/components/atoms';
 import { Screen } from '@/app/components/templates';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useGetOrderByIdQuery } from '@/app/services/ordersApi';
+import {
+  useGetOrderByIdQuery,
+  useDeleteOrderMutation,
+} from '@/app/services/ordersApi';
 import { getApiImageUrl } from '@/app/utils/Environment';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
+import { useUpdateOrderMutation } from '@/app/services/ordersApi';
 
 const TaskOrderDetailsScreen = () => {
   const { t } = useTranslation();
   const route = useRoute();
   const navigation = useNavigation();
   const { orderId } = route.params || {};
+  const [updateOrder, { isLoading: isUpdating, error }] =
+    useUpdateOrderMutation();
+  const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
+
+  const handleUpdateStatus = async (status: number) => {
+    try {
+      await updateOrder({ id: orderId, status }).unwrap();
+      Alert.alert(
+        t('common.success', 'Success'),
+        t(
+          'taskOrderDetails.statusUpdated',
+          'Order status updated successfully!',
+        ),
+        [
+          {
+            text: t('common.ok', 'OK'),
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    } catch (e) {
+      Alert.alert(
+        t('common.error', 'Error'),
+        t(
+          'taskOrderDetails.statusUpdateError',
+          'Could not update order status.',
+        ),
+      );
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteOrder(orderId).unwrap();
+      Alert.alert(
+        t('common.success', 'Success'),
+        t('taskOrderDetails.deleted', 'Order deleted successfully!'),
+        [
+          {
+            text: t('common.ok', 'OK'),
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    } catch (e) {
+      Alert.alert(
+        t('common.error', 'Error'),
+        t('taskOrderDetails.deleteError', 'Could not delete order.'),
+      );
+    }
+  };
 
   const { data, isLoading, isError } = useGetOrderByIdQuery(orderId);
 
@@ -49,22 +111,32 @@ const TaskOrderDetailsScreen = () => {
         return (
           <>
             <Button
-              title="Chat with provider"
+              title="Accept Task"
               variant="filled"
               style={styles.button}
-              onPress={() => navigation.navigate('AllServices')}
+              onPress={() => handleUpdateStatus(2)} // 2 = In Progress
+              disabled={isUpdating}
             />
             <Button
               title="Not interested"
               variant="tonal"
               style={[styles.button, { marginTop: 12 }]}
+              onPress={() => handleUpdateStatus(4)} // 4 = Canceled
+              disabled={isUpdating}
+            />
+            <Button
+              title="Chat with provider"
+              variant="tonal"
+              style={styles.button}
               onPress={() => {}}
+              disabled={isUpdating}
             />
             <Button
               title="Find a new professional"
               variant="text"
               style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
+              onPress={() => navigation.navigate('AllServices')}
+              disabled={isUpdating}
             />
           </>
         );
@@ -76,18 +148,21 @@ const TaskOrderDetailsScreen = () => {
               variant="tonal"
               style={[styles.button, { marginTop: 12 }]}
               onPress={() => {}}
+              disabled={isUpdating}
             />
             <Button
               title="Mark as completed"
               variant="filled"
               style={styles.button}
-              onPress={() => {}}
+              onPress={() => handleUpdateStatus(3)} // 3 = Completed
+              disabled={isUpdating}
             />
             <Button
               title="Cancel Task"
               variant="text"
               style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
+              onPress={() => handleUpdateStatus(4)} // 4 = Canceled
+              disabled={isUpdating}
             />
           </>
         );
@@ -107,12 +182,17 @@ const TaskOrderDetailsScreen = () => {
                   },
                 })
               }
+              disabled={isUpdating}
             />
             <Button
-              title="Chat with provider"
-              variant="tonal"
+              title="Delete Task"
+              variant="outlined"
               style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
+              onPress={handleDelete}
+              disabled={isUpdating}
+              endIcon={
+                <Ionicons name="trash-outline" size={20} color="#6750A4" />
+              }
             />
           </>
         );
@@ -132,12 +212,17 @@ const TaskOrderDetailsScreen = () => {
                   },
                 })
               }
+              disabled={isUpdating}
             />
             <Button
-              title="Chat with provider"
-              variant="tonal"
+              title="Delete Task"
+              variant="outlined"
               style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
+              onPress={handleDelete}
+              disabled={isUpdating}
+              endIcon={
+                <Ionicons name="trash-outline" size={20} color="#6750A4" />
+              }
             />
           </>
         );
@@ -251,7 +336,22 @@ const TaskOrderDetailsScreen = () => {
           </View>
 
           {/* Botones */}
-          {renderActions()}
+          {isUpdating ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <ActivityIndicator size="large" color="#7B61FF" />
+              <Text style={{ marginTop: 16 }}>
+                {t('taskOrderDetails.updating', 'Updating order...')}
+              </Text>
+            </View>
+          ) : (
+            renderActions()
+          )}
         </View>
       </ScrollView>
     </Screen>

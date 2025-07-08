@@ -18,30 +18,21 @@ interface TabsProps {
   tabs: TabItem[];
   scrollable?: boolean;
   headerBGColor?: boolean;
-  activeTab?: number;
-  onTabChange?: (index: number) => void;
+  tabTextStyle?: object;
 }
 
 const Tabs: React.FC<TabsProps> = ({
   tabs,
   scrollable = false,
   headerBGColor = false,
-  activeTab: controlledActiveTab,
-  onTabChange,
+  tabTextStyle = {},
 }) => {
-  const [internalActiveTab, setInternalActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
   const { theme } = useTheme();
   const { colors } = theme;
 
-  // Use controlled activeTab if provided, otherwise use internal state
-  const activeTab = controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
-
   const handleTabPress = (index: number) => {
-    if (onTabChange) {
-      onTabChange(index);
-    } else {
-      setInternalActiveTab(index);
-    }
+    setActiveTab(index);
   };
 
   const TabContent = tabs[activeTab]?.render();
@@ -79,6 +70,7 @@ const Tabs: React.FC<TabsProps> = ({
                 <Text
                   style={[
                     styles.tabText,
+                    tabTextStyle,
                     { color: colors.secondary },
                     activeTab === index && [
                       styles.activeTabText,
@@ -114,6 +106,7 @@ const Tabs: React.FC<TabsProps> = ({
                 <Text
                   style={[
                     styles.tabText,
+                    tabTextStyle,
                     { color: colors.secondary },
                     activeTab === index && [
                       styles.activeTabText,
@@ -154,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
   },
   activeTab: {
     borderBottomWidth: 3,

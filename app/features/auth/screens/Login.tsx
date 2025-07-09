@@ -19,14 +19,14 @@ export const Login = ({ navigation }: Props) => {
     <Screen statusBarProps={{}}>
       <View style={styles.container}>
         <SafeAreaView>
-          <Text
+          {/* <Text
             variant={'headline'}
             size={'large'}
             color="primary"
             style={{ textAlign: 'center' }}
           >
             {t('commons.app_name', 'Reco')}
-          </Text>
+          </Text> */}
           <LoginForm />
           <Text
             variant={'body'}

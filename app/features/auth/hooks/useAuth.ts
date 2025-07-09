@@ -1,35 +1,54 @@
-import { useState, useEffect } from 'react';
-//import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppDispatch } from '../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../hooks/useAppSelector';
+import {
+  logout,
+  selectAuth,
+  setAuthUserState,
+} from '../../../redux/slices/authSlice';
+import { useUpdateUserNameMutation } from '../../../services/userApi';
+import { UpdateUserPayload } from '../../../types/api/apiRequests';
 
-export const useAuth = () => {
-  const [isAuth, setIsAuth] = useState<boolean>(false);
+const useUserEvents = () => {
+  const authState = useAppSelector(selectAuth);
+  const [updateUserInfo, { isLoading }] = useUpdateUserNameMutation();
+  const { user } = useAppSelector(selectAuth);
+  const dispatch = useAppDispatch();
+  
+  const logoutUser = () => {
+    dispatch(logout());
+  };
 
-  useEffect(() => {
-    checkIsAuth();
-  }, []);
+  const handleUpdateUserInfo = async (userObjNewFields: UpdateUserPayload) => {
+    if (user) {
+      try {
+        const userUpdateResponse = await updateUserInfo({
+          userObj: {
+            ...user,
+            ...userObjNewFields,
+          },
+        }).unwrap();
+        if (userUpdateResponse.success) {
+          dispatch(
+            setAuthUserState({
+              ...userUpdateResponse.data
+            }),
+          );
+          console.error(
+            'User info updated successfully:',
+            userUpdateResponse.data,
+            user
+          );
+        };
 
-  //this hook should be used to check if the user is authenticated
-  //saving the value in device storage using mmkv library
-  const checkIsAuth = async () => {
-    try {
-      //   const value = await AsyncStorage.getItem('isAuth');
-      //   if (value !== null) {
-      //     setIsAuth(value === 'true');
-      //   }
-    } catch (error) {
-      console.error('Error reading isAuth from AsyncStorage', error);
+      } catch (error) {
+        console.error('Error updating user info:', error);
+      }
     }
-  };
-
-  const login = async () => {
-    //await AsyncStorage.setItem('isAuth', 'true');
-    setIsAuth(true);
-  };
-
-  const logout = async () => {
-    //await AsyncStorage.setItem('isAuth', 'false');
-    setIsAuth(false);
-  };
-
-  return { isAuth, login, logout, checkIsAuth };
 };
+
+  const roleNames = authState?.user?.roles?.map((role) => role.name.toLowerCase()) || [];
+
+  return { roleNames, logoutUser, handleUpdateUserInfo };
+};
+
+export { useUserEvents };

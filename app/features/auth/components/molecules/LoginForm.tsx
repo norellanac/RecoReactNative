@@ -111,6 +111,7 @@ export const LoginForm: React.FC = () => {
             title={t('login.login', 'Login')}
             onPress={() => handleSubmit()}
             isLoading={isLoading}
+            style={{ marginTop: 32 }}
           />
         </View>
       )}

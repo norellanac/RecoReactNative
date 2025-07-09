@@ -24,6 +24,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProfileOptions } from '../components/ProfileOptions';
 import { Icon } from '@/app/components/atoms/Icon';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
+import { useHasRole } from '@/app/hooks/useHasRole';
+import { useUserEvents } from '@/app/features/auth/hooks/useAuth';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
@@ -40,6 +42,8 @@ export const LandingProfile = ({ navigation }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [avatar, setAvatar] = useState(user?.avatarUrl || '');
   const [pendingAvatar, setPendingAvatar] = useState<string | null>(null);
+  const isMerchant = useHasRole('Merchant');
+  const { handleUpdateUserInfo } = useUserEvents();
 
   useEffect(() => {
     setAvatar(user?.avatarUrl || '');
@@ -48,6 +52,19 @@ export const LandingProfile = ({ navigation }: Props) => {
   const BASE_URL =
     process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
     'https://dev.recolatam.com';
+
+  const handleSwitchRole = async () => {
+    try {
+      const newRoles = isMerchant ? [2] : [2, 3]; // Ajusta los IDs según tu backend
+      await handleUpdateUserInfo({ id: user.id, roles: newRoles });
+      // Puedes mostrar un mensaje de éxito si lo deseas
+    } catch (error) {
+      Alert.alert(
+        t('userProfile.error', 'Error'),
+        t('userProfile.updateFailed', 'Failed to update role'),
+      );
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -208,7 +225,16 @@ export const LandingProfile = ({ navigation }: Props) => {
         </ModalComponent>
 
         <ProfileOptions navigation={navigation} user={user} />
-
+        <Button
+          variant="outlined"
+          title={
+            isMerchant
+              ? t('userProfile.switchToUser', 'Switch to User')
+              : t('userProfile.switchToMerchant', 'Become a Professional')
+          }
+          onPress={handleSwitchRole}
+          style={styles.logoutButton}
+        />
         <Button
           variant="outlined"
           title={t('userProfile.publishServices', 'Publish my services')}

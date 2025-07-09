@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { BusinessNavigation } from '@/app/features/Business/screens/BusinessStack';
 import { useGetOrdersQuery } from '@/app/services/ordersApi';
 import { useAppSelector } from '../hooks/useAppSelector';
+import { useHasRole } from '../hooks/useHasRole';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +37,7 @@ const BottomTabNavigator = React.memo(() => {
     Favorites: ['heart', 'heart-outline'],
     Profile: ['person', 'person-outline'],
     Products: ['cart', 'cart-outline'],
+    Messages: ['chatbubble', 'chatbubble-outline'],
   };
 
   const authUser = useAppSelector((state) => state.auth.user);
@@ -52,6 +54,48 @@ const BottomTabNavigator = React.memo(() => {
         <Text style={styles.badgeText}>{count}</Text>
       </View>
     ) : null;
+
+  // Role-based logic
+  const isMerchant = useHasRole('Merchant');
+
+  // Define tabs based on role
+  const { ChatNavigation } = require('../features/Chat/screens/ChatStack');
+  const tabScreens = [
+    {
+      name: 'Home',
+      component: HomeNavigation,
+      show: true,
+    },
+    {
+      name: 'Products',
+      component: BusinessNavigation,
+      show: isMerchant, // Only for Merchant
+    },
+    {
+      name: 'Task',
+      component: TaskPage,
+      show: true,
+      options: {
+        tabBarBadge:
+          scheduledCount > 0 ? <TaskBadge count={scheduledCount} /> : undefined,
+      },
+    },
+    {
+      name: 'Favorites',
+      component: FavoritesNavigation,
+      show: !isMerchant, // Only for non-Merchant
+    },
+    {
+      name: 'Messages',
+      component: ChatNavigation,
+      show: true,
+    },
+    {
+      name: 'Profile',
+      component: ProfileNavigation,
+      show: true,
+    },
+  ];
 
   return (
     <Tab.Navigator
@@ -90,20 +134,16 @@ const BottomTabNavigator = React.memo(() => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeNavigation} />
-      <Tab.Screen name="Products" component={BusinessNavigation} />
-      <Tab.Screen
-        name="Task"
-        component={TaskPage}
-        options={{
-          tabBarBadge:
-            scheduledCount > 0 ? (
-              <TaskBadge count={scheduledCount} />
-            ) : undefined,
-        }}
-      />
-      <Tab.Screen name="Favorites" component={FavoritesNavigation} />
-      <Tab.Screen name="Profile" component={ProfileNavigation} />
+      {tabScreens
+        .filter((tab) => tab.show)
+        .map((tab) => (
+          <Tab.Screen
+            key={tab.name}
+            name={tab.name}
+            component={tab.component}
+            {...(tab.options ? { options: tab.options } : {})}
+          />
+        ))}
     </Tab.Navigator>
   );
 });

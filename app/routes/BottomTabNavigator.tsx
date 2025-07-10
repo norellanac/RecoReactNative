@@ -55,7 +55,6 @@ const BottomTabNavigator = React.memo(() => {
       </View>
     ) : null;
 
-  // Role-based logic
   const isMerchant = useHasRole('Merchant');
 
   // Define tabs based on role
@@ -67,11 +66,6 @@ const BottomTabNavigator = React.memo(() => {
       show: true,
     },
     {
-      name: 'Products',
-      component: BusinessNavigation,
-      show: isMerchant, // Only for Merchant
-    },
-    {
       name: 'Task',
       component: TaskPage,
       show: true,
@@ -81,9 +75,14 @@ const BottomTabNavigator = React.memo(() => {
       },
     },
     {
+      name: 'Products',
+      component: BusinessNavigation,
+      show: isMerchant,
+    },
+    {
       name: 'Favorites',
       component: FavoritesNavigation,
-      show: !isMerchant, // Only for non-Merchant
+      show: !isMerchant,
     },
     {
       name: 'Messages',
@@ -130,7 +129,7 @@ const BottomTabNavigator = React.memo(() => {
           minHeight: 70,
         },
         tabBarLabelStyle: {
-          display: 'none', // Oculta el estilo de etiqueta predeterminado
+          display: 'none',
         },
       })}
     >

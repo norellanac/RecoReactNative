@@ -18,6 +18,7 @@ import { getApiImageUrl } from '@/app/utils/Environment';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useUpdateOrderMutation } from '@/app/services/ordersApi';
+import { useHasRole } from '@/app/hooks/useHasRole';
 
 const TaskOrderDetailsScreen = () => {
   const { t } = useTranslation();
@@ -27,6 +28,7 @@ const TaskOrderDetailsScreen = () => {
   const [updateOrder, { isLoading: isUpdating, error }] =
     useUpdateOrderMutation();
   const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
+  const isMerchant = useHasRole('Merchant');
 
   const handleUpdateStatus = async (status: number) => {
     try {
@@ -110,60 +112,83 @@ const TaskOrderDetailsScreen = () => {
       case 1: // Scheduled
         return (
           <>
-            <Button
-              title="Accept Task"
-              variant="filled"
-              style={styles.button}
-              onPress={() => handleUpdateStatus(2)} // 2 = In Progress
-              disabled={isUpdating}
-            />
-            <Button
-              title="Not interested"
-              variant="tonal"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => handleUpdateStatus(4)} // 4 = Canceled
-              disabled={isUpdating}
-            />
-            <Button
-              title="Chat with provider"
-              variant="tonal"
-              style={styles.button}
-              onPress={() => {}}
-              disabled={isUpdating}
-            />
-            <Button
-              title="Find a new professional"
-              variant="text"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => navigation.navigate('AllServices')}
-              disabled={isUpdating}
-            />
+            {isMerchant && (
+              <>
+                <Button
+                  title="Accept Task"
+                  variant="filled"
+                  style={styles.button}
+                  onPress={() => handleUpdateStatus(2)}
+                  disabled={isUpdating}
+                />
+                <Button
+                  title="Not interested"
+                  variant="tonal"
+                  style={[styles.button, { marginTop: 12 }]}
+                  onPress={() => handleUpdateStatus(4)}
+                  disabled={isUpdating}
+                />
+              </>
+            )}
+            {!isMerchant && (
+              <>
+                <Button
+                  title="Chat with provider"
+                  variant="tonal"
+                  style={styles.button}
+                  onPress={() => {}}
+                  disabled={isUpdating}
+                />
+                <Button
+                  title="Find a new professional"
+                  variant="text"
+                  style={[styles.button, { marginTop: 12 }]}
+                  onPress={() => navigation.navigate('AllServices')}
+                  disabled={isUpdating}
+                />
+              </>
+            )}
           </>
         );
       case 2: // In Progress
         return (
           <>
-            <Button
-              title="Chat with provider"
-              variant="tonal"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => {}}
-              disabled={isUpdating}
-            />
-            <Button
-              title="Mark as completed"
-              variant="filled"
-              style={styles.button}
-              onPress={() => handleUpdateStatus(3)} // 3 = Completed
-              disabled={isUpdating}
-            />
-            <Button
-              title="Cancel Task"
-              variant="text"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={() => handleUpdateStatus(4)} // 4 = Canceled
-              disabled={isUpdating}
-            />
+            {isMerchant && (
+              <>
+                <Button
+                  title="Mark as completed"
+                  variant="filled"
+                  style={styles.button}
+                  onPress={() => handleUpdateStatus(3)} // 3 = Completed
+                  disabled={isUpdating}
+                />
+                <Button
+                  title="Cancel Task"
+                  variant="text"
+                  style={[styles.button, { marginTop: 12 }]}
+                  onPress={() => handleUpdateStatus(4)} // 4 = Canceled
+                  disabled={isUpdating}
+                />
+              </>
+            )}
+            {!isMerchant && (
+              <>
+                <Button
+                  title="Chat with provider"
+                  variant="tonal"
+                  style={[styles.button, { marginTop: 12 }]}
+                  onPress={() => {}}
+                  disabled={isUpdating}
+                />
+                <Button
+                  title="Cancel Task"
+                  variant="text"
+                  style={[styles.button, { marginTop: 12 }]}
+                  onPress={() => handleUpdateStatus(4)} // 4 = Canceled
+                  disabled={isUpdating}
+                />
+              </>
+            )}
           </>
         );
       case 3: // Completed

@@ -5,12 +5,11 @@ import EmptyState from '../components/EmptyState';
 import { useGetOrdersQuery } from '@/app/services/ordersApi';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '@/app/redux/slices/authSlice';
-import { View, StyleSheet } from 'react-native';
-import { colors } from '@/app/theme/colors';
-import { Text } from '@/app/components/atoms';
+import { useHasRole } from '@/app/hooks/useHasRole';
 
 const OrdersScreen = () => {
   const { user } = useSelector(selectAuth);
+  const isMerchant = useHasRole('Merchant');
   const { data } = useGetOrdersQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -18,10 +17,23 @@ const OrdersScreen = () => {
   const orders =
     data && 'data' in data && Array.isArray(data.data) ? data.data : [];
   const userId = user && ('data' in user ? user.data.id : user.id);
+
+  // Filtrado según el rol
   const filteredOrders = (status: number) =>
-    orders.filter(
-      (order: any) => order.status === status && order.userId === userId,
-    );
+    orders.filter((order: any) => {
+      if (order.status !== status) return false;
+      if (isMerchant) {
+        // Ajusta el path según tu modelo de datos
+        return (
+          order.details &&
+          order.details[0] &&
+          order.details[0].productService &&
+          order.details[0].productService.userId === userId
+        );
+      } else {
+        return order.userId === userId;
+      }
+    });
 
   const tabs = [
     {
@@ -30,6 +42,7 @@ const OrdersScreen = () => {
         <TaskList
           data={filteredOrders(1)}
           ListEmptyComponent={<EmptyState />}
+          //isMerchant={isMerchant}
         />
       ),
     },

@@ -5,18 +5,18 @@ import {
   selectAuth,
   setAuthUserState,
 } from '../../../redux/slices/authSlice';
-import { useUpdateUserNameMutation } from '../../../services/userApi';
+import { useUpdateUserInfoMutation, } from '../../../services/userApi';
 import { UpdateUserPayload } from '../../../types/api/apiRequests';
 
 const useUserEvents = () => {
   const authState = useAppSelector(selectAuth);
-  const [updateUserInfo, { isLoading }] = useUpdateUserNameMutation();
+  const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
   const { user } = useAppSelector(selectAuth);
   const dispatch = useAppDispatch();
   
   const logoutUser = () => {
     dispatch(logout());
-  };
+  }
 
   const handleUpdateUserInfo = async (userObjNewFields: UpdateUserPayload) => {
     if (user) {
@@ -32,11 +32,6 @@ const useUserEvents = () => {
             setAuthUserState({
               ...userUpdateResponse.data
             }),
-          );
-          console.error(
-            'User info updated successfully:',
-            userUpdateResponse.data,
-            user
           );
         };
 

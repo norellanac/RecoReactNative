@@ -25,7 +25,7 @@ import { ProfileOptions } from '../components/ProfileOptions';
 import { Icon } from '@/app/components/atoms/Icon';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
 import { useHasRole } from '@/app/hooks/useHasRole';
-import { useUserEvents } from '@/app/features/auth/hooks/useAuth';
+import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
@@ -53,12 +53,15 @@ export const LandingProfile = ({ navigation }: Props) => {
     process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
     'https://dev.recolatam.com';
 
+  //console.log('USER OBJ:', user);
+
   const handleSwitchRole = async () => {
     try {
-      const newRoles = isMerchant ? [2] : [2, 3]; // Ajusta los IDs según tu backend
-      await handleUpdateUserInfo({ id: user.id, roles: newRoles });
-      // Puedes mostrar un mensaje de éxito si lo deseas
+      const newRoles = isMerchant ? [2] : [2, 3];
+      console.log('USER OBJ:', user);
+      await handleUpdateUserInfo({ roles: newRoles });
     } catch (error) {
+      console.log('ERROR:', error);
       Alert.alert(
         t('userProfile.error', 'Error'),
         t('userProfile.updateFailed', 'Failed to update role'),

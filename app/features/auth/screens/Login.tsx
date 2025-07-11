@@ -19,14 +19,14 @@ export const Login = ({ navigation }: Props) => {
     <Screen statusBarProps={{}}>
       <View style={styles.container}>
         <SafeAreaView>
-          {/* <Text
+          <Text
             variant={'headline'}
             size={'large'}
-            color="primary"
-            style={{ textAlign: 'center' }}
+            color="secondary"
+            style={{ textAlign: 'left', marginHorizontal: 16 }}
           >
-            {t('commons.app_name', 'Reco')}
-          </Text> */}
+            {t('login.title', 'Login to your account')}
+          </Text>
           <LoginForm />
           <Text
             variant={'body'}
@@ -60,7 +60,7 @@ export const Login = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    padding: 20,
+    padding: 32,
   },
   msmFood: {
     alignItems: 'center',

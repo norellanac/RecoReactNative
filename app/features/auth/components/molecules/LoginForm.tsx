@@ -121,7 +121,7 @@ export const LoginForm: React.FC = () => {
 
 const styles = StyleSheet.create({
   form: {
-    marginTop: 100,
+    marginTop: 60,
     padding: 16,
   },
 });

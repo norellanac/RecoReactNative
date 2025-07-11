@@ -15,15 +15,15 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
   const { t } = useTranslation();
 
   return (
-    <Screen>
+    <Screen statusBarProps={{}}>
       <View style={styles.container}>
         <Text
           variant={'headline'}
           size={'large'}
-          color="primary"
-          style={{ textAlign: 'center' }}
+          color="secondary"
+          style={{ textAlign: 'left', marginHorizontal: 16, marginTop: 20 }}
         >
-          {t('commons.app_name', 'Reco')}
+          {t('register.title', 'Create your account')}
         </Text>
         <RegisterForm />
         <Text
@@ -85,6 +85,8 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingHorizontal: 32,
+    paddingTop: 60,
     justifyContent: 'center',
   },
   terms_policy: {

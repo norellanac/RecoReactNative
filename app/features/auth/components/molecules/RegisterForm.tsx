@@ -10,12 +10,18 @@ import { Button } from '../../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { loginSuccess } from '@/app/redux/slices/authSlice';
 import { useLoginMutation, useSignupMutation } from '@/app/services/authApi';
+import { Icon } from '@/app/components/atoms/Icon';
 
 export const RegisterForm: React.FC = () => {
   const { t } = useTranslation();
   const [onSignup] = useSignupMutation();
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleLogin = async (values: SignupValues) => {
     try {
@@ -143,6 +149,13 @@ export const RegisterForm: React.FC = () => {
             value={values.password}
             errorMsg={errors.password}
             variant="underlined"
+            secureTextEntry={!showPassword}
+            endAdornment={
+              <Icon
+                name={showPassword ? 'eye-off' : 'eye'}
+                onPress={handleShowPassword}
+              />
+            }
           />
 
           <TextInput
@@ -155,11 +168,20 @@ export const RegisterForm: React.FC = () => {
             value={values.confirmPassword}
             errorMsg={errors.confirmPassword}
             variant="underlined"
+            secureTextEntry={!showPassword}
+            endAdornment={
+              <Icon
+                name={showPassword ? 'eye-off' : 'eye'}
+                onPress={handleShowPassword}
+              />
+            }
           />
           <Button
             variant="filled"
             title={t('register.sign_up', 'Sign Up')}
             onPress={handleSubmit}
+            isLoading={isLoading}
+            style={{ marginTop: 32 }}
           />
         </View>
       )}

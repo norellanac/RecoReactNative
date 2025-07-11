@@ -225,14 +225,25 @@ export const LandingProfile = ({ navigation }: Props) => {
 
         <ProfileOptions navigation={navigation} user={user} />
         <Button
-          variant="outlined"
+          variant="filled"
           title={
             isMerchant
-              ? t('userProfile.switchToUser', 'Switch to User')
+              ? t('userProfile.switchToUser', 'Switch to user')
               : t('userProfile.switchToMerchant', 'Become a Professional')
           }
           onPress={handleSwitchRole}
-          style={styles.logoutButton}
+          style={[
+            styles.logoutButton,
+            { backgroundColor: isMerchant ? '#019FE9' : '#6750A4' },
+          ]}
+          startIcon={
+            <Icon
+              name={isMerchant ? 'user' : 'rocket'}
+              size={24}
+              color={isMerchant ? '#FFD700' : '#FF7043'}
+              family="FontAwesome"
+            />
+          }
         />
         <Button
           variant="outlined"
@@ -241,7 +252,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           style={styles.logoutButton}
         />
         <Button
-          variant="filled"
+          variant="text"
           title={t('userProfile.logout', 'Logout')}
           onPress={handleLogout}
           style={styles.logoutButton}

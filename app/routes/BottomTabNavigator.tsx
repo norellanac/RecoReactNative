@@ -13,7 +13,8 @@ import { BusinessNavigation } from '@/app/features/Business/screens/BusinessStac
 import { useGetOrdersQuery } from '@/app/services/ordersApi';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { useHasRole } from '../hooks/useHasRole';
-import { useUserEvents } from '@/app/features/auth/hooks/authHooks'; // Importa tu hook global
+import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
+import { useNavigationState } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -59,12 +60,30 @@ const BottomTabNavigator = React.memo(() => {
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo } = useUserEvents();
 
-  // Para saber la ruta activa y evitar el botón flotante en Perfil
-  const navigationState = globalThis?.__NAVIGATION_STATE__ || {};
-  const currentRouteName =
-    navigationState.routes?.[navigationState.index]?.name || '';
+  const navigationState = useNavigationState((state) => state);
+  const currentTabRoute = navigationState.routes[navigationState.index]?.name;
 
-  // Define tabs based on role
+  let isOnProfileHome = false;
+  if (currentTabRoute === 'Profile') {
+    const profileStackState =
+      navigationState.routes[navigationState.index]?.state;
+    const profileRouteName =
+      profileStackState?.routes?.[profileStackState.index]?.name;
+    isOnProfileHome = profileRouteName === 'ProfileHome';
+  }
+
+  const showFloatingButton =
+    isMerchant && !(currentTabRoute === 'Profile' && isOnProfileHome);
+
+  const handleSwitchRole = async () => {
+    try {
+      await handleUpdateUserInfo({ roles: [2] });
+    } catch (error) {}
+  };
+
+  // Debug para saber en qué pantalla estás
+  // console.log({ currentTabRoute, isOnProfileHome, showFloatingButton });
+
   const { ChatNavigation } = require('../features/Chat/screens/ChatStack');
   const tabScreens = [
     {
@@ -102,16 +121,6 @@ const BottomTabNavigator = React.memo(() => {
       show: true,
     },
   ];
-
-  // Botón flotante para cambiar a usuario (solo merchant y fuera de perfil)
-  const showFloatingButton = isMerchant && currentRouteName !== 'Profile';
-  const handleSwitchRole = async () => {
-    try {
-      await handleUpdateUserInfo({ roles: [2] }); // Cambia a solo User
-    } catch (error) {
-      // Maneja el error si lo necesitas
-    }
-  };
 
   return (
     <>
@@ -206,7 +215,7 @@ const styles = StyleSheet.create({
   iconLabelContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: isTablet ? 80 : 64, // Ajusta el ancho para tablets
+    width: isTablet ? 80 : 64,
   },
   iconContainer: {
     justifyContent: 'center',

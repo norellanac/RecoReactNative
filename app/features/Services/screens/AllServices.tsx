@@ -154,7 +154,6 @@ export const AllServices = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAF8FF',
     paddingHorizontal: 12,
     paddingTop: 16,
   },

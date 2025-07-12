@@ -22,10 +22,10 @@ export const Login = ({ navigation }: Props) => {
           <Text
             variant={'headline'}
             size={'large'}
-            color="primary"
-            style={{ textAlign: 'center' }}
+            color="secondary"
+            style={{ textAlign: 'left', marginHorizontal: 16 }}
           >
-            {t('commons.app_name', 'Reco')}
+            {t('login.title', 'Login to your account')}
           </Text>
           <LoginForm />
           <Text
@@ -60,7 +60,7 @@ export const Login = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    padding: 20,
+    padding: 32,
   },
   msmFood: {
     alignItems: 'center',

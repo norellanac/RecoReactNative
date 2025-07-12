@@ -68,7 +68,6 @@ const TaskCard = ({ task }) => {
         <View style={styles.avatarContainer}>
           <Image
             source={getApiImageUrl(service?.urlImage)}
-            //source={{ uri: getApiImageUrl(service?.urlImage) }}
             style={styles.avatar}
           />
         </View>
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     elevation: 2,
     shadowColor: '#000',
-    shadowOpacity: 0.07,
+    shadowOpacity: 0.12,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     padding: 0,

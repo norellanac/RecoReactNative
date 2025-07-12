@@ -17,7 +17,8 @@
     "home": "Home",
     "products": "Products",
     "profile": "Profile",
-    "task": "Task"
+    "task": "Task",
+    "messages": "Messages"
   },
   "business": {
     "title": "My Services",

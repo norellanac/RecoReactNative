@@ -24,6 +24,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProfileOptions } from '../components/ProfileOptions';
 import { Icon } from '@/app/components/atoms/Icon';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
+import { useHasRole } from '@/app/hooks/useHasRole';
+import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
@@ -40,6 +42,8 @@ export const LandingProfile = ({ navigation }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [avatar, setAvatar] = useState(user?.avatarUrl || '');
   const [pendingAvatar, setPendingAvatar] = useState<string | null>(null);
+  const isMerchant = useHasRole('Merchant');
+  const { handleUpdateUserInfo } = useUserEvents();
 
   useEffect(() => {
     setAvatar(user?.avatarUrl || '');
@@ -48,6 +52,18 @@ export const LandingProfile = ({ navigation }: Props) => {
   const BASE_URL =
     process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
     'https://dev.recolatam.com';
+
+  const handleSwitchRole = async () => {
+    try {
+      const newRoles = isMerchant ? [2] : [2, 3];
+      await handleUpdateUserInfo({ roles: newRoles });
+    } catch (error) {
+      Alert.alert(
+        t('userProfile.error', 'Error'),
+        t('userProfile.updateFailed', 'Failed to update role'),
+      );
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -208,7 +224,27 @@ export const LandingProfile = ({ navigation }: Props) => {
         </ModalComponent>
 
         <ProfileOptions navigation={navigation} user={user} />
-
+        <Button
+          variant="filled"
+          title={
+            isMerchant
+              ? t('userProfile.switchToUser', 'Switch to user')
+              : t('userProfile.switchToMerchant', 'Become a Professional')
+          }
+          onPress={handleSwitchRole}
+          style={[
+            styles.logoutButton,
+            { backgroundColor: isMerchant ? '#019FE9' : '#6750A4' },
+          ]}
+          startIcon={
+            <Icon
+              name={isMerchant ? 'user' : 'rocket'}
+              size={24}
+              color={isMerchant ? '#FFD700' : '#FF7043'}
+              family="FontAwesome"
+            />
+          }
+        />
         <Button
           variant="outlined"
           title={t('userProfile.publishServices', 'Publish my services')}
@@ -216,7 +252,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           style={styles.logoutButton}
         />
         <Button
-          variant="filled"
+          variant="text"
           title={t('userProfile.logout', 'Logout')}
           onPress={handleLogout}
           style={styles.logoutButton}

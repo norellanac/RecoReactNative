@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
+import { Button } from '../../../components/atoms';
 import { Text } from '../../../components/atoms';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -130,19 +131,19 @@ const IntroSlider: React.FC = () => {
                 ]}
               />
               {index === slides.length - 1 && (
-                <TouchableOpacity
+                <Button
+                  title={t('slider.get_started', 'Get Started')}
                   onPress={handleSkip}
                   style={styles.getStartedButton}
-                >
-                  <Text variant="title" size="large" color="primary">
-                    {t('slider.get_started', 'Get Started')}
-                  </Text>
-                  <Ionicons
-                    name="chevron-forward-outline"
-                    size={18}
-                    color="primary"
-                  />
-                </TouchableOpacity>
+                  variant="filled"
+                  endIcon={
+                    <Ionicons
+                      name="chevron-forward-outline"
+                      size={18}
+                      color="white"
+                    />
+                  }
+                />
               )}
             </View>
           ))}
@@ -204,6 +205,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   getStartedButton: {
+    width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 50,
     flexDirection: 'row',
     alignItems: 'center',

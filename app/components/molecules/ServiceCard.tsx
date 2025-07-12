@@ -111,11 +111,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 24,
-    marginBottom: 18,
+    marginBottom: 9,
+    marginTop: 9,
+    marginHorizontal: 12,
     padding: 14,
     shadowColor: '#000',
-    shadowOpacity: 0.04,
+    shadowOpacity: 0.09,
     shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
     elevation: 2,
     position: 'relative',
   },
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
   cardContent: {
     flex: 1,
     justifyContent: 'center',
+    paddingRight: 40,
   },
   providerName: {
     color: '#7B7B7B',
@@ -166,7 +170,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 18,
     right: 18,
-    // Puedes ajustar el estilo según el tamaño del botón/ícono
   },
 });
 

@@ -40,6 +40,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             size={'large'}
             color="primary"
             style={{ textAlign: 'center' }}
+            onPress={() => navigation.navigate('Terms')}
           >
             {t('register.terms_service', 'Terms of Service')}
           </Text>
@@ -49,7 +50,6 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             color="info"
             style={{ textAlign: 'center' }}
           >
-            {' '}
             {t('commons.and', 'and')}{' '}
           </Text>
           <Text
@@ -57,6 +57,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             size={'large'}
             color="primary"
             style={{ textAlign: 'center' }}
+            onPress={() => navigation.navigate('PrivacyPolicy')}
           >
             {t('register.privacy_policy', 'Privacy Policy')}
           </Text>

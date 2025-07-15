@@ -17,12 +17,24 @@ import slider_1 from '../../../assets/img/home_sliders/slider_1_Reco.png';
 import slider_2 from '../../../assets/img/home_sliders/slider_2_Reco.png';
 import Carousel from '@/app/components/molecules/Carousel';
 import { ProductService } from '@/app/types/api/modelTypes';
+import { SearchBar } from '@/app/components/molecules/SearchBar';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
 export const LandingHome = ({ navigation } /** route */ : Props) => {
   const { t } = useTranslation();
   const [search, setSearch] = React.useState('');
+
+  const handleSearchSubmit = () => {
+    if (search.trim()) {
+      navigation.navigate('SearchResults', { query: search });
+    }
+  };
+
+  const handleClearSearch = () => setSearch('');
+
+  const handleOpenFilters = () => setShowFilterModal(true);
+
   const {
     data: productsData,
     isLoading: isProductsLoading,
@@ -58,34 +70,19 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
     );
   }
 
-  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const handleClearSearch = () => {
-    setSearch('');
-  };
-
   return (
     <Screen statusBarProps={{}}>
       <GreetingHeader />
-      <TextInput
-        variant="outlined"
+      <SearchBar
+        value={search}
+        onChange={setSearch}
+        onSubmit={handleSearchSubmit}
+        onClear={handleClearSearch}
+        onFilterPress={handleOpenFilters}
         placeholder={t(
           'home_screen.searchPlaceholder',
           'Search services that you need',
         )}
-        value={search}
-        onChange={handleChangeSearch}
-        endAdornment={<Icon name="close" onPress={handleClearSearch} />}
-        startAdornment={<Icon name="search" />}
-        style={{
-          marginTop: 16,
-          marginLeft: 10,
-          marginRight: 10,
-          backgroundColor: '#fff',
-          borderRadius: 20,
-        }}
       />
       <ScrollView
         contentContainerStyle={{

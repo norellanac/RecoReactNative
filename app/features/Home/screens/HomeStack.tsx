@@ -6,12 +6,14 @@ import { AllServices } from '../../Services/screens';
 import ServiceDetails from '../../Services/screens/ServiceDetails';
 import TaskDetailsScreen from '../../Services/screens/TaskDetailsScreen';
 import { ProductService } from '@/app/types/api/modelTypes';
+import { SearchResults } from '@/app/features/Profile/SearchResults';
 
 export type HomeStackParams = {
   LandingHome: undefined;
   AllCategories: undefined;
   AllServices: undefined;
   ServiceDetails: { productService: ProductService };
+  SearchResults: { query: string };
   TaskDetails: {
     service: ProductService;
     dateTime: string;
@@ -32,6 +34,7 @@ export const HomeNavigation = () => {
       <HomeStack.Screen name="AllServices" component={AllServices} />
       <HomeStack.Screen name="ServiceDetails" component={ServiceDetails} />
       <HomeStack.Screen name="TaskDetails" component={TaskDetailsScreen} />
+      <HomeStack.Screen name="SearchResults" component={SearchResults} />
     </HomeStack.Navigator>
   );
 };

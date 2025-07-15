@@ -5,6 +5,7 @@ import { combineReducers } from 'redux';
 import authReducer from '../slices/authSlice';
 import serviceStepperReducer from '../slices/serviceStepperSlice';
 import favoritesReducer from '../slices/favoritesSlice';
+import filterProductsReducer from '../slices/filterProductsSlice';
 import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   serviceStepper: serviceStepperReducer,
   favorites: favoritesReducer,
+  filter: filterProductsReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
@@ -32,7 +34,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth', 'serviceStepper'], // Only persist the auth and serviceStepper reducers
+  whitelist: ['auth', 'serviceStepper', 'roleSwitcher', 'filterProducts'], // Only persist the auth and serviceStepper reducers
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

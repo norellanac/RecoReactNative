@@ -12,6 +12,7 @@ import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 import { TextInput } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
+import { GreetingHeader } from '../components/molecules/GreetingHeader';
 import slider_1 from '../../../assets/img/home_sliders/slider_1_Reco.png';
 import slider_2 from '../../../assets/img/home_sliders/slider_2_Reco.png';
 import Carousel from '@/app/components/molecules/Carousel';
@@ -67,6 +68,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
 
   return (
     <Screen statusBarProps={{}}>
+      <GreetingHeader />
       <TextInput
         variant="outlined"
         placeholder={t(

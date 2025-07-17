@@ -29,13 +29,21 @@ export const SearchBar: React.FC<Props> = ({
       value={value}
       onChangeText={onChange}
       onSubmitEditing={onSubmit}
-      startAdornment={<Icon name="search" />}
+      startAdornment={
+        <View style={styles.searchIcon}>
+          <Icon name="search" />
+        </View>
+      }
       endAdornment={
         <View style={{ flexDirection: 'row' }}>
           {value.length > 0 && (
-            <Icon name="close" onPress={onClear} style={{ marginRight: 8 }} />
+            <View style={styles.clearIcon}>
+              <Icon name="close" onPress={onClear} color="#79747E" />
+            </View>
           )}
-          <Icon name="options" onPress={onFilterPress} />
+          <View style={styles.filterIcon}>
+            <Icon name="options" onPress={onFilterPress} />
+          </View>
         </View>
       }
       style={styles.input}
@@ -51,5 +59,15 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginLeft: 10,
     marginRight: 10,
+  },
+  searchIcon: {
+    marginLeft: 5,
+  },
+  clearIcon: {
+    marginRight: 10,
+    marginLeft: 5,
+  },
+  filterIcon: {
+    marginRight: 5,
   },
 });

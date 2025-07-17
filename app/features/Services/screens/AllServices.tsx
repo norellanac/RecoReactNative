@@ -1,58 +1,48 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Text } from '@/app/components/atoms';
-import { Icon } from '@/app/components/atoms/Icon';
-import { Screen } from '../../../components/templates';
-import { useGetProductsQuery } from '@/app/services/productApi';
-import { HomeStackParams } from '../../Home/screens/HomeStack';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { View, FlatList, Image } from 'react-native';
+import { Text } from '@/app/components/atoms/Text';
+import { Screen } from '@/app/components/templates/Screen';
+import { useProductServiceFilterData } from '@/app/hooks/useProductServiceFilterData';
 import ServiceCard from '@/app/components/molecules/ServiceCard';
+import SearchFilterModal from '@/app/components/molecules/SearchFilterModal';
+import { SearchBar } from '@/app/components/molecules/SearchBar';
+import { useTranslation } from 'react-i18next';
 import {
   toggleFavorite,
   selectIsFavorite,
 } from '@/app/redux/slices/favoritesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import NotFoundImage from '@/app/assets/img/notFound.png';
+import { setSearchTerm } from '@/app/redux/slices/filterProductsSlice';
 
-type Props = NativeStackScreenProps<HomeStackParams, 'AllServices'>;
-
-const ServiceItem = ({ item, navigation }: { item: any; navigation: any }) => {
-  const dispatch = useDispatch();
-  const isFavorite = useSelector((state: any) =>
-    selectIsFavorite(state, item.id),
-  );
-
-  const handleFavoriteToggle = () => {
-    dispatch(toggleFavorite(item));
-  };
-
-  return (
-    <ServiceCard
-      service={item}
-      onPress={() =>
-        navigation.navigate('ServiceDetails', {
-          productService: item,
-        })
-      }
-      showFavorite={true}
-      showBookmark={false}
-      isFavorite={isFavorite}
-      onFavoritePress={handleFavoriteToggle}
-    />
-  );
-};
-
-export const AllServices = ({ navigation }: Props) => {
+export const AllServices = ({ navigation }) => {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const search = useSelector((state) => state.filter.options.searchTerm);
 
-  const { data, isLoading } = useGetProductsQuery({ search });
+  const { filteredServices, updateSearchTerm } = useProductServiceFilterData();
+
+  const dispatch = useDispatch();
+  const handleSearchChange = (text) => dispatch(setSearchTerm(text));
+  const handleSearchSubmit = () => updateSearchTerm(search);
+  const handleClearSearch = () => dispatch(setSearchTerm(''));
+
+  const ServiceItem = ({ item }) => {
+    const dispatch = useDispatch();
+    const isFavorite = useSelector((state) => selectIsFavorite(state, item.id));
+    return (
+      <ServiceCard
+        service={item}
+        onPress={() =>
+          navigation.navigate('ServiceDetails', { productService: item })
+        }
+        showFavorite={true}
+        showBookmark={false}
+        isFavorite={isFavorite}
+        onFavoritePress={() => dispatch(toggleFavorite(item))}
+      />
+    );
+  };
 
   return (
     <Screen
@@ -60,8 +50,8 @@ export const AllServices = ({ navigation }: Props) => {
         showBackButton: true,
         title: (
           <Text
-            variant="headline"
-            size="small"
+            variant="title"
+            size="medium"
             color="info"
             style={{ marginTop: 8 }}
           >
@@ -71,129 +61,56 @@ export const AllServices = ({ navigation }: Props) => {
         onLeftIconPress: () => navigation.goBack(),
       }}
     >
-      <View style={styles.container}>
-        {/* Search Input */}
-        <View style={styles.searchContainer}>
-          <Icon
-            name="search"
-            family="Ionicons"
-            size={20}
-            color="#B0B0B0"
-            style={{ marginLeft: 10 }}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder={t(
-              'services.allServices.searchPlaceholder',
-              'Search services that you need',
-            )}
-            value={search}
-            onChangeText={setSearch}
-            placeholderTextColor="#B0B0B0"
-          />
-          <TouchableOpacity style={styles.filterButton}>
-            <Icon name="filter" family="Ionicons" size={22} color="#7B61FF" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Results header */}
-        <View style={styles.resultsHeader}>
-          <Text
-            variant="title"
-            size="large"
-            color="info"
-            style={styles.resultsText}
-          >
-            {t('services.allServices.resultsFor', 'Results for')}{' '}
-            <Text
-              variant="title"
-              size="large"
-              color="primary"
-              style={styles.highlightText}
-            >
-              "{search || t('home_screen.all', 'All')}"
-            </Text>
-          </Text>
-          <Text
-            variant="title"
-            size="medium"
-            color="primary"
-            style={styles.foundText}
-          >
-            {data?.data?.items?.length ?? 0}{' '}
-            {t('services.allServices.founds', 'founds')}
-          </Text>
-        </View>
-
-        {/* Services List */}
+      <View style={{ flex: 1 }}>
+        <SearchBar
+          value={search}
+          onChange={handleSearchChange}
+          onSubmit={handleSearchSubmit}
+          onClear={handleClearSearch}
+          onFilterPress={() => setShowFilterModal(true)}
+          placeholder={t('search.searchPlaceholder', 'Search services...')}
+        />
         <FlatList
-          data={data?.data?.items ?? []}
+          data={filteredServices}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ServiceItem item={item} navigation={navigation} />
           )}
-          contentContainerStyle={{ paddingBottom: 24 }}
-          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            !isLoading ? (
+            <View style={{ alignItems: 'center', marginTop: 80 }}>
+              <Image
+                source={NotFoundImage}
+                style={{ width: '90%', height: '90%', marginBottom: 24 }}
+                resizeMode="contain"
+              />
               <Text
-                variant="body"
-                size="medium"
-                style={{ textAlign: 'center', marginTop: 40 }}
+                variant="title"
+                size="large"
+                color="info"
+                style={{ fontWeight: 'bold', marginBottom: 12 }}
               >
                 {t('services.allServices.noResults', 'No services found')}
               </Text>
-            ) : null
+              <Text
+                variant="body"
+                size="medium"
+                style={{ textAlign: 'center', color: '#888', maxWidth: 320 }}
+              >
+                {t(
+                  'services.allServices.noResultsDescription',
+                  'Try adjusting your filters or search for something else.',
+                )}
+              </Text>
+            </View>
           }
+        />
+        <SearchFilterModal
+          visible={showFilterModal}
+          onClose={() => setShowFilterModal(false)}
         />
       </View>
     </Screen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 12,
-    paddingTop: 16,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F4F4F4',
-    borderRadius: 16,
-    marginBottom: 18,
-    paddingHorizontal: 6,
-    height: 48,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    paddingHorizontal: 10,
-    color: '#222',
-    backgroundColor: 'transparent',
-  },
-  filterButton: {
-    padding: 8,
-    borderRadius: 16,
-    marginRight: 4,
-  },
-  resultsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: 12,
-    paddingHorizontal: 2,
-  },
-  resultsText: {
-    fontWeight: '500',
-  },
-  highlightText: {
-    fontWeight: 'bold',
-  },
-  foundText: {
-    fontWeight: 'bold',
-  },
-});
 
 export default AllServices;

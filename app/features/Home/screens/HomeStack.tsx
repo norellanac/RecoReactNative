@@ -6,7 +6,7 @@ import { AllServices } from '../../Services/screens';
 import ServiceDetails from '../../Services/screens/ServiceDetails';
 import TaskDetailsScreen from '../../Services/screens/TaskDetailsScreen';
 import { ProductService } from '@/app/types/api/modelTypes';
-import { SearchResults } from '@/app/features/Profile/SearchResults';
+import { SearchResults } from '@/app/features/Search/screens/SearchResults';
 
 export type HomeStackParams = {
   LandingHome: undefined;

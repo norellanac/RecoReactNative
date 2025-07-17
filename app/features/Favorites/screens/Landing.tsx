@@ -52,8 +52,8 @@ export const LandingFavorites = ({ navigation }: Props) => {
         showBackButton: true,
         title: (
           <Text
-            variant="headline"
-            size="small"
+            variant="title"
+            size="medium"
             color="info"
             style={{ marginTop: 8 }}
           >

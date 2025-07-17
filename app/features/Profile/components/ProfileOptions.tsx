@@ -69,12 +69,6 @@ export const ProfileMenuOptions = ({
       onPress: () => navigation.navigate('PrivacyPolicy'),
     },
     {
-      key: 'PublishServices',
-      label: t('userProfile.publishServices', 'Publish my services'),
-      value: '',
-      icon: { name: 'rocket-outline', color: '#625B71', family: 'Ionicons' },
-    },
-    {
       key: 'Logout',
       label: t('userProfile.logout', 'Logout'),
       value: '',

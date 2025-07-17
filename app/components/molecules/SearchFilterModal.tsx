@@ -6,26 +6,51 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Text, Button } from '../atoms';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setCategories,
+  setLocationIds,
+  resetFilters,
+} from '@/app/redux/slices/filterProductsSlice';
 import { useProductServiceFilterData } from '@/app/hooks/useProductServiceFilterData';
+import { useTranslation } from 'react-i18next';
 
 const SearchFilterModal = ({ visible, onClose }) => {
-  const {
-    availableCategories,
-    availableLocations,
-    filters,
-    updateCategories,
-    updateLocationIds,
-    resetFilters,
-  } = useProductServiceFilterData();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
 
-  // Dropdown state
+  const [localCategories, setLocalCategories] = useState([]);
+  const [localLocations, setLocalLocations] = useState([]);
+
+  React.useEffect(() => {
+    if (visible) {
+      setLocalCategories(
+        Array.isArray(selectedCategories) ? selectedCategories : [],
+      );
+      setLocalLocations(
+        Array.isArray(selectedLocations) ? selectedLocations : [],
+      );
+    }
+  }, [visible, selectedCategories, selectedLocations]);
+
+  // Lee los filtros actuales de Redux
+  const selectedCategories = useSelector(
+    (state) => state.filter.options.categories,
+  );
+  const selectedLocations = useSelector(
+    (state) => state.filter.options.locationIds,
+  );
+
+  const { availableLocations, availableCategories } =
+    useProductServiceFilterData();
+
+  // Dropdown state (solo para abrir/cerrar)
   const [catOpen, setCatOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [locOpen, setLocOpen] = useState(false);
-  const [selectedLocations, setSelectedLocations] = useState([]);
 
-  // Format data for dropdown
+  // Formatea los datos para el dropdown
   const categoryItems = availableCategories.map((cat) => ({
     label: cat.name,
     value: cat.id,
@@ -36,15 +61,15 @@ const SearchFilterModal = ({ visible, onClose }) => {
   }));
 
   const handleApply = () => {
-    updateCategories(selectedCategories);
-    updateLocationIds(selectedLocations);
+    dispatch(setCategories(localCategories));
+    dispatch(setLocationIds(localLocations));
     onClose();
   };
 
   const handleReset = () => {
-    setSelectedCategories([]);
-    setSelectedLocations([]);
-    resetFilters();
+    setLocalCategories([]);
+    setLocalLocations([]);
+    dispatch(resetFilters());
   };
 
   return (
@@ -58,52 +83,41 @@ const SearchFilterModal = ({ visible, onClose }) => {
         <View style={styles.overlay} />
       </TouchableWithoutFeedback>
       <View style={styles.modalContainer}>
-        <Text style={styles.title}>Filter</Text>
+        <Text variant="title" size="large" color="primary" style={styles.title}>
+          {t('searchFilterModal.title', 'Filter')}
+        </Text>
         <View style={styles.divider} />
 
-        <Text style={styles.label}>Category</Text>
+        <Text variant="title" size="small" color="info" style={styles.label}>
+          Category
+        </Text>
         <DropDownPicker
           open={catOpen}
           setOpen={setCatOpen}
-          value={selectedCategories}
-          setValue={setSelectedCategories}
+          value={localCategories}
+          setValue={setLocalCategories}
           items={categoryItems}
           multiple={true}
+          mode="BADGE"
           min={0}
-          max={10}
+          max={5}
           zIndex={2000}
           zIndexInverse={1000}
-          placeholder="Select categories"
+          placeholder={t(
+            'searchFilterModal.selectCategories',
+            'Select categories',
+          )}
           searchable={true}
-          searchPlaceholder="Buscar categoría..."
-          searchTextInputStyle={{
-            borderColor: '#7B61FF',
-            borderWidth: 1,
-            borderRadius: 12,
-            color: '#222',
-            paddingHorizontal: 10,
-            fontSize: 15,
-          }}
+          searchPlaceholder={t(
+            'searchFilterModal.searchCategory',
+            'Search category...',
+          )}
+          searchTextInputStyle={styles.searchTextInput}
           style={styles.dropdown}
           dropDownContainerStyle={styles.dropdownContainer}
-          badgeColors={['#7B61FF']}
-          badgeDotColors={['#fff']}
-          zIndex={1000}
-          zIndexInverse={2000}
           renderBadgeItem={(item) => (
-            <View
-              style={{
-                backgroundColor: '#7B61FF',
-                borderRadius: 16,
-                paddingHorizontal: 12,
-                paddingVertical: 4,
-                marginRight: 6,
-                marginBottom: 4,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 14 }}>
+            <View style={styles.dropdownBadgeItem}>
+              <Text variant="body" size="small" style={styles.badgeText}>
                 {item.label}
               </Text>
             </View>
@@ -116,43 +130,30 @@ const SearchFilterModal = ({ visible, onClose }) => {
         <DropDownPicker
           open={locOpen}
           setOpen={setLocOpen}
-          value={selectedLocations}
-          setValue={setSelectedLocations}
+          value={localLocations}
+          setValue={setLocalLocations}
           items={locationItems}
           multiple={true}
+          mode="BADGE"
           min={0}
-          max={10}
+          max={5}
           zIndex={1000}
           zIndexInverse={2000}
           searchable={true}
-          placeholder="Select locations"
-          searchPlaceholder="Buscar ubicación..."
-          searchTextInputStyle={{
-            borderColor: '#7B61FF',
-            borderWidth: 1,
-            borderRadius: 12,
-            color: '#222',
-            paddingHorizontal: 10,
-            fontSize: 15,
-          }}
+          placeholder={t(
+            'searchFilterModal.selectLocations',
+            'Select locations',
+          )}
+          searchPlaceholder={t(
+            'searchFilterModal.searchLocation',
+            'Search location...',
+          )}
+          searchTextInputStyle={styles.searchTextInput}
           style={styles.dropdown}
           dropDownContainerStyle={styles.dropdownContainer}
-          badgeColors={['#7B61FF']}
-          badgeDotColors={['#fff']}
           renderBadgeItem={(item) => (
-            <View
-              style={{
-                backgroundColor: '#7B61FF',
-                borderRadius: 16,
-                paddingHorizontal: 12,
-                paddingVertical: 4,
-                marginRight: 6,
-                marginBottom: 4,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 14 }}>
+            <View style={styles.dropdownBadgeItem}>
+              <Text variant="body" size="small" style={styles.badgeText}>
                 {item.label}
               </Text>
             </View>
@@ -168,14 +169,15 @@ const SearchFilterModal = ({ visible, onClose }) => {
           />
           <Button
             variant="filled"
-            title="Filter"
+            title="Apply"
             onPress={handleApply}
             style={styles.filterButton}
           />
         </View>
-        <Button
-          variant="text"
-          title="Close"
+        <Ionicons
+          name="close"
+          size={28}
+          color="#6750A4"
           onPress={onClose}
           style={styles.closeButton}
         />
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    height: '60%',
+    height: '65%',
     backgroundColor: '#fff',
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
@@ -225,6 +227,28 @@ const styles = StyleSheet.create({
     borderColor: '#7B61FF',
     backgroundColor: '#fff',
   },
+  searchTextInput: {
+    borderColor: '#79747E',
+    borderWidth: 1,
+    borderRadius: 8,
+    color: '#222',
+    paddingHorizontal: 10,
+    fontSize: 15,
+  },
+  dropdownBadgeItem: {
+    backgroundColor: '#7B61FF',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    marginRight: 6,
+    marginBottom: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -234,13 +258,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
     borderRadius: 24,
-    backgroundColor: '#E5D8FF',
   },
   filterButton: {
     flex: 1,
     marginLeft: 8,
     borderRadius: 24,
-    backgroundColor: '#7B61FF',
   },
   closeButton: {
     position: 'absolute',

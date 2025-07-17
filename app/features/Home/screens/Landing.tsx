@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Text } from '@/app/components/atoms';
 import { Button } from '@/app/components/atoms/Button';
@@ -9,8 +9,6 @@ import CategoryCard from '../components/molecules/CategoryCard';
 import ServiceCard from '../components/molecules/ServiceCard';
 import { useGetProductsQuery } from '@/app/services/productApi';
 import { useGetCategoriesQuery } from '@/app/services/categoryApi';
-import { TextInput } from '@/app/components/atoms';
-import { Icon } from '@/app/components/atoms/Icon';
 import { useTranslation } from 'react-i18next';
 import { GreetingHeader } from '../components/molecules/GreetingHeader';
 import slider_1 from '../../../assets/img/home_sliders/slider_1_Reco.png';
@@ -18,21 +16,30 @@ import slider_2 from '../../../assets/img/home_sliders/slider_2_Reco.png';
 import Carousel from '@/app/components/molecules/Carousel';
 import { ProductService } from '@/app/types/api/modelTypes';
 import { SearchBar } from '@/app/components/molecules/SearchBar';
+import SearchFilterModal from '@/app/components/molecules/SearchFilterModal';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchTerm } from '@/app/redux/slices/filterProductsSlice';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
-export const LandingHome = ({ navigation } /** route */ : Props) => {
+export const LandingHome = ({ navigation }: Props) => {
   const { t } = useTranslation();
-  const [search, setSearch] = React.useState('');
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const search = useSelector((state) => state.filter.options.searchTerm);
+  const dispatch = useDispatch();
 
-  const handleSearchSubmit = () => {
-    if (search.trim()) {
-      navigation.navigate('SearchResults', { query: search });
-    }
+  const handleSearchChange = (text: string) => {
+    dispatch(setSearchTerm(text));
   };
 
-  const handleClearSearch = () => setSearch('');
+  const handleSearchSubmit = () => {
+    dispatch(setSearchTerm(search));
+    navigation.navigate('SearchResults', { query: search });
+  };
 
+  const handleClearSearch = () => {
+    dispatch(setSearchTerm(''));
+  };
   const handleOpenFilters = () => setShowFilterModal(true);
 
   const {
@@ -75,7 +82,7 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
       <GreetingHeader />
       <SearchBar
         value={search}
-        onChange={setSearch}
+        onChange={handleSearchChange}
         onSubmit={handleSearchSubmit}
         onClear={handleClearSearch}
         onFilterPress={handleOpenFilters}
@@ -83,6 +90,10 @@ export const LandingHome = ({ navigation } /** route */ : Props) => {
           'home_screen.searchPlaceholder',
           'Search services that you need',
         )}
+      />
+      <SearchFilterModal
+        visible={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
       />
       <ScrollView
         contentContainerStyle={{

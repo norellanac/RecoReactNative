@@ -18,7 +18,7 @@ import NotFoundImage from '@/app/assets/img/notFound.png';
 export const SearchResults = ({ navigation }) => {
   const { t } = useTranslation();
   const route = useRoute();
-  const { query } = route.params;
+  const { query, categories, locations } = route.params;
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const { filteredServices, updateSearchTerm } = useProductServiceFilterData();
@@ -26,15 +26,6 @@ export const SearchResults = ({ navigation }) => {
   React.useEffect(() => {
     updateSearchTerm(query);
   }, [query]);
-
-  const {
-    availableCategories,
-    availableLocations,
-    filters,
-    updateCategories,
-    updateLocationIds,
-    resetFilters,
-  } = useProductServiceFilterData();
 
   const ServiceItem = ({
     item,
@@ -92,7 +83,7 @@ export const SearchResults = ({ navigation }) => {
           onSubmit={() => updateSearchTerm(query)}
           onClear={() => navigation.setParams({ query: '' })}
           onFilterPress={() => setShowFilterModal(true)}
-          placeholder="Search services..."
+          placeholder={t('search.searchPlaceholder', 'Search services...')}
         />
         <View style={styles.resultsHeader}>
           <View style={{ flex: 1, paddingRight: 12 }}>
@@ -104,7 +95,7 @@ export const SearchResults = ({ navigation }) => {
               numberOfLines={2}
               ellipsizeMode="tail"
             >
-              {t('services.allServices.resultsFor', 'Results for')}{' '}
+              {t('search.resultsFor', 'Results for')}{' '}
               <Text
                 variant="title"
                 size="medium"
@@ -113,7 +104,7 @@ export const SearchResults = ({ navigation }) => {
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                "{query || t('home_screen.all', 'All Services')}"
+                "{query || t('search.allServices', 'All Services')}"
               </Text>
             </Text>
           </View>
@@ -123,8 +114,7 @@ export const SearchResults = ({ navigation }) => {
             color="primary"
             style={styles.foundText}
           >
-            {filteredServices.length}{' '}
-            {t('services.allServices.founds', 'founds')}
+            {filteredServices.length} {t('search.found', 'found')}
           </Text>
         </View>
         <FlatList
@@ -164,7 +154,6 @@ export const SearchResults = ({ navigation }) => {
         <SearchFilterModal
           visible={showFilterModal}
           onClose={() => setShowFilterModal(false)}
-          // Pasa los props necesarios para filtros
         />
       </View>
     </Screen>

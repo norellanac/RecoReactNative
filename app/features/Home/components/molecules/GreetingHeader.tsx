@@ -63,9 +63,7 @@ export const GreetingHeader = () => {
         </View>
       )}
       <View style={{ flex: 1 }}>
-        <Text style={{ color: '#888', fontSize: 16 }}>
-          {getGreeting()} <Text>👋</Text>
-        </Text>
+        <Text style={{ color: '#888', fontSize: 16 }}>{getGreeting()} 👋</Text>
         <Text style={{ fontWeight: 'bold', fontSize: 22, color: '#222' }}>
           {user?.name} {user?.lastname}
         </Text>

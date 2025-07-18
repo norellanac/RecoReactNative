@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LandingAuth } from './Landing';
 import { Login } from './Login';
 import { Register } from './Register';
+import { TermsScreen } from '@/app/features/Profile/screens/TermsScreen';
+import { PrivacyPolicyScreen } from '@/app/features/Profile/screens/PrivacyPolicyScreen';
 
 const AuthStack = createNativeStackNavigator();
 
@@ -10,6 +12,8 @@ export type AuthStackParams = {
   Landing: undefined;
   Login: undefined;
   Register: undefined;
+  Terms: undefined;
+  PrivacyPolicy: undefined;
 };
 
 const AuthNavigator = () => {
@@ -18,6 +22,8 @@ const AuthNavigator = () => {
       <AuthStack.Screen name="Landing" component={LandingAuth} />
       <AuthStack.Screen name="Login" component={Login} />
       <AuthStack.Screen name="Register" component={Register} />
+      <AuthStack.Screen name="Terms" component={TermsScreen} />
+      <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
     </AuthStack.Navigator>
   );
 };

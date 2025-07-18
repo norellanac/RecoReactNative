@@ -105,6 +105,7 @@ export const LoginForm: React.FC = () => {
                 onPress={handleShowPassword}
               />
             }
+            onSubmitEditing={() => handleSubmit()}
           />
           <Button
             variant="filled"

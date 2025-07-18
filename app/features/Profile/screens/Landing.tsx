@@ -11,17 +11,13 @@ import { Screen } from '../../../components/templates';
 import { Button, Text } from '../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
-import {
-  logout,
-  selectAuth,
-  setAuthUserState,
-} from '@/app/redux/slices/authSlice';
+import { selectAuth, setAuthUserState } from '@/app/redux/slices/authSlice';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
 import { useUpdateUserNameMutation } from '@/app/services/userApi';
 import { ProfileStackParams } from './ProfileStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ProfileOptions } from '../components/ProfileOptions';
+import { ProfileMenuOptions } from '../components/ProfileOptions';
 import { Icon } from '@/app/components/atoms/Icon';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
 import { useHasRole } from '@/app/hooks/useHasRole';
@@ -63,10 +59,6 @@ export const LandingProfile = ({ navigation }: Props) => {
         t('userProfile.updateFailed', 'Failed to update role'),
       );
     }
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
   };
 
   const getAvatarSource = () => {
@@ -151,8 +143,8 @@ export const LandingProfile = ({ navigation }: Props) => {
         showBackButton: true,
         title: (
           <Text
-            variant="headline"
-            size="small"
+            variant="title"
+            size="medium"
             color="info"
             style={{ marginTop: 8 }}
           >
@@ -223,7 +215,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           />
         </ModalComponent>
 
-        <ProfileOptions navigation={navigation} user={user} />
+        <ProfileMenuOptions navigation={navigation} user={user} />
         <Button
           variant="filled"
           title={
@@ -233,7 +225,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           }
           onPress={handleSwitchRole}
           style={[
-            styles.logoutButton,
+            styles.becomeMerchantButton,
             { backgroundColor: isMerchant ? '#019FE9' : '#6750A4' },
           ]}
           startIcon={
@@ -245,18 +237,6 @@ export const LandingProfile = ({ navigation }: Props) => {
             />
           }
         />
-        <Button
-          variant="outlined"
-          title={t('userProfile.publishServices', 'Publish my services')}
-          onPress={() => navigation.navigate('MyServices')}
-          style={styles.logoutButton}
-        />
-        <Button
-          variant="text"
-          title={t('userProfile.logout', 'Logout')}
-          onPress={handleLogout}
-          style={styles.logoutButton}
-        />
       </View>
     </Screen>
   );
@@ -265,7 +245,8 @@ export const LandingProfile = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: 50,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
   avatar: {
     width: 125,
@@ -277,7 +258,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: -10,
   },
-
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -286,9 +266,9 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     width: 300,
   },
-  logoutButton: {
+  becomeMerchantButton: {
     marginTop: 20,
-    width: '80%',
+    width: '70%',
   },
   modalContent: {
     backgroundColor: 'white',

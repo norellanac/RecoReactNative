@@ -28,14 +28,12 @@ export const Login = ({ navigation }: Props) => {
             {t('login.title', 'Login to your account')}
           </Text>
           <LoginForm />
-          <Text
-            variant={'body'}
-            size={'large'}
-            color="info"
-            style={{ textAlign: 'center' }}
-          >
-            {t('login.forget_password', 'Forgot password?')}
-          </Text>
+          <Button
+            variant="text"
+            title={t('login.forget_password', 'Forgot password?')}
+            onPress={() => navigation.navigate('PasswordRecovery')}
+            style={{ marginTop: -16 }}
+          />
           <View style={styles.msmFood}>
             <Text
               variant={'body'}

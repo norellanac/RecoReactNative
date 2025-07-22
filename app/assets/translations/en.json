@@ -11,7 +11,22 @@
       "full_name": "Full Name",
       "password": "Password"
     }
-  },
+},
+  "passwordRecovery": {
+      "OTPVerification": {
+        "title": "Check your email",
+        "body": "Almost done! We'll send you an email with a 6-digit code. Use it here to create a new password and continue enjoying Reco.",
+        "OtpPlaceHolder": "Enter your 6-digit code"
+      },
+      "updateSuccess": {
+        "title": "¡Successful!",
+        "body": "¡Congratulations! Your password has been changed. Click continue to login.",
+        "CTAbutton": "Continue to login"
+      },
+
+      "title": "Password Recovery",
+      "body": "Enter your email to receive a password reset link."    
+    },
   "privacyPolicy": {
     "title": "Privacy Policy",
     "content": "RECO PRIVACY POLICY\nLast updated: July 15, 2025\n\n1. Data Controller\nLegal Name: Reco - Trusted Professionals\nFiscal Address: Residenciales San Jose, San José Pinula, Guatemala.\nEmail: privacy@recolatam.com\n\n2. Data We Collect\n a) Data provided by you:\n- Registration: Full name, email, phone, profile photo.\n- Professionals: Experience, skills, licenses (optional), prices.\n- Content: Project photos, reviews, messages.\n\n b) Data collected automatically:\n- GPS Location: Only when the app is in use (can be disabled)\n- Device: Model, OS, IP address.\n- Usage: Screen time, searches, clicks.\n\n c) Third-party data:\n- If you log in with Facebook/Google: Name and email.\n\n3. Purposes of Processing\nWe use your data to:\n✅ Connect users with professionals\n✅ Personalize recommendations (using location)\n✅ Verify identities (profile photo)\n✅ Improve our platform (usage analytics)\n📢 Send relevant offers (you may opt out)\n\n4. Legal Bases (Law 57-2008)\n- Contract execution: To provide the service\n- Explicit consent: For location and marketing\n- Legitimate interest: Analysis of anonymized data\n\n5. Data Sharing\nYour data may be shared with:\n- Professionals: Only when hiring a service (they will see your name and approximate location)\n- Technical providers: Hosting on AWS/Google Cloud (with GDPR contracts)\n- Authorities: Upon legal request in Guatemala\n\n6. Data Security\nWe implement:\n- SSL/TLS encryption in communications\n- Restricted access with two-factor authentication\n- Daily backups\n\n7. ARCO Rights\nYou may:\n- Access your stored data\n- Rectify incorrect information\n- Cancel your account and delete data\n- Object to processing for commercial purposes\nTo exercise these rights: Send a request to privacy@reco.com (we respond within 10 business days)\n\n8. Data Retention\n- Active accounts: Until deletion is requested\n- Inactive accounts: 2 years (then anonymized)\n- Transaction data: 5 years (for tax obligations)\n\n9. Minors\n⚠️ Registration by minors under 18 is prohibited. If we detect a minor's account, it will be immediately deleted.\n\n10. Changes to this Policy\nWe will notify changes via:\n- Email to registered users\n- Highlighted banner in the app for 7 days\n\n11. Contact\nFor privacy questions:\nprivacy@recolatam.com\nOffice: Residenciales San Jose, San José Pinula, Guatemala."
@@ -115,7 +130,12 @@
       "permissionDenied": "Permiso denegado",
       "permissionGallery": "Se requiere acceso a la galería para seleccionar una imagen.",
       "remove": "Remove",
-      "required": "Required"
+      "required": "Required",
+      "email": "Enter email",
+      "password": "Enter password",
+      "confirmPassword": "Confirm password",
+      "minLength": "Must be at least 6 characters",
+      "passwordsMustMatch": "Passwords must match"
     }
   },
   "Forms": {

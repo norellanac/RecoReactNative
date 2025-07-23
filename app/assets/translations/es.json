@@ -115,7 +115,8 @@
       "permissionDenied": "Permiso denegado",
       "permissionGallery": "Se requiere acceso a la galería para seleccionar una imagen.",
       "remove": "Eliminar",
-      "required": "Requerido"
+      "required": "Requerido",
+      "email": "Ingresar correo electrónico"
     }
   },
   "Forms": {

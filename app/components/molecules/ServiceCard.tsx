@@ -53,7 +53,7 @@ export const ServiceCard: React.FC<Props> = ({
           {service.name}
         </Text>
         <Text variant="body" size="medium" color="primary" style={styles.price}>
-          Q{service.price}{' '}
+          Q{Number(service.price).toFixed(2)}{' '}
           <Text variant="body" size="small" color="secondary">
             {t('services.allServices.perDay', '/ per day')}
           </Text>
@@ -66,7 +66,9 @@ export const ServiceCard: React.FC<Props> = ({
             color="info"
             style={styles.ratingText}
           >
-            {service.averageRating ?? '0'}
+            {service.averageRating
+              ? Number(service.averageRating).toFixed(1)
+              : '0.0'}
           </Text>
           <Text
             variant="body"

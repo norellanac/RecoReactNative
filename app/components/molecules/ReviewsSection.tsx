@@ -36,14 +36,14 @@ const ReviewsSection: React.FC<Props> = ({
         >
           {t('services.serviceDetails.reviews', 'Reviews')}
         </Text>
-        <Button
+        {/* <Button
           title={t('services.serviceDetails.seeAll', 'See All')}
           variant="text"
           color="primary"
           size="large"
           style={[styles.seeAll, stylesOverride.seeAll]}
           onPress={onSeeAll}
-        />
+        /> */}
       </View>
 
       {/* Review List */}

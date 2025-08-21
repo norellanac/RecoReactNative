@@ -154,7 +154,7 @@ export const LandingHome = ({ navigation }: Props) => {
               variant="text"
               size="large"
               color="secondary"
-              title={t('home_screen.viewAll', 'View all')}
+              title={t('home_screen.all', 'View all')}
               onPress={() => navigation.navigate('AllServices')}
             />
           </View>

@@ -125,13 +125,13 @@
     "password_long": ""
   },
   "home_screen": {
-    "all": "Todo",
+    "all": "Ver todos",
     "all_categories": "Todas las categorías",
     "categoriesTitle": "Categorías",
     "error": "Ocurrió un error al cargar los datos.",
     "loading": "Cargando datos...",
     "searchPlaceholder": "Busca los servicios que necesitas",
-    "servicesAvailable": "Servicios Disponibles",
+    "servicesAvailable": "Servicios disponibles",
     "viewAll": "Ver todas",
     "moreButton": "Más"
   },
@@ -159,10 +159,10 @@
       "searchPlaceholder": "Buscar servicios que necesitas"
     },
     "serviceDetails": {
-      "floorPrice": "(Precio mínimo)",
+      "floorPrice": "/ por día",
       "noReviews": "Aún no hay reseñas. ¡Sé el primero en dejar una reseña!",
       "otherSkills": "Otras habilidades",
-      "reviews": "reseñas",
+      "reviews": "Reseñas",
       "seeAll": "Ver todo",
       "selectDate": "Elegir fecha y hora",
       "selectDateTime": "Seleccionar fecha y hora",

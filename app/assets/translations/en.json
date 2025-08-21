@@ -143,7 +143,7 @@
     "password": "Password"
   },
   "home_screen": {
-    "all": "All",
+    "all": "View all",
     "all_categories": "All Categories",
     "categoriesTitle": "Categories",
     "error": "An error occurred while loading data.",
@@ -177,10 +177,10 @@
       "searchPlaceholder": "Search services that you need"
     },
     "serviceDetails": {
-      "floorPrice": "(Floor price)",
+      "floorPrice": "/ per day",
       "noReviews": "No reviews yet. Be the first to leave a review!",
       "otherSkills": "Other Skills",
-      "reviews": "reviews",
+      "reviews": "Reviews",
       "seeAll": "See All",
       "selectDate": "Choose date and time",
       "selectDateTime": "Select date and time",

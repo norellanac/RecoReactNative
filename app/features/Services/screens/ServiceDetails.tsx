@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { Screen } from '../../../components/templates';
 import { Text, Button } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
@@ -17,8 +18,12 @@ import { getApiImageUrl } from '@/app/utils/Environment';
 import Carousel from '@/app/components/molecules/Carousel';
 import ReviewsSection from '@/app/components/molecules/ReviewsSection';
 import { ProductService } from '@/app/types/api/modelTypes';
+import { RootState } from '@/app/redux/store/store';
+import {
+  toggleFavorite,
+  selectIsFavorite,
+} from '@/app/redux/slices/favoritesSlice';
 
-// Define a generic type for any stack that includes ServiceDetails
 type ServiceDetailsParams = {
   productService: ProductService;
 };
@@ -28,13 +33,21 @@ type NavigationProp = {
   goBack: () => void;
 };
 
-type ServiceDetailsRouteProp = RouteProp<Record<string, ServiceDetailsParams>, 'ServiceDetails'>;
+type ServiceDetailsRouteProp = RouteProp<
+  Record<string, ServiceDetailsParams>,
+  'ServiceDetails'
+>;
 
 const ServiceDetails = () => {
   const { t } = useTranslation();
   const route = useRoute<ServiceDetailsRouteProp>();
-  const navigation = useNavigation<any>(); // Using any to work across multiple stacks
+  const navigation = useNavigation<any>();
   const { productService } = route.params;
+
+  const dispatch = useDispatch();
+  const isFavorite = useSelector((state: RootState) =>
+    selectIsFavorite(state, productService.id),
+  );
 
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -42,6 +55,10 @@ const ServiceDetails = () => {
   const [currentPickerMode, setCurrentPickerMode] = useState<'date' | 'time'>(
     'date',
   );
+
+  const handleFavoritePress = () => {
+    dispatch(toggleFavorite(productService));
+  };
 
   const handleBookNow = () => setCalendarVisible(true);
   const handleConfirm = () => {
@@ -79,7 +96,7 @@ const ServiceDetails = () => {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Carousel images={images} />
 
-        {/* Title & Bookmark */}
+        {/* Title & Favorite */}
         <View style={styles.titleRow}>
           <Text
             variant="title"
@@ -90,12 +107,17 @@ const ServiceDetails = () => {
           >
             {service.name}
           </Text>
-          <Icon
-            name="bookmark-outline"
-            family="Ionicons"
-            size={26}
-            color="#7B61FF"
-          />
+          <TouchableOpacity
+            style={styles.favoriteButton}
+            onPress={handleFavoritePress}
+          >
+            <Icon
+              name={isFavorite ? 'heart' : 'heart-outline'}
+              family="MaterialCommunityIcons"
+              size={32}
+              color={isFavorite ? '#FF4757' : '#7B61FF'}
+            />
+          </TouchableOpacity>
         </View>
 
         {/* Provider, Rating, Location */}
@@ -110,32 +132,49 @@ const ServiceDetails = () => {
           </Text>
           <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />
           <Text variant="body" size="medium" color="info">
-            {service.averageRating ?? '0'} ({reviews.length}{' '}
-            {t('services.serviceDetails.reviews', 'reviews')} )
+            {service.averageRating
+              ? Number(service.averageRating).toFixed(1)
+              : '0.0'}{' '}
+            ({reviews.length} {t('services.serviceDetails.reviews', 'reviews')}{' '}
+            )
           </Text>
         </View>
         <View style={styles.infoRow}>
-          <View style={styles.chip}>
-            <Text variant="body" size="small" style={styles.chipText}>
-              {service.categories?.[0]?.name ?? 'Service'}
+          <View style={styles.categoriesContainer}>
+            {service.categories && service.categories.length > 0 ? (
+              service.categories.map((category, index) => (
+                <View key={category.id} style={styles.chip}>
+                  <Text variant="body" size="small" style={styles.chipText}>
+                    {category.name}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <View style={styles.chip}>
+                <Text variant="body" size="small" style={styles.chipText}>
+                  Service
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.locationContainer}>
+            <Icon
+              name="location-on"
+              family="MaterialIcons"
+              size={16}
+              color="#7B61FF"
+            />
+            <Text variant="body" size="medium" color="secondary">
+              {service.location ?? 'No location'}
             </Text>
           </View>
-          <Icon
-            name="location-on"
-            family="MaterialIcons"
-            size={16}
-            color="#7B61FF"
-          />
-          <Text variant="body" size="medium" color="secondary">
-            {service.locations?.[0]?.name ?? 'No address'}
-          </Text>
         </View>
 
         {/* Price */}
         <Text variant="title" size="large" style={styles.price}>
-          Q{service.price}{' '}
+          Q{Number(service.price).toFixed(2)}{' '}
           <Text variant="body" size="small" color="secondary">
-            {t('services.serviceDetails.floorPrice', '(Floor price)')}
+            {t('services.serviceDetails.floorPrice', '/ per day')}
           </Text>
         </Text>
 
@@ -301,9 +340,20 @@ const ServiceDetails = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  headerImageContainer: { position: 'relative', height: 250, marginBottom: 12 },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerImageContainer: {
+    position: 'relative',
+    height: 250,
+    marginBottom: 12,
+  },
   headerImage: {
     width: '100%',
     height: 250,
@@ -327,10 +377,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 8,
+    marginHorizontal: 18,
   },
   title: {
     fontWeight: 'bold',
-    marginLeft: 18,
+    flex: 1,
+    marginRight: 12,
+  },
+  favoriteButton: {
+    padding: 8,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   providerRow: {
     flexDirection: 'row',
@@ -348,12 +406,24 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginTop: 8,
     gap: 8,
+    flexWrap: 'wrap',
+  },
+  categoriesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
   },
   chip: {
     backgroundColor: '#F4F4F4',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    marginBottom: 4,
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   chipText: {
     color: '#7B61FF',

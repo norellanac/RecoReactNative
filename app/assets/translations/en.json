@@ -150,7 +150,8 @@
     "loading": "Loading data...",
     "searchPlaceholder": "Search services that you need",
     "servicesAvailable": "Services Available",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "moreButton": "More"
   },
   "login": {
     "forget_password": "Forgot password?",
@@ -166,8 +167,10 @@
   },
   "services": {
     "allServices": {
+      "title": "All Services",
       "founds": "founds",
       "noResults": "No services found",
+      "noResultsDescription": "Try adjusting your filters or search for something else.",
       "perDay": "/ per day",
       "resultsFor": "Results for",
       "reviews": "reviews",

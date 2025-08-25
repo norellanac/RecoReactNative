@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Image, StyleSheet } from 'react-native';
 import { Text } from '@/app/components/atoms';
 import { Icon } from '@/app/components/atoms/Icon';
 import { getApiImageUrl } from '@/app/utils/Environment';
+import { formatPrice, formatRating } from '@/app/utils/formatters';
 import { ProductService } from '@/app/types/api/modelTypes';
 import { useTranslation } from 'react-i18next';
 
@@ -28,6 +29,7 @@ export const ServiceCard: React.FC<Props> = ({
   onFavoritePress,
 }) => {
   const { t } = useTranslation();
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
       <View style={styles.cardImageContainer}>
@@ -53,7 +55,7 @@ export const ServiceCard: React.FC<Props> = ({
           {service.name}
         </Text>
         <Text variant="body" size="medium" color="primary" style={styles.price}>
-          Q{Number(service.price).toFixed(2)}{' '}
+          {formatPrice(service.price)}{' '}
           <Text variant="body" size="small" color="secondary">
             {t('services.allServices.perDay', '/ per day')}
           </Text>
@@ -66,9 +68,7 @@ export const ServiceCard: React.FC<Props> = ({
             color="info"
             style={styles.ratingText}
           >
-            {service.averageRating
-              ? Number(service.averageRating).toFixed(1)
-              : '0.0'}
+            {formatRating(service.averageRating)}
           </Text>
           <Text
             variant="body"

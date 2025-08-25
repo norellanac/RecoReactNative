@@ -23,14 +23,10 @@ import {
   toggleFavorite,
   selectIsFavorite,
 } from '@/app/redux/slices/favoritesSlice';
+import { formatPrice, formatRating } from '@/app/utils/formatters';
 
 type ServiceDetailsParams = {
   productService: ProductService;
-};
-
-type NavigationProp = {
-  navigate: (screen: string, params?: any) => void;
-  goBack: () => void;
 };
 
 type ServiceDetailsRouteProp = RouteProp<
@@ -132,11 +128,8 @@ const ServiceDetails = () => {
           </Text>
           <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />
           <Text variant="body" size="medium" color="info">
-            {service.averageRating
-              ? Number(service.averageRating).toFixed(1)
-              : '0.0'}{' '}
-            ({reviews.length} {t('services.serviceDetails.reviews', 'reviews')}{' '}
-            )
+            {formatRating(service.averageRating)} ({reviews.length}{' '}
+            {t('services.serviceDetails.reviews', 'reviews')} )
           </Text>
         </View>
         <View style={styles.infoRow}>
@@ -172,7 +165,7 @@ const ServiceDetails = () => {
 
         {/* Price */}
         <Text variant="title" size="large" style={styles.price}>
-          Q{Number(service.price).toFixed(2)}{' '}
+          {formatPrice(service.price)}{' '}
           <Text variant="body" size="small" color="secondary">
             {t('services.serviceDetails.floorPrice', '/ per day')}
           </Text>

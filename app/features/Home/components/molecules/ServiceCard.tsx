@@ -1,7 +1,9 @@
+import React from 'react';
 import { ProductService } from '@/app/types/api/modelTypes';
 import { getApiImageUrl } from '@/app/utils/Environment';
-import React from 'react';
+import { formatPrice, formatRating } from '@/app/utils/formatters';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 type ServiceCardProps = {
   service?: ProductService;
@@ -12,6 +14,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   service = {} as ProductService,
   onPress,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.imageContainer}>
@@ -21,9 +25,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         />
       </View>
       <Text style={styles.name}>{service.name}</Text>
-      <Text style={styles.price}>{service.price}</Text>
+      <Text style={styles.price}>
+        {formatPrice(service.price)} / {t('common.perDay', 'per day')}
+      </Text>
       <Text style={styles.rating}>
-        ⭐ {service.averageRating} ({service.reviews.length} reseñas)
+        ⭐ {formatRating(service.averageRating)} ({service.reviews.length}{' '}
+        {t('common.reviews', 'reseñas')})
       </Text>
     </TouchableOpacity>
   );

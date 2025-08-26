@@ -5,7 +5,6 @@ import { Button } from '@/app/components/atoms/Button';
 import { Screen } from '../../../components/templates';
 import { HomeStackParams } from './HomeStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CategoryCard from '../components/molecules/CategoryCard';
 import ServiceCard from '../components/molecules/ServiceCard';
 import { useGetProductsQuery } from '@/app/services/productApi';
 import { useGetCategoriesQuery } from '@/app/services/categoryApi';
@@ -19,6 +18,7 @@ import { SearchBar } from '@/app/components/molecules/SearchBar';
 import SearchFilterModal from '@/app/components/molecules/SearchFilterModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchTerm } from '@/app/redux/slices/filterProductsSlice';
+import CategoryList from '../components/molecules/CategoryList';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
 
@@ -118,46 +118,16 @@ export const LandingHome = ({ navigation }: Props) => {
         />
 
         <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text
-              variant="title"
-              size="large"
-              color="secondary"
-              style={{
-                textAlign: 'left',
-                fontWeight: 'bold',
-              }}
-            >
-              {t('home_screen.categoriesTitle', 'Categories')}
-            </Text>
-            <Button
-              variant="text"
-              size="large"
-              color="secondary"
-              title={t('home_screen.viewAll', 'View all')}
-              onPress={() => navigation.navigate('AllCategories')}
-            />
-          </View>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ height: 125, padding: 0, marginBottom: 10 }}
-          >
-            {categories.map((category, index) => (
-              <CategoryCard
-                key={index}
-                title={category.name}
-                icon={category.icon}
-              />
-            ))}
-          </ScrollView>
+          <CategoryList
+            categories={categories}
+            onCategoryPress={(category) =>
+              navigation.navigate('CategoryServices', {
+                categoryId: category.id,
+                categoryName: category.name,
+              })
+            }
+            onViewAll={() => navigation.navigate('AllCategories')}
+          />
         </View>
 
         <View>
@@ -184,7 +154,7 @@ export const LandingHome = ({ navigation }: Props) => {
               variant="text"
               size="large"
               color="secondary"
-              title={t('home_screen.viewAll', 'View all')}
+              title={t('home_screen.all', 'View all')}
               onPress={() => navigation.navigate('AllServices')}
             />
           </View>

@@ -6,12 +6,20 @@ import { Text } from '../../../../components/atoms/Text';
 import { useGetCategoriesQuery } from '@/app/services/categoryApi';
 import { useTranslation } from 'react-i18next';
 import { getApiImageUrl } from '@/app/utils/Environment';
+import { Category } from '@/app/types/api/modelTypes';
 
-export const AllCategories = ({ navigation }: { navigation: any }) => {
+interface AllCategoriesProps {
+  navigation: {
+    goBack: () => void;
+    navigate: (screen: string, params?: any) => void;
+  };
+}
+
+export const AllCategories: React.FC<AllCategoriesProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const { data: categoriesData, isLoading, isError } = useGetCategoriesQuery();
 
-  const categories = categoriesData?.data || [];
+  const categories: Category[] = categoriesData?.data || [];
 
   if (isLoading) {
     return (
@@ -29,8 +37,16 @@ export const AllCategories = ({ navigation }: { navigation: any }) => {
     );
   }
 
-  const renderCategory = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.categoryItem}>
+  const renderCategory = ({ item }: { item: Category }) => (
+    <TouchableOpacity
+      style={styles.categoryItem}
+      onPress={() =>
+        navigation.navigate('CategoryServices', {
+          categoryId: item.id,
+          categoryName: item.name,
+        })
+      }
+    >
       <View style={styles.iconContainer}>
         {item.icon && (
           <Image
@@ -56,33 +72,18 @@ export const AllCategories = ({ navigation }: { navigation: any }) => {
       statusBarProps={{
         showBackButton: true,
         title: (
-          <Text variant="headline" size="medium" color="info">
+          <Text variant="title" size="medium" color="info">
             {t('home_screen.all_categories', 'All Categories')}
           </Text>
         ),
         onLeftIconPress: () => navigation.goBack(),
       }}
     >
-      {/* <Text
-        variant="headline"
-        size="small"
-        color="info"
-        style={{
-          textAlign: 'left',
-          padding: 10,
-          paddingLeft: 20,
-          marginVertical: 10,
-          backgroundColor: '#E7E0EC',
-        }}
-      >
-        {t('home_screen.all_categories', 'All Categories')}
-      </Text> */}
-      <FlatList
+      <FlatList<Category>
         data={categories}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderCategory}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
+        numColumns={3}
         contentContainerStyle={styles.list}
       />
     </Screen>
@@ -102,34 +103,33 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   list: {
+    paddingTop: 24,
     padding: 10,
-  },
-  row: {
-    justifyContent: 'space-between',
-    marginBottom: 15,
   },
   categoryItem: {
     flex: 1,
-    marginHorizontal: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
-    paddingBottom: 20,
+    padding: 8,
+    paddingBottom: 16,
+    maxWidth: '33%',
   },
   iconContainer: {
     width: 50,
     height: 50,
     borderRadius: 25,
     backgroundColor: '#E8DEF8',
-    marginBottom: 10,
+    marginBottom: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconImage: {
-    width: 30,
-    height: 30,
+    width: 22,
+    height: 22,
   },
   categoryText: {
     fontWeight: 'bold',
+    textAlign: 'center',
+    maxWidth: 100,
   },
 });

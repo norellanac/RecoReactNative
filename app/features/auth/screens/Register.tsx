@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { Text } from '../../../components/atoms';
 import { Screen } from '../../../components/templates';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { AuthStackParams } from './AuthStack';
 import { Button } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';

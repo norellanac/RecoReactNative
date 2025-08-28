@@ -177,6 +177,11 @@
     "title_3": "Basado en las calificaciones de usuarios que compraron sus servicios.",
     "title_4": "Explora, compara y agenda en pocos pasos."
   },
+  "messages": {
+    "title": "Mensajes",
+    "empty": "No tienes mensajes",
+    "emptyDescription": "Cuando recibas mensajes, aparecerán aquí."
+  },
   "userProfile": {
     "account": "Cuenta",
     "changeLanguage": "Cambiar Idioma",

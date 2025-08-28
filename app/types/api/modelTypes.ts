@@ -107,3 +107,54 @@ export interface UserRole {
   updatedAt: string;
   deletedAt: null | Date | string;
 }
+
+export type ChatMessage = {
+  id: number;
+  conversationId: number;
+  senderId: number;
+  content: string;
+  createdAt: string; // La API devuelve string, no Date
+  updatedAt: string;
+  deletedAt: null;
+  Reactions: ChatReaction[]; // Array de reacciones
+  sender: User; // Usuario completo, no solo ID
+};
+
+export type ChatReaction = {
+  id: number;
+  messageId: number;
+  userId: number;
+  emoji: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: null;
+  user: User;
+};
+
+export type ChatConversation = {
+  id: number;
+  user1Id: number;
+  user2Id: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: null;
+  messages: ChatMessage[]; // Array de mensajes
+  user1: User; // Usuario 1 completo
+  user2: User; // Usuario 2 completo
+};
+
+export type ChatStartResponse = {
+  message: string;
+  conversationId: number;
+};
+
+export type ApiResponse<T> = {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
+};
+
+export type ChatConversationsResponse = ApiResponse<ChatConversation[]>;
+export type ChatMessagesResponse = ApiResponse<ChatMessage[]>;
+export type ChatStartResponseWrapper = ApiResponse<ChatStartResponse>;

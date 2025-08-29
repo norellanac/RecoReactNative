@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   FlatList,
@@ -8,80 +8,138 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { Text } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Icon } from '../../../components/atoms/Icon';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/redux/store/store';
+import {
+  useGetChatByIdQuery,
+  useSendMessageMutation,
+} from '@/app/services/chatApi';
+import { ChatMessage as APIChatMessage } from '@/app/types/api/modelTypes';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
-// Tipo para los mensajes
+// ✅ Mantener la misma interfaz UI
 interface ChatMessage {
   id: string;
   text: string;
   timestamp: string;
-  isOwn: boolean; // true si es del usuario actual
+  isOwn: boolean;
   status?: 'sent' | 'delivered' | 'read';
 }
 
-// Datos de ejemplo
-const mockMessages: ChatMessage[] = [
-  {
-    id: '1',
-    text: 'Hi! I saw your house cleaning service.',
-    timestamp: '10:30',
-    isOwn: false,
-  },
-  {
-    id: '2',
-    text: 'Hello! Yes, I can help you with that. When would you like to schedule?',
-    timestamp: '10:32',
-    isOwn: true,
-    status: 'read',
-  },
-  {
-    id: '3',
-    text: 'I have booked your house cleaning for tomorrow. What time works best?',
-    timestamp: '10:35',
-    isOwn: false,
-  },
-  {
-    id: '4',
-    text: 'Perfect! How about 2:00 PM? I can be there at that time.',
-    timestamp: '10:40',
-    isOwn: true,
-    status: 'delivered',
-  },
-];
+// Tipos para navegación
+interface RouteParams {
+  conversationId: number;
+  otherUser: {
+    id: number;
+    name: string;
+    lastname: string;
+    avatarUrl: string | null;
+  };
+}
 
 const ChatScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { t } = useTranslation();
-  const { chatId, userName, userAvatar } = route.params;
+  const { conversationId, otherUser } = route.params as RouteParams;
 
-  const [messages, setMessages] = useState<ChatMessage[]>(mockMessages);
+  // 🔌 Conectar con Redux y API
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const currentUserId = currentUser?.id;
+
+  const {
+    data: conversationResponse,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetChatByIdQuery(conversationId);
+
+  const [sendMessageMutation, { isLoading: isSending }] =
+    useSendMessageMutation();
+
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
 
-  const sendMessage = () => {
-    if (inputText.trim()) {
-      const newMessage: ChatMessage = {
-        id: Date.now().toString(),
-        text: inputText,
-        timestamp: new Date().toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }),
-        isOwn: true,
-        status: 'sent',
-      };
+  // 🔄 Transformar datos de API al formato UI
+  const transformMessagesToUI = (
+    apiMessages: APIChatMessage[],
+  ): ChatMessage[] => {
+    return apiMessages.map((msg) => ({
+      id: msg.id.toString(),
+      text: msg.content,
+      timestamp: formatMessageTime(msg.createdAt),
+      isOwn: msg.senderId === currentUserId,
+      status: 'read', // TODO: Implementar estados reales si la API los soporta
+    }));
+  };
 
-      setMessages((prev) => [...prev, newMessage]);
-      setInputText('');
+  const formatMessageTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
+
+  // ✅ Actualizar mensajes cuando lleguen datos de la API
+  useEffect(() => {
+    if (conversationResponse?.data?.messages) {
+      const uiMessages = transformMessagesToUI(
+        conversationResponse.data.messages,
+      );
+      setMessages(uiMessages);
+    }
+  }, [conversationResponse]);
+
+  // 📤 Enviar mensaje con API real
+  const sendMessage = async () => {
+    if (!inputText.trim() || !currentUserId) return;
+
+    // ✅ Agregar mensaje optimistamente (UI responsiva)
+    const tempMessage: ChatMessage = {
+      id: `temp-${Date.now()}`,
+      text: inputText,
+      timestamp: new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
+      isOwn: true,
+      status: 'sent',
+    };
+
+    setMessages((prev) => [...prev, tempMessage]);
+    const messageToSend = inputText;
+    setInputText('');
+
+    try {
+      // 📡 Enviar a la API
+      await sendMessageMutation({
+        conversationId,
+        senderId: currentUserId,
+        content: messageToSend,
+      }).unwrap();
+
+      // ✅ Refrescar mensajes para obtener el mensaje real del servidor
+      refetch();
+    } catch (error) {
+      // ❌ Si falla, revertir UI y mostrar error
+      setMessages((prev) => prev.filter((msg) => msg.id !== tempMessage.id));
+      setInputText(messageToSend); // Restaurar texto
+      console.error('Error sending message:', error);
+      // TODO: Mostrar toast de error
     }
   };
 
+  // 📱 UI Components - MANTENER EXACTAMENTE IGUAL
   const MessageItem: React.FC<{ item: ChatMessage }> = ({ item }) => (
     <View
       style={[
@@ -130,16 +188,76 @@ const ChatScreen = () => {
     </View>
   );
 
+  // 🔄 Estados de carga y error
+  if (isLoading) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: (
+            <View style={styles.headerContainer}>
+              <View style={[styles.headerAvatar, styles.loadingAvatar]} />
+              <View>
+                <Text style={styles.headerName}>Loading...</Text>
+              </View>
+            </View>
+          ),
+          onLeftIconPress: () => navigation.goBack(),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <ActivityIndicator size="large" color="#7B61FF" />
+        </View>
+      </Screen>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: <Text style={styles.headerName}>Error</Text>,
+          onLeftIconPress: () => navigation.goBack(),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <Text style={styles.errorText}>
+            {t('chat.errorLoadingMessages', 'Error loading messages')}
+          </Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => refetch()}
+          >
+            <Text style={styles.retryText}>{t('common.retry', 'Retry')}</Text>
+          </TouchableOpacity>
+        </View>
+      </Screen>
+    );
+  }
+
+  // ✅ Obtener URL de avatar
+  const getAvatarSource = () => {
+    if (otherUser.avatarUrl) {
+      return getApiImageUrl(otherUser.avatarUrl);
+    }
+    return { uri: 'https://via.placeholder.com/32/CCCCCC/FFFFFF?text=User' };
+  };
+
   return (
     <Screen
       statusBarProps={{
         showBackButton: true,
         title: (
           <View style={styles.headerContainer}>
-            <Image source={{ uri: userAvatar }} style={styles.headerAvatar} />
+            <Image source={getAvatarSource()} style={styles.headerAvatar} />
             <View>
-              <Text style={styles.headerName}>{userName}</Text>
-              <Text style={styles.headerStatus}>Online</Text>
+              <Text style={styles.headerName}>
+                {`${otherUser.name} ${otherUser.lastname}`}
+              </Text>
+              <Text style={styles.headerStatus}>
+                {t('chat.online', 'Online')}
+              </Text>
             </View>
           </View>
         ),
@@ -157,6 +275,9 @@ const ChatScreen = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.messagesList}
           inverted={false}
+          onContentSizeChange={() => {
+            // Auto scroll to bottom when new messages arrive
+          }}
         />
 
         <View style={styles.inputContainer}>
@@ -168,16 +289,28 @@ const ChatScreen = () => {
               placeholder={t('chat.placeholder', 'Type a message...')}
               multiline
               maxLength={500}
+              editable={!isSending}
             />
             <TouchableOpacity
               style={[
                 styles.sendButton,
-                { opacity: inputText.trim() ? 1 : 0.5 },
+                {
+                  opacity: inputText.trim() && !isSending ? 1 : 0.5,
+                },
               ]}
               onPress={sendMessage}
-              disabled={!inputText.trim()}
+              disabled={!inputText.trim() || isSending}
             >
-              <Icon name="send" family="MaterialIcons" size={24} color="#fff" />
+              {isSending ? (
+                <ActivityIndicator size={20} color="#fff" />
+              ) : (
+                <Icon
+                  name="send"
+                  family="MaterialIcons"
+                  size={24}
+                  color="#fff"
+                />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -186,10 +319,15 @@ const ChatScreen = () => {
   );
 };
 
+// ✅ Estilos EXACTAMENTE IGUALES + algunos nuevos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  centerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -201,6 +339,9 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     marginRight: 8,
+  },
+  loadingAvatar: {
+    backgroundColor: '#f0f0f0',
   },
   headerName: {
     fontSize: 16,
@@ -300,6 +441,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
+  },
+  // ✅ Nuevos estilos para estados
+  errorText: {
+    fontSize: 16,
+    color: '#FF4757',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#7B61FF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  retryText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

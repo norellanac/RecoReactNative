@@ -13,7 +13,7 @@ export const chatApi = createApi({
     }),
     createChat: builder.mutation({
       query: (chatData) => ({
-        url: 'chats/',
+        url: 'chat/conversation/',
         method: 'POST',
         body: chatData,
       }),

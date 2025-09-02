@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useUpdateOrderMutation } from '@/app/services/ordersApi';
 import { useHasRole } from '@/app/hooks/useHasRole';
+import useChatHandler from '@/app/hooks/useChatHandler';
 
 const TaskOrderDetailsScreen = () => {
   const { t } = useTranslation();
@@ -29,54 +30,7 @@ const TaskOrderDetailsScreen = () => {
     useUpdateOrderMutation();
   const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
   const isMerchant = useHasRole('Merchant');
-
-  const handleUpdateStatus = async (status: number) => {
-    try {
-      await updateOrder({ id: orderId, status }).unwrap();
-      Alert.alert(
-        t('common.success', 'Success'),
-        t(
-          'taskOrderDetails.statusUpdated',
-          'Order status updated successfully!',
-        ),
-        [
-          {
-            text: t('common.ok', 'OK'),
-            onPress: () => navigation.goBack(),
-          },
-        ],
-      );
-    } catch (e) {
-      Alert.alert(
-        t('common.error', 'Error'),
-        t(
-          'taskOrderDetails.statusUpdateError',
-          'Could not update order status.',
-        ),
-      );
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      await deleteOrder(orderId).unwrap();
-      Alert.alert(
-        t('common.success', 'Success'),
-        t('taskOrderDetails.deleted', 'Order deleted successfully!'),
-        [
-          {
-            text: t('common.ok', 'OK'),
-            onPress: () => navigation.goBack(),
-          },
-        ],
-      );
-    } catch (e) {
-      Alert.alert(
-        t('common.error', 'Error'),
-        t('taskOrderDetails.deleteError', 'Could not delete order.'),
-      );
-    }
-  };
+  const { startChatWith } = useChatHandler();
 
   const { data, isLoading, isError } = useGetOrderByIdQuery(orderId);
 
@@ -107,6 +61,55 @@ const TaskOrderDetailsScreen = () => {
     minute: '2-digit',
   });
 
+  // Manejar el chat con el proveedor
+  const handleChat = () => {
+    const providerId = service?.userId; // ID del proveedor
+    const otherUser = {
+      id: service?.userId,
+      name: service?.name, // Usar el nombre del servicio como nombre temporal
+      lastname: '', // No disponible en la respuesta actual
+      avatarUrl: service?.urlImage, // Usar la imagen del servicio como avatar temporal
+    };
+
+    console.log('TaskOrderDetailsScreen handleChat:', {
+      providerId,
+      otherUser,
+    });
+
+    if (providerId && otherUser) {
+      startChatWith(providerId, otherUser);
+    } else {
+      console.error('No provider information found for this task.');
+    }
+  };
+
+  const handleUpdateStatus = async (status: number) => {
+    try {
+      await updateOrder({ id: orderId, status }).unwrap();
+      Alert.alert(
+        t('common.success', 'Success'),
+        t(
+          'taskOrderDetails.statusUpdated',
+          'Order status updated successfully!',
+        ),
+        [
+          {
+            text: t('common.ok', 'OK'),
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    } catch (e) {
+      Alert.alert(
+        t('common.error', 'Error'),
+        t(
+          'taskOrderDetails.statusUpdateError',
+          'Could not update order status.',
+        ),
+      );
+    }
+  };
+
   const renderActions = () => {
     switch (order.status) {
       case 1: // Scheduled
@@ -136,7 +139,7 @@ const TaskOrderDetailsScreen = () => {
                   title="Chat with provider"
                   variant="tonal"
                   style={styles.button}
-                  onPress={() => {}}
+                  onPress={handleChat}
                   disabled={isUpdating}
                 />
                 <Button
@@ -177,7 +180,7 @@ const TaskOrderDetailsScreen = () => {
                   title="Chat with provider"
                   variant="tonal"
                   style={[styles.button, { marginTop: 12 }]}
-                  onPress={() => {}}
+                  onPress={handleChat}
                   disabled={isUpdating}
                 />
                 <Button
@@ -209,16 +212,6 @@ const TaskOrderDetailsScreen = () => {
               }
               disabled={isUpdating}
             />
-            <Button
-              title="Delete Task"
-              variant="outlined"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={handleDelete}
-              disabled={isUpdating}
-              endIcon={
-                <Ionicons name="trash-outline" size={20} color="#6750A4" />
-              }
-            />
           </>
         );
       case 4: // Canceled
@@ -238,16 +231,6 @@ const TaskOrderDetailsScreen = () => {
                 })
               }
               disabled={isUpdating}
-            />
-            <Button
-              title="Delete Task"
-              variant="outlined"
-              style={[styles.button, { marginTop: 12 }]}
-              onPress={handleDelete}
-              disabled={isUpdating}
-              endIcon={
-                <Ionicons name="trash-outline" size={20} color="#6750A4" />
-              }
             />
           </>
         );

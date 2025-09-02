@@ -12,64 +12,42 @@ import { Screen } from '../../../components/templates';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/redux/store/store';
 import { useGetChatsByUserIdQuery } from '@/app/services/chatApi';
-import { ChatConversation, User } from '@/app/types/api/modelTypes';
 import { getApiImageUrl } from '@/app/utils/Environment';
 
-// ✅ Mantener la misma interfaz UI, pero adaptada a los datos reales
-interface ChatListItem {
-  id: string;
-  user: {
-    name: string;
-    avatar: string;
-  };
-  lastMessage: {
-    text: string;
-    timestamp: string;
-  };
-  unreadCount: number;
-  isOnline?: boolean;
-}
-
 const ChatListScreen = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const { t } = useTranslation();
 
   // 🔌 Conectar con Redux y API
-  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const currentUser = useSelector((state) => state.auth.user);
   const currentUserId = currentUser?.id;
 
   const {
     data: conversationsResponse,
     isLoading,
     isError,
-    error,
     refetch,
-  } = useGetChatsByUserIdQuery(currentUserId!, {
-    // ← Cambiar hook
+  } = useGetChatsByUserIdQuery(currentUserId, {
     skip: !currentUserId,
   });
 
   const conversations = conversationsResponse?.data || [];
 
   // 🔄 Funciones para transformar datos de API a formato UI
-  const getOtherUser = (
-    conversation: ChatConversation,
-    currentUserId: number,
-  ): User => {
+  const getOtherUser = (conversation, currentUserId) => {
     return conversation.user1Id === currentUserId
       ? conversation.user2
       : conversation.user1;
   };
 
-  const getLastMessage = (conversation: ChatConversation): string => {
+  const getLastMessage = (conversation) => {
     if (conversation.messages.length === 0)
       return t('chat.noMessages', 'No messages yet');
     return conversation.messages[conversation.messages.length - 1].content;
   };
 
-  const formatTime = (dateString: string): string => {
+  const formatTime = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -93,14 +71,12 @@ const ChatListScreen = () => {
   };
 
   // 🔄 Transformar datos de API al formato que espera la UI
-  const transformToUIFormat = (
-    conversations: ChatConversation[],
-  ): ChatListItem[] => {
+  const transformToUIFormat = (conversations) => {
     if (!Array.isArray(conversations)) {
       return [];
     }
-    return conversations.map((conversation, index) => {
-      const otherUser = getOtherUser(conversation, currentUserId!);
+    return conversations.map((conversation) => {
+      const otherUser = getOtherUser(conversation, currentUserId);
       const lastMessage = getLastMessage(conversation);
       const lastMessageTime =
         conversation.messages.length > 0
@@ -127,16 +103,15 @@ const ChatListScreen = () => {
     });
   };
 
-  // 📱 UI Components - MANTENER EXACTAMENTE IGUAL
-  const ChatItem: React.FC<{ item: ChatListItem }> = ({ item }) => (
+  // 📱 UI Components
+  const ChatItem = ({ item }) => (
     <TouchableOpacity
       style={styles.chatItem}
       onPress={() => {
-        // ✅ Navegación actualizada con datos reales
         const originalConversation = conversations.find(
           (c) => c.id.toString() === item.id,
         );
-        const otherUser = getOtherUser(originalConversation!, currentUserId!);
+        const otherUser = getOtherUser(originalConversation, currentUserId);
 
         navigation.navigate('ChatScreen', {
           conversationId: parseInt(item.id),
@@ -242,7 +217,7 @@ const ChatListScreen = () => {
     );
   }
 
-  // ✅ Transformar datos y renderizar - UI EXACTAMENTE IGUAL
+  // ✅ Transformar datos y renderizar
   const uiData = transformToUIFormat(conversations);
 
   return (
@@ -262,8 +237,8 @@ const ChatListScreen = () => {
       }}
     >
       <View style={styles.container}>
-        <FlatList<ChatListItem>
-          data={uiData} // ✅ Usar datos transformados
+        <FlatList
+          data={uiData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ChatItem item={item} />}
           showsVerticalScrollIndicator={false}
@@ -283,7 +258,7 @@ const ChatListScreen = () => {
   );
 };
 
-// ✅ Estilos EXACTAMENTE IGUALES + algunos nuevos para estados
+// ✅ Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -378,7 +353,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     marginLeft: 78,
   },
-  // ✅ Nuevos estilos para estados
   loadingText: {
     marginTop: 10,
     fontSize: 16,

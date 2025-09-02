@@ -16,42 +16,29 @@ import { Icon } from '../../../components/atoms/Icon';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/redux/store/store';
 import {
   useGetChatByIdQuery,
   useSendMessageMutation,
 } from '@/app/services/chatApi';
-import { ChatMessage as APIChatMessage } from '@/app/types/api/modelTypes';
 import { getApiImageUrl } from '@/app/utils/Environment';
 
-// ✅ Mantener la misma interfaz UI
-interface ChatMessage {
-  id: string;
-  text: string;
-  timestamp: string;
-  isOwn: boolean;
-  status?: 'sent' | 'delivered' | 'read';
-}
-
-// Tipos para navegación
-interface RouteParams {
-  conversationId: number;
-  otherUser: {
-    id: number;
-    name: string;
-    lastname: string;
-    avatarUrl: string | null;
-  };
-}
-
 const ChatScreen = () => {
-  const navigation = useNavigation<any>();
-  const route = useRoute<any>();
+  const navigation = useNavigation();
+  const route = useRoute();
   const { t } = useTranslation();
-  const { conversationId, otherUser } = route.params as RouteParams;
+  const { conversationId, otherUser } = route.params || {}; // ✅ Manejo seguro
+
+  if (!conversationId || !otherUser) {
+    console.error('Missing required parameters: conversationId or otherUser.');
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: 'red' }}>Missing required parameters.</Text>
+      </View>
+    );
+  }
 
   // 🔌 Conectar con Redux y API
-  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const currentUser = useSelector((state) => state.auth.user);
   const currentUserId = currentUser?.id;
 
   const {
@@ -64,13 +51,11 @@ const ChatScreen = () => {
   const [sendMessageMutation, { isLoading: isSending }] =
     useSendMessageMutation();
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
 
   // 🔄 Transformar datos de API al formato UI
-  const transformMessagesToUI = (
-    apiMessages: APIChatMessage[],
-  ): ChatMessage[] => {
+  const transformMessagesToUI = (apiMessages) => {
     return apiMessages.map((msg) => ({
       id: msg.id.toString(),
       text: msg.content,
@@ -80,7 +65,7 @@ const ChatScreen = () => {
     }));
   };
 
-  const formatMessageTime = (dateString: string): string => {
+  const formatMessageTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
@@ -104,7 +89,7 @@ const ChatScreen = () => {
     if (!inputText.trim() || !currentUserId) return;
 
     // ✅ Agregar mensaje optimistamente (UI responsiva)
-    const tempMessage: ChatMessage = {
+    const tempMessage = {
       id: `temp-${Date.now()}`,
       text: inputText,
       timestamp: new Date().toLocaleTimeString('en-US', {
@@ -139,8 +124,8 @@ const ChatScreen = () => {
     }
   };
 
-  // 📱 UI Components - MANTENER EXACTAMENTE IGUAL
-  const MessageItem: React.FC<{ item: ChatMessage }> = ({ item }) => (
+  // 📱 UI Components
+  const MessageItem = ({ item }) => (
     <View
       style={[
         styles.messageContainer,
@@ -268,7 +253,7 @@ const ChatScreen = () => {
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <FlatList<ChatMessage>
+        <FlatList
           data={messages}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <MessageItem item={item} />}
@@ -319,7 +304,7 @@ const ChatScreen = () => {
   );
 };
 
-// ✅ Estilos EXACTAMENTE IGUALES + algunos nuevos
+// ✅ Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -442,7 +427,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-  // ✅ Nuevos estilos para estados
   errorText: {
     fontSize: 16,
     color: '#FF4757',

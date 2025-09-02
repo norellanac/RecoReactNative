@@ -5,10 +5,12 @@ import { Icon } from '@/app/components/atoms/Icon';
 import { getApiImageUrl } from '@/app/utils/Environment';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import useChatHandler from '@/app/hooks/useChatHandler';
 
 const TaskCard = ({ task }) => {
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const { startChatWith } = useChatHandler();
 
   const detail = task.details?.[0];
   const service = detail?.productService;
@@ -19,6 +21,27 @@ const TaskCard = ({ task }) => {
     hour: '2-digit',
     minute: '2-digit',
   });
+
+  const handleChat = () => {
+    console.log('TaskCard task:', task); // 🔍 Inspeccionar el contenido de task
+
+    // Obtener el proveedor desde productService
+    const providerId = service?.userId; // ID del proveedor
+    const otherUser = {
+      id: service?.userId,
+      name: service?.name, // Usar el nombre del servicio como nombre temporal
+      lastname: '', // No disponible en la respuesta actual
+      avatarUrl: service?.urlImage, // Usar la imagen del servicio como avatar temporal
+    };
+
+    console.log('TaskCard handleChat:', { providerId, otherUser });
+
+    if (providerId && otherUser) {
+      startChatWith(providerId, otherUser); // ✅ Pasar providerId y otherUser
+    } else {
+      console.error('No provider information found for this task.');
+    }
+  };
 
   return (
     <View style={styles.card}>
@@ -92,7 +115,7 @@ const TaskCard = ({ task }) => {
           title={t('taskCard.chat', 'Chat')}
           style={styles.actionButton}
           textStyle={styles.actionButtonText}
-          onPress={() => {}}
+          onPress={handleChat}
         />
       </View>
     </View>
@@ -179,5 +202,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
   },
 });
-
-export default TaskCard;

@@ -32,6 +32,13 @@ export const chatApi = createApi({
         body: messageData,
       }),
     }),
+     addReaction: builder.mutation({
+      query: (reactionData) => ({
+        url: 'chat/reaction',
+        method: 'POST',
+        body: reactionData,
+      }),
+    }),
   }),
 });
 
@@ -41,4 +48,5 @@ export const {
   useCreateChatMutation,
   useUpdateChatMutation,
   useSendMessageMutation,
+  useAddReactionMutation,
 } = chatApi;

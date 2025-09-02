@@ -59,7 +59,9 @@ const ChatScreen = () => {
     isLoading,
     isError,
     refetch,
-  } = useGetChatByIdQuery(conversationId);
+  } = useGetChatByIdQuery(conversationId, {
+    pollingInterval: 5000,
+  });
 
   const [sendMessageMutation, { isLoading: isSending }] =
     useSendMessageMutation();
@@ -76,14 +78,17 @@ const ChatScreen = () => {
 
   // Transformar datos de API al formato UI
   const transformMessagesToUI = (apiMessages) => {
-    return apiMessages.map((msg) => ({
-      id: msg.id.toString(),
-      text: msg.content,
-      timestamp: formatMessageTime(msg.createdAt),
-      isOwn: msg.senderId === currentUserId,
-      status: 'read',
-      reactions: msg.Reactions || [], // Agregar reacciones del mensaje
-    }));
+    return apiMessages
+      .map((msg) => ({
+        id: msg.id.toString(),
+        text: msg.content,
+        timestamp: formatMessageTime(msg.createdAt),
+        isOwn: msg.senderId === currentUserId,
+        status: 'read',
+        reactions: msg.Reactions || [],
+        createdAt: new Date(msg.createdAt),
+      }))
+      .sort((a, b) => a.createdAt - b.createdAt);
   };
 
   const formatMessageTime = (dateString) => {

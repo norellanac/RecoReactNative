@@ -17,21 +17,19 @@ import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 import { useNavigationState } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
-
 const isTablet = Dimensions.get('window').width >= 768;
+
+const TaskBadge = ({ count }: { count: number }) =>
+  count > 0 ? (
+    <View style={styles.badge}>
+      <Text style={styles.badgeText}>{count}</Text>
+    </View>
+  ) : null;
 
 const BottomTabNavigator = React.memo(() => {
   const { theme } = useTheme();
   const { colors } = theme;
   const { t } = useTranslation();
-
-  {
-    t('bottomTabs.home', 'Home'),
-      t('bottomTabs.task', 'Task'),
-      t('bottomTabs.favorites', 'Favorites'),
-      t('bottomTabs.profile', 'Profile'),
-      t('bottomTabs.products', 'Products');
-  }
 
   const iconMapping = {
     Home: ['home', 'home-outline'],
@@ -49,13 +47,6 @@ const BottomTabNavigator = React.memo(() => {
   const scheduledCount = orders.filter(
     (o) => o.status === 1 && authUser && o.userId === authUser.id,
   ).length;
-
-  const TaskBadge = ({ count }: { count: number }) =>
-    count > 0 ? (
-      <View style={styles.badge}>
-        <Text style={styles.badgeText}>{count}</Text>
-      </View>
-    ) : null;
 
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo } = useUserEvents();
@@ -80,9 +71,6 @@ const BottomTabNavigator = React.memo(() => {
       await handleUpdateUserInfo({ roles: [2] });
     } catch (error) {}
   };
-
-  // Debug para saber en qué pantalla estás
-  // console.log({ currentTabRoute, isOnProfileHome, showFloatingButton });
 
   const { ChatNavigation } = require('../features/Chat/screens/ChatStack');
   const tabScreens = [
@@ -142,12 +130,13 @@ const BottomTabNavigator = React.memo(() => {
                 >
                   <Ionicons name={iconName} size={size || 24} color={color} />
                   {route.name === 'Profile' && isMerchant && (
-                    <FontAwesome
-                      name="rocket"
-                      size={16}
-                      color="#FF7043"
-                      style={{ position: 'absolute', top: -2, right: 8 }}
-                    />
+                    <View style={styles.profileBadge}>
+                      <FontAwesome
+                        name="rocket"
+                        size={12}
+                        color={styles.badgeText.color}
+                      />
+                    </View>
                   )}
                 </View>
                 <Text variant={'body'} size={'small'} color={'secondary'}>
@@ -180,28 +169,13 @@ const BottomTabNavigator = React.memo(() => {
           ))}
       </Tab.Navigator>
       {showFloatingButton && (
-        <View
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 100,
-            alignItems: 'center',
-            zIndex: 100,
-            pointerEvents: 'box-none',
-          }}
-          pointerEvents="box-none"
-        >
-          <View style={{ width: 220 }}>
+        <View style={styles.floatingButtonContainer}>
+          <View style={styles.floatingButtonWrapper}>
             <Button
               variant="filled"
               title={t('userProfile.switchToUser', 'Switch to User')}
               onPress={handleSwitchRole}
-              style={{
-                backgroundColor: '#019FE9',
-                borderRadius: 24,
-                elevation: 4,
-              }}
+              style={styles.floatingButton}
               startIcon={<FontAwesome name="user" size={20} color="#FFD700" />}
             />
           </View>
@@ -236,10 +210,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     zIndex: 10,
   },
+  profileBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    borderRadius: 10,
+    minWidth: 28,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    zIndex: 10,
+    backgroundColor: '#ff4949',
+  },
   badgeText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 12,
+  },
+  floatingButtonContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 100,
+    alignItems: 'center',
+    zIndex: 100,
+    pointerEvents: 'box-none',
+  },
+  floatingButtonWrapper: {
+    width: 220,
+  },
+  floatingButton: {
+    backgroundColor: '#1C1B1F',
+    borderRadius: 24,
+    elevation: 4,
   },
 });
 

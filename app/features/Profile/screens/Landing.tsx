@@ -226,7 +226,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           onPress={handleSwitchRole}
           style={[
             styles.becomeMerchantButton,
-            { backgroundColor: isMerchant ? '#019FE9' : '#6750A4' },
+            { backgroundColor: isMerchant ? '#1C1B1F' : '#6750A4' },
           ]}
           startIcon={
             <Icon

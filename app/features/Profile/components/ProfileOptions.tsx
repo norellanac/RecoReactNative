@@ -37,7 +37,8 @@ export const ProfileMenuOptions = ({
         color: '#625B71',
         family: 'Ionicons',
       },
-      onPress: () => navigation.navigate(''),
+      onPress: () =>
+        navigation.navigate('AuthStack', { screen: 'PasswordRecovery' }),
     },
     {
       key: 'changeLanguage',

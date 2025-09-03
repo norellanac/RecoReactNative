@@ -60,7 +60,7 @@ const ChatScreen = () => {
     isError,
     refetch,
   } = useGetChatByIdQuery(conversationId, {
-    pollingInterval: 5000,
+    pollingInterval: 60000,
   });
 
   const [sendMessageMutation, { isLoading: isSending }] =

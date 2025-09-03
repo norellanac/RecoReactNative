@@ -13,9 +13,11 @@ const useChatHandler = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const currentUserId = useSelector((state) => state.auth.user.id);
-  const conversations = useSelector((state) => state.chat.conversations);
+  //const conversations = useSelector((state) => state.chat.conversations);
   const [createChat] = useCreateChatMutation();
-  const { refetch } = useGetChatsByUserIdQuery(currentUserId);
+  const { refetch, data } = useGetChatsByUserIdQuery(currentUserId);
+  const conversations = data?.data || [];
+  //console.error(conversations);
 
   const startChatWith = async (otherUserId, otherUser) => {
     try {

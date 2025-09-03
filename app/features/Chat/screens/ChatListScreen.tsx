@@ -5,88 +5,124 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { Text } from '../../../components/atoms/Text';
 import { Screen } from '../../../components/templates';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
-// Tipo para las conversaciones
-interface ChatConversation {
-  id: string;
-  user: {
-    name: string;
-    avatar: string;
-  };
-  lastMessage: {
-    text: string;
-    timestamp: string;
-  };
-  unreadCount: number;
-  isOnline?: boolean;
-}
-
-// Datos de ejemplo (después conectarás con tu API)
-const mockConversations: ChatConversation[] = [
-  {
-    id: '1',
-    user: {
-      name: 'Jenny Wilson',
-      avatar: 'https://picsum.photos/50/50',
-    },
-    lastMessage: { text: 'I have booked your house...', timestamp: '13:29' },
-    unreadCount: 2,
-    isOnline: true,
-  },
-  {
-    id: '2',
-    user: {
-      name: 'Alfonzo Schuessler',
-      avatar: 'https://picsum.photos/40/40',
-    },
-    lastMessage: { text: 'I just finished it 😂😂', timestamp: '10:48' },
-    unreadCount: 3,
-    isOnline: false,
-  },
-  {
-    id: '3',
-    user: {
-      name: 'Benny Spanbauer',
-      avatar: 'https://picsum.photos/60/60',
-    },
-    lastMessage: { text: 'omg, this is amazing 🔥🔥🔥', timestamp: '09:25' },
-    unreadCount: 0,
-    isOnline: true,
-  },
-  {
-    id: '4',
-    user: {
-      name: 'Marci Senter',
-      avatar: 'https://picsum.photos/55/55',
-    },
-    lastMessage: {
-      text: 'Wow, this is really epic 😎',
-      timestamp: 'Yesterday',
-    },
-    unreadCount: 2,
-    isOnline: false,
-  },
-];
+import { useSelector } from 'react-redux';
+import { useGetChatsByUserIdQuery } from '@/app/services/chatApi';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
 const ChatListScreen = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const { t } = useTranslation();
 
-  const ChatItem: React.FC<{ item: ChatConversation }> = ({ item }) => (
+  // 🔌 Conectar con Redux y API
+  const currentUser = useSelector((state) => state.auth.user);
+  const currentUserId = currentUser?.id;
+
+  const {
+    data: conversationsResponse,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetChatsByUserIdQuery(currentUserId, {
+    skip: !currentUserId,
+  });
+
+  const conversations = conversationsResponse?.data || [];
+
+  // 🔄 Funciones para transformar datos de API a formato UI
+  const getOtherUser = (conversation, currentUserId) => {
+    return conversation.user1Id === currentUserId
+      ? conversation.user2
+      : conversation.user1;
+  };
+
+  const getLastMessage = (conversation) => {
+    if (conversation.messages.length === 0)
+      return t('chat.noMessages', 'No messages yet');
+    return conversation.messages[conversation.messages.length - 1].content;
+  };
+
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    if (diffHours < 1) {
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+    } else if (diffHours < 24) {
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+    } else {
+      return t('chat.yesterday', 'Yesterday');
+    }
+  };
+
+  // 🔄 Transformar datos de API al formato que espera la UI
+  const transformToUIFormat = (conversations) => {
+    if (!Array.isArray(conversations)) {
+      return [];
+    }
+    return conversations.map((conversation) => {
+      const otherUser = getOtherUser(conversation, currentUserId);
+      const lastMessage = getLastMessage(conversation);
+      const lastMessageTime =
+        conversation.messages.length > 0
+          ? formatTime(
+              conversation.messages[conversation.messages.length - 1].createdAt,
+            )
+          : '';
+
+      return {
+        id: conversation.id.toString(),
+        user: {
+          name: `${otherUser.name} ${otherUser.lastname}`,
+          avatar: otherUser.avatarUrl
+            ? getApiImageUrl(otherUser.avatarUrl).uri
+            : 'https://via.placeholder.com/50/CCCCCC/FFFFFF?text=User',
+        },
+        lastMessage: {
+          text: lastMessage,
+          timestamp: lastMessageTime,
+        },
+        unreadCount: 0, // TODO: Implementar lógica de no leídos
+        isOnline: false, // TODO: Implementar estado online
+      };
+    });
+  };
+
+  // 📱 UI Components
+  const ChatItem = ({ item }) => (
     <TouchableOpacity
       style={styles.chatItem}
-      onPress={() =>
+      onPress={() => {
+        const originalConversation = conversations.find(
+          (c) => c.id.toString() === item.id,
+        );
+        const otherUser = getOtherUser(originalConversation, currentUserId);
+
         navigation.navigate('ChatScreen', {
-          chatId: item.id,
-          userName: item.user.name,
-          userAvatar: item.user.avatar,
-        })
-      }
+          conversationId: parseInt(item.id),
+          otherUser: {
+            id: otherUser.id,
+            name: otherUser.name,
+            lastname: otherUser.lastname,
+            avatarUrl: otherUser.avatarUrl,
+          },
+        });
+      }}
     >
       <View style={styles.avatarContainer}>
         <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
@@ -121,6 +157,69 @@ const ChatListScreen = () => {
     </TouchableOpacity>
   );
 
+  // 🔄 Estados de carga y error
+  if (isLoading) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: (
+            <Text
+              variant="title"
+              size="medium"
+              color="info"
+              style={styles.headerTitle}
+            >
+              {t('messages.title', 'Messages')}
+            </Text>
+          ),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <ActivityIndicator size="large" color="#7B61FF" />
+          <Text style={styles.loadingText}>
+            {t('chat.loading', 'Loading conversations...')}
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: (
+            <Text
+              variant="title"
+              size="medium"
+              color="info"
+              style={styles.headerTitle}
+            >
+              {t('messages.title', 'Messages')}
+            </Text>
+          ),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <Text style={styles.errorText}>
+            {t('chat.error', 'Error loading conversations')}
+          </Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => refetch()}
+          >
+            <Text style={styles.retryText}>{t('common.retry', 'Retry')}</Text>
+          </TouchableOpacity>
+        </View>
+      </Screen>
+    );
+  }
+
+  // ✅ Transformar datos y renderizar
+  const uiData = transformToUIFormat(conversations);
+
   return (
     <Screen
       statusBarProps={{
@@ -138,23 +237,38 @@ const ChatListScreen = () => {
       }}
     >
       <View style={styles.container}>
-        <FlatList<ChatConversation>
-          data={mockConversations}
+        <FlatList
+          data={uiData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ChatItem item={item} />}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
+          refreshing={isLoading}
+          onRefresh={refetch}
+          ListEmptyComponent={
+            <View style={styles.centerContainer}>
+              <Text style={styles.emptyText}>
+                {t('chat.noConversations', 'No conversations yet')}
+              </Text>
+            </View>
+          }
         />
       </View>
     </Screen>
   );
 };
 
+// ✅ Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     marginTop: 16,
+  },
+  centerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   headerTitle: {
     marginTop: 12,
@@ -238,6 +352,32 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#f0f0f0',
     marginLeft: 78,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#FF4757',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#7B61FF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  retryText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
   },
 });
 

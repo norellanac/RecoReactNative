@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers } from 'redux';
 import authReducer from '../slices/authSlice';
+import chatReducer from '@/app/redux/slices/chatSlice';
 import serviceStepperReducer from '../slices/serviceStepperSlice';
 import favoritesReducer from '../slices/favoritesSlice';
 import filterProductsReducer from '../slices/filterProductsSlice';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   serviceStepper: serviceStepperReducer,
   favorites: favoritesReducer,
   filter: filterProductsReducer,
+  chat: chatReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
@@ -34,7 +36,13 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth', 'serviceStepper', 'roleSwitcher', 'filterProducts'], // Only persist the auth and serviceStepper reducers
+  whitelist: [
+    'auth',
+    'serviceStepper',
+    'roleSwitcher',
+    'filterProducts',
+    'chat',
+  ], // Only persist the auth and serviceStepper reducers
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

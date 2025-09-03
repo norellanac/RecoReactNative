@@ -173,7 +173,7 @@ const ServiceDetails = () => {
 
         {/* Bottom Buttons */}
         <View style={styles.bottomButtons}>
-          <Button title="Message" variant="outlined" style={styles.bottomBtn} />
+          {/* <Button title="Message" variant="outlined" style={styles.bottomBtn} /> */}
           <Button
             title="Book Now"
             variant="filled"

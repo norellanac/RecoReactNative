@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   FlatList,
@@ -8,102 +8,271 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Animated,
+  Modal,
+  Dimensions,
 } from 'react-native';
 import { Text } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Icon } from '../../../components/atoms/Icon';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import {
+  useGetChatByIdQuery,
+  useSendMessageMutation,
+  useAddReactionMutation,
+} from '@/app/services/chatApi';
+import { getApiImageUrl } from '@/app/utils/Environment';
 
-// Tipo para los mensajes
-interface ChatMessage {
-  id: string;
-  text: string;
-  timestamp: string;
-  isOwn: boolean; // true si es del usuario actual
-  status?: 'sent' | 'delivered' | 'read';
-}
-
-// Datos de ejemplo
-const mockMessages: ChatMessage[] = [
-  {
-    id: '1',
-    text: 'Hi! I saw your house cleaning service.',
-    timestamp: '10:30',
-    isOwn: false,
-  },
-  {
-    id: '2',
-    text: 'Hello! Yes, I can help you with that. When would you like to schedule?',
-    timestamp: '10:32',
-    isOwn: true,
-    status: 'read',
-  },
-  {
-    id: '3',
-    text: 'I have booked your house cleaning for tomorrow. What time works best?',
-    timestamp: '10:35',
-    isOwn: false,
-  },
-  {
-    id: '4',
-    text: 'Perfect! How about 2:00 PM? I can be there at that time.',
-    timestamp: '10:40',
-    isOwn: true,
-    status: 'delivered',
-  },
+const REACTIONS = [
+  { type: 'like', emoji: '👍' },
+  { type: 'love', emoji: '❤️' },
+  { type: 'laugh', emoji: '😂' },
+  { type: 'wow', emoji: '😮' },
+  { type: 'sad', emoji: '😢' },
 ];
 
 const ChatScreen = () => {
-  const navigation = useNavigation<any>();
-  const route = useRoute<any>();
+  const navigation = useNavigation();
+  const route = useRoute();
   const { t } = useTranslation();
-  const { chatId, userName, userAvatar } = route.params;
+  const { conversationId, otherUser } = route.params || {};
 
-  const [messages, setMessages] = useState<ChatMessage[]>(mockMessages);
+  if (!conversationId || !otherUser) {
+    console.error('Missing required parameters: conversationId or otherUser.');
+    return (
+      <Screen>
+        <Text style={{ textAlign: 'center', marginTop: 40 }}>
+          Missing required parameters.
+        </Text>
+      </Screen>
+    );
+  }
+
+  const currentUser = useSelector((state) => state.auth.user);
+  const currentUserId = currentUser?.id;
+
+  const {
+    data: conversationResponse,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetChatByIdQuery(conversationId, {
+    pollingInterval: 5000,
+  });
+
+  const [sendMessageMutation, { isLoading: isSending }] =
+    useSendMessageMutation();
+  const [addReaction, { isLoading: isReacting }] = useAddReactionMutation();
+
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
 
-  const sendMessage = () => {
-    if (inputText.trim()) {
-      const newMessage: ChatMessage = {
-        id: Date.now().toString(),
-        text: inputText,
-        timestamp: new Date().toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }),
-        isOwn: true,
-        status: 'sent',
-      };
+  // Estados para el menú de reacciones
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [reactionPosition, setReactionPosition] = useState({ x: 0, y: 0 });
+  const scaleAnim = useRef(new Animated.Value(0)).current;
 
-      setMessages((prev) => [...prev, newMessage]);
-      setInputText('');
+  // Transformar datos de API al formato UI
+  const transformMessagesToUI = (apiMessages) => {
+    return apiMessages
+      .map((msg) => ({
+        id: msg.id.toString(),
+        text: msg.content,
+        timestamp: formatMessageTime(msg.createdAt),
+        isOwn: msg.senderId === currentUserId,
+        status: 'read',
+        reactions: msg.Reactions || [],
+        createdAt: new Date(msg.createdAt),
+      }))
+      .sort((a, b) => a.createdAt - b.createdAt);
+  };
+
+  const formatMessageTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
+
+  useEffect(() => {
+    if (conversationResponse?.data?.messages) {
+      const uiMessages = transformMessagesToUI(
+        conversationResponse.data.messages,
+      );
+      setMessages(uiMessages);
+    }
+  }, [conversationResponse]);
+
+  // Obtener dimensiones de la pantalla
+  const { width: screenWidth } = Dimensions.get('window');
+  const REACTION_PICKER_WIDTH = 280; // Ancho aproximado del menú de reacciones
+
+  // Función mejorada para manejar long press en mensajes
+  const handleLongPress = (messageId, event) => {
+    const { pageX, pageY } = event.nativeEvent;
+    setSelectedMessageId(messageId);
+
+    // Calcular posición X mejorada
+    let calculatedX = pageX - REACTION_PICKER_WIDTH / 2; // Centrar el menú horizontalmente
+
+    // Verificar si se sale por la izquierda
+    if (calculatedX < 16) {
+      calculatedX = 16;
+    }
+
+    // Verificar si se sale por la derecha
+    if (calculatedX + REACTION_PICKER_WIDTH > screenWidth - 16) {
+      calculatedX = screenWidth - REACTION_PICKER_WIDTH - 16;
+    }
+
+    setReactionPosition({
+      x: calculatedX,
+      y: pageY - 80, // Aumentar un poco la distancia vertical
+    });
+    setShowReactionPicker(true);
+
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      tension: 150,
+      friction: 8,
+    }).start();
+  };
+
+  // Función para cerrar el menú de reacciones
+  const closeReactionPicker = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+      tension: 150,
+      friction: 8,
+    }).start(() => {
+      setShowReactionPicker(false);
+      setSelectedMessageId(null);
+    });
+  };
+
+  // Función para manejar selección de reacción
+  const handleReactionSelect = async (reactionType) => {
+    if (!selectedMessageId) return;
+
+    try {
+      await addReaction({
+        userId: currentUserId,
+        reactableType: 'message',
+        reactableId: parseInt(selectedMessageId),
+        type: reactionType,
+      }).unwrap();
+
+      refetch(); // Refrescar para obtener las reacciones actualizadas
+      closeReactionPicker();
+    } catch (error) {
+      console.error('Error adding reaction:', error);
+      closeReactionPicker();
     }
   };
 
-  const MessageItem: React.FC<{ item: ChatMessage }> = ({ item }) => (
+  // Enviar mensaje
+  const sendMessage = async () => {
+    if (!inputText.trim() || !currentUserId) return;
+
+    const tempMessage = {
+      id: `temp-${Date.now()}`,
+      text: inputText,
+      timestamp: new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
+      isOwn: true,
+      status: 'sent',
+      reactions: [],
+    };
+
+    setMessages((prev) => [...prev, tempMessage]);
+    const messageToSend = inputText;
+    setInputText('');
+
+    try {
+      await sendMessageMutation({
+        conversationId,
+        senderId: currentUserId,
+        content: messageToSend,
+      }).unwrap();
+
+      refetch();
+    } catch (error) {
+      setMessages((prev) => prev.filter((msg) => msg.id !== tempMessage.id));
+      setInputText(messageToSend);
+      console.error('Error sending message:', error);
+    }
+  };
+
+  // Componente para mostrar reacciones en el mensaje
+  const MessageReactions = ({ reactions }) => {
+    if (!reactions || reactions.length === 0) return null;
+
+    // Agrupar reacciones por tipo
+    const groupedReactions = reactions.reduce((acc, reaction) => {
+      if (!acc[reaction.type]) {
+        acc[reaction.type] = 0;
+      }
+      acc[reaction.type]++;
+      return acc;
+    }, {});
+
+    return (
+      <View style={styles.messageReactions}>
+        {Object.entries(groupedReactions).map(([type, count]) => {
+          const reactionEmoji =
+            REACTIONS.find((r) => r.type === type)?.emoji || '👍';
+          return (
+            <View key={type} style={styles.reactionBadge}>
+              <Text style={styles.reactionEmojiSmall}>{reactionEmoji}</Text>
+              {count > 1 && <Text style={styles.reactionCount}>{count}</Text>}
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
+
+  // Componente MessageItem actualizado
+  const MessageItem = ({ item }) => (
     <View
       style={[
         styles.messageContainer,
         item.isOwn ? styles.ownMessage : styles.otherMessage,
       ]}
     >
-      <View
-        style={[
-          styles.messageBubble,
-          item.isOwn ? styles.ownBubble : styles.otherBubble,
-        ]}
+      <TouchableOpacity
+        onLongPress={(event) => handleLongPress(item.id, event)}
+        activeOpacity={0.8}
       >
-        <Text
+        <View
           style={[
-            styles.messageText,
-            item.isOwn ? styles.ownText : styles.otherText,
+            styles.messageBubble,
+            item.isOwn ? styles.ownBubble : styles.otherBubble,
           ]}
         >
-          {item.text}
-        </Text>
-      </View>
+          <Text
+            style={[
+              styles.messageText,
+              item.isOwn ? styles.ownText : styles.otherText,
+            ]}
+          >
+            {item.text}
+          </Text>
+        </View>
+
+        <MessageReactions reactions={item.reactions} />
+      </TouchableOpacity>
 
       <View
         style={[
@@ -130,66 +299,179 @@ const ChatScreen = () => {
     </View>
   );
 
+  // Estados de carga y error
+  if (isLoading) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: (
+            <View style={styles.headerContainer}>
+              <View style={[styles.headerAvatar, styles.loadingAvatar]} />
+              <View>
+                <Text style={styles.headerName}>Loading...</Text>
+              </View>
+            </View>
+          ),
+          onLeftIconPress: () => navigation.goBack(),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <ActivityIndicator size="large" color="#7B61FF" />
+        </View>
+      </Screen>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: <Text style={styles.headerName}>Error</Text>,
+          onLeftIconPress: () => navigation.goBack(),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <Text style={styles.errorText}>
+            {t('chat.errorLoadingMessages', 'Error loading messages')}
+          </Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => refetch()}
+          >
+            <Text style={styles.retryText}>{t('common.retry', 'Retry')}</Text>
+          </TouchableOpacity>
+        </View>
+      </Screen>
+    );
+  }
+
+  const getAvatarSource = () => {
+    if (otherUser.avatarUrl) {
+      return getApiImageUrl(otherUser.avatarUrl);
+    }
+    return { uri: 'https://via.placeholder.com/32/CCCCCC/FFFFFF?text=User' };
+  };
+
   return (
-    <Screen
-      statusBarProps={{
-        showBackButton: true,
-        title: (
-          <View style={styles.headerContainer}>
-            <Image source={{ uri: userAvatar }} style={styles.headerAvatar} />
-            <View>
-              <Text style={styles.headerName}>{userName}</Text>
-              <Text style={styles.headerStatus}>Online</Text>
+    <>
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: (
+            <View style={styles.headerContainer}>
+              <Image source={getAvatarSource()} style={styles.headerAvatar} />
+              <View>
+                <Text style={styles.headerName}>
+                  {`${otherUser.name} ${otherUser.lastname}`}
+                </Text>
+                <Text style={styles.headerStatus}>
+                  {t('chat.online', 'Online')}
+                </Text>
+              </View>
+            </View>
+          ),
+          onLeftIconPress: () => navigation.goBack(),
+        }}
+      >
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <FlatList
+            data={messages}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <MessageItem item={item} />}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.messagesList}
+            inverted={false}
+          />
+
+          <View style={styles.inputContainer}>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.textInput}
+                value={inputText}
+                onChangeText={setInputText}
+                placeholder={t('chat.placeholder', 'Type a message...')}
+                multiline
+                maxLength={500}
+                editable={!isSending}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.sendButton,
+                  {
+                    opacity: inputText.trim() && !isSending ? 1 : 0.5,
+                  },
+                ]}
+                onPress={sendMessage}
+                disabled={!inputText.trim() || isSending}
+              >
+                {isSending ? (
+                  <ActivityIndicator size={20} color="#fff" />
+                ) : (
+                  <Icon
+                    name="send"
+                    family="MaterialIcons"
+                    size={24}
+                    color="#fff"
+                  />
+                )}
+              </TouchableOpacity>
             </View>
           </View>
-        ),
-        onLeftIconPress: () => navigation.goBack(),
-      }}
-    >
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <FlatList<ChatMessage>
-          data={messages}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <MessageItem item={item} />}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.messagesList}
-          inverted={false}
-        />
+        </KeyboardAvoidingView>
+      </Screen>
 
-        <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.textInput}
-              value={inputText}
-              onChangeText={setInputText}
-              placeholder={t('chat.placeholder', 'Type a message...')}
-              multiline
-              maxLength={500}
-            />
-            <TouchableOpacity
-              style={[
-                styles.sendButton,
-                { opacity: inputText.trim() ? 1 : 0.5 },
-              ]}
-              onPress={sendMessage}
-              disabled={!inputText.trim()}
-            >
-              <Icon name="send" family="MaterialIcons" size={24} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </Screen>
+      {/* Modal fuera del componente Screen */}
+      <Modal
+        transparent
+        visible={showReactionPicker}
+        onRequestClose={closeReactionPicker}
+        animationType="none"
+      >
+        <TouchableOpacity
+          style={styles.reactionOverlay}
+          activeOpacity={1}
+          onPress={closeReactionPicker}
+        >
+          <Animated.View
+            style={[
+              styles.reactionPicker,
+              {
+                left: reactionPosition.x, // Usar la posición calculada directamente
+                top: Math.max(60, reactionPosition.y), // Mantener el límite superior
+                transform: [{ scale: scaleAnim }],
+              },
+            ]}
+          >
+            {REACTIONS.map((reaction) => (
+              <TouchableOpacity
+                key={reaction.type}
+                style={styles.reactionButton}
+                onPress={() => handleReactionSelect(reaction.type)}
+              >
+                <Text style={styles.reactionEmoji}>{reaction.emoji}</Text>
+              </TouchableOpacity>
+            ))}
+          </Animated.View>
+        </TouchableOpacity>
+      </Modal>
+    </>
   );
 };
 
+// Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  centerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -201,6 +483,9 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     marginRight: 8,
+  },
+  loadingAvatar: {
+    backgroundColor: '#f0f0f0',
   },
   headerName: {
     fontSize: 16,
@@ -300,6 +585,74 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#FF4757',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#7B61FF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  retryText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  // Estilos para reacciones
+  reactionOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  reactionPicker: {
+    position: 'absolute',
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  reactionButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginHorizontal: 2,
+    borderRadius: 20,
+    backgroundColor: 'transparent',
+  },
+  reactionEmoji: {
+    fontSize: 24,
+  },
+  messageReactions: {
+    flexDirection: 'row',
+    marginTop: 4,
+    flexWrap: 'wrap',
+  },
+  reactionBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 16,
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+    marginRight: 4,
+    marginTop: -6,
+  },
+  reactionEmojiSmall: {
+    fontSize: 14,
+  },
+  reactionCount: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 2,
+    fontWeight: '500',
   },
 });
 

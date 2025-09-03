@@ -81,11 +81,12 @@ export type User = {
   name: string;
   lastname: string;
   email: string;
-  averageRating: number;
+  averageRating: number | null;
   avatarUrl: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: null | Date | string;
+    password?: string;
   roles: Role[] | number[];
 };
 
@@ -113,11 +114,10 @@ export type ChatMessage = {
   conversationId: number;
   senderId: number;
   content: string;
-  createdAt: string; // La API devuelve string, no Date
+  createdAt: string; 
   updatedAt: string;
   deletedAt: null;
-  Reactions: ChatReaction[]; // Array de reacciones
-  sender: User; // Usuario completo, no solo ID
+  Reactions: any[];
 };
 
 export type ChatReaction = {
@@ -128,7 +128,6 @@ export type ChatReaction = {
   createdAt: string;
   updatedAt: string;
   deletedAt: null;
-  user: User;
 };
 
 export type ChatConversation = {
@@ -137,10 +136,10 @@ export type ChatConversation = {
   user2Id: number;
   createdAt: string;
   updatedAt: string;
-  deletedAt: null;
-  messages: ChatMessage[]; // Array de mensajes
-  user1: User; // Usuario 1 completo
-  user2: User; // Usuario 2 completo
+   deletedAt: string | null;
+  messages: ChatMessage[];
+  user1: User;
+  user2: User;
 };
 
 export type ChatStartResponse = {

@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { Text } from '@/app/components/atoms';
-import { Icon } from '@/app/components/atoms/Icon';
+import RecoIcon from '../../../../assets/img/RecoIcon.png';
 import { getApiImageUrl } from '@/app/utils/Environment';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { selectAuth } from '@/app/redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
+//import { Icon } from '@/app/components/atoms/Icon';
 
 export const GreetingHeader = () => {
   const { t } = useTranslation();
@@ -25,57 +26,88 @@ export const GreetingHeader = () => {
   };
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 24,
-        marginBottom: 8,
-        marginHorizontal: 20,
-      }}
-    >
+    <View style={styles.container}>
       {user?.avatarUrl ? (
         <Image
           source={getApiImageUrl(user?.avatarUrl)}
-          style={{
-            width: 54,
-            height: 54,
-            borderRadius: 27,
-            marginRight: 14,
-          }}
+          style={styles.avatar}
           resizeMode="cover"
         />
       ) : (
-        <View
-          style={{
-            width: 54,
-            height: 54,
-            borderRadius: 27,
-            marginRight: 14,
-            backgroundColor: '#E0E0E0',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#6750A4' }}>
-            {getInitials(user?.name, user?.lastname)}
+        <View style={styles.initialsContainer}>
+          <Text style={styles.initialsText}>
+            {getInitials(user?.name, user?.lastname) ||
+              t('home_screen.user', 'Dear friend')}
           </Text>
         </View>
       )}
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: '#888', fontSize: 16 }}>{getGreeting()} 👋</Text>
-        <Text style={{ fontWeight: 'bold', fontSize: 22, color: '#222' }}>
+      <View style={styles.greetingContainer}>
+        <Text style={styles.greetingText}>{getGreeting()} 👋</Text>
+        <Text style={styles.nameText}>
           {user?.name} {user?.lastname}
         </Text>
       </View>
-      <View style={{ flexDirection: 'row', gap: 16, marginRight: 12 }}>
-        <Icon
+      <View style={styles.iconContainer}>
+        {/* <Icon
+          source={getApiImageUrl(user?.avatarUrl)}
           name="bell-outline"
           size={26}
           color="#222"
           family="MaterialCommunityIcons"
-        />
+        /> */}
+        <Image source={RecoIcon} style={styles.recoIcon} resizeMode="contain" />
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 8,
+    marginHorizontal: 20,
+  },
+  avatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    marginRight: 14,
+  },
+  initialsContainer: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    marginRight: 14,
+    backgroundColor: '#E0E0E0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  initialsText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#6750A4',
+  },
+  greetingContainer: {
+    flex: 1,
+  },
+  greetingText: {
+    color: '#888',
+    fontSize: 16,
+  },
+  nameText: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: '#222',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    gap: 16,
+    marginRight: 12,
+  },
+  recoIcon: {
+    width: 28,
+    height: 28,
+  },
+});

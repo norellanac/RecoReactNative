@@ -43,13 +43,17 @@ export const RegisterForm: React.FC = () => {
 
   const handleSignup = async (values: SignupValues) => {
     try {
-      const signupResponse = await onSignup(values).unwrap();
+      const signupResponse = await onSignup({
+        name: values.name,
+        lastname: values.lastname,
+        email: values.email,
+        password: values.password,
+      }).unwrap();
       if (signupResponse.success) {
         handleLogin(values);
       }
     } catch (error) {
       console.error('Signup error:', error);
-      // Handle the error appropriately, e.g., show a message to the user
       if (error.data) {
         console.error('Error data:', error.data);
       }
@@ -69,16 +73,22 @@ export const RegisterForm: React.FC = () => {
   return (
     <Formik
       initialValues={{
-        fullName: '',
+        name: '',
+        lastname: '',
         email: '',
         password: '',
         confirmPassword: '',
       }}
       onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        fullName: Yup.string().required(
+        name: Yup.string().required(
           t('validations.required', 'This {{field}} is required', {
-            field: t('auth.register.full_name', 'Full Name'),
+            field: t('auth.register.name', 'Name'),
+          }),
+        ),
+        lastname: Yup.string().required(
+          t('validations.required', 'This {{field}} is required', {
+            field: t('auth.register.lastname', 'Last Name'),
           }),
         ),
         email: Yup.string().required(
@@ -125,11 +135,20 @@ export const RegisterForm: React.FC = () => {
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
         <View style={styles.form}>
           <TextInput
-            placeholder={t('auth.register.full_name', 'Full Name')}
-            onChangeText={handleChange('fullName')}
-            onBlur={() => handleBlur('fullName')}
-            value={values.fullName}
-            errorMsg={errors.fullName}
+            placeholder={t('auth.register.name', 'Name')}
+            onChangeText={handleChange('name')}
+            onBlur={() => handleBlur('name')}
+            value={values.name}
+            errorMsg={errors.name}
+            variant="underlined"
+          />
+
+          <TextInput
+            placeholder={t('auth.register.lastname', 'Last Name')}
+            onChangeText={handleChange('lastname')}
+            onBlur={() => handleBlur('lastname')}
+            value={values.lastname}
+            errorMsg={errors.lastname}
             variant="underlined"
           />
 

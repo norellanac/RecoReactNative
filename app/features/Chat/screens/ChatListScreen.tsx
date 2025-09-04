@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useGetChatsByUserIdQuery } from '@/app/services/chatApi';
 import { getApiImageUrl } from '@/app/utils/Environment';
+import { Avatar } from '@/app/components/molecules/Avatar';
 
 const ChatListScreen = () => {
   const navigation = useNavigation();
@@ -89,9 +90,9 @@ const ChatListScreen = () => {
         id: conversation.id.toString(),
         user: {
           name: `${otherUser.name} ${otherUser.lastname}`,
-          avatar: otherUser.avatarUrl
-            ? getApiImageUrl(otherUser.avatarUrl).uri
-            : 'https://via.placeholder.com/50/CCCCCC/FFFFFF?text=User',
+          avatarUrl: otherUser.avatarUrl,
+          firstName: otherUser.name,
+          lastName: otherUser.lastname,
         },
         lastMessage: {
           text: lastMessage,
@@ -125,7 +126,12 @@ const ChatListScreen = () => {
       }}
     >
       <View style={styles.avatarContainer}>
-        <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
+        <Avatar
+          avatarUrl={item.user.avatarUrl}
+          name={item.user.firstName}
+          lastname={item.user.lastName}
+          size={50} // Tamaño para la lista de chats
+        />
         {item.isOnline && <View style={styles.onlineIndicator} />}
       </View>
 
@@ -282,12 +288,6 @@ const styles = StyleSheet.create({
   avatarContainer: {
     position: 'relative',
     marginRight: 12,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#f0f0f0',
   },
   onlineIndicator: {
     position: 'absolute',

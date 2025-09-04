@@ -16,6 +16,7 @@ import {
 import { Text } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Icon } from '../../../components/atoms/Icon';
+import { Avatar } from '@/app/components/molecules/Avatar';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -307,7 +308,9 @@ const ChatScreen = () => {
           showBackButton: true,
           title: (
             <View style={styles.headerContainer}>
-              <View style={[styles.headerAvatar, styles.loadingAvatar]} />
+              <View style={styles.loadingAvatarContainer}>
+                <Avatar size={32} />
+              </View>
               <View>
                 <Text style={styles.headerName}>Loading...</Text>
               </View>
@@ -347,12 +350,12 @@ const ChatScreen = () => {
     );
   }
 
-  const getAvatarSource = () => {
-    if (otherUser.avatarUrl) {
-      return getApiImageUrl(otherUser.avatarUrl);
-    }
-    return { uri: 'https://via.placeholder.com/32/CCCCCC/FFFFFF?text=User' };
-  };
+  // const getAvatarSource = () => {
+  //   if (otherUser.avatarUrl) {
+  //     return getApiImageUrl(otherUser.avatarUrl);
+  //   }
+  //   return { uri: 'https://via.placeholder.com/32/CCCCCC/FFFFFF?text=User' };
+  // };
 
   return (
     <>
@@ -361,7 +364,14 @@ const ChatScreen = () => {
           showBackButton: true,
           title: (
             <View style={styles.headerContainer}>
-              <Image source={getAvatarSource()} style={styles.headerAvatar} />
+              <View style={styles.loadingAvatarContainer}>
+                <Avatar
+                  avatarUrl={otherUser.avatarUrl}
+                  name={otherUser.name}
+                  lastname={otherUser.lastname}
+                  size={32}
+                />
+              </View>
               <View>
                 <Text style={styles.headerName}>
                   {`${otherUser.name} ${otherUser.lastname}`}
@@ -478,14 +488,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-  headerAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  // headerAvatar: {
+  //   width: 32,
+  //   height: 32,
+  //   borderRadius: 16,
+  //   marginRight: 8,
+  // },
+  loadingAvatarContainer: {
     marginRight: 8,
-  },
-  loadingAvatar: {
-    backgroundColor: '#f0f0f0',
   },
   headerName: {
     fontSize: 16,

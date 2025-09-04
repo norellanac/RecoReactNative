@@ -32,7 +32,12 @@ const TextViewScreen: React.FC<TextViewScreenProps> = ({ route }) => {
       }}
     >
       <View style={styles.container}>
-        <WebView source={{ uri: route.params.url }} style={{ flex: 1 }} />
+        <WebView
+          source={{ uri: route.params.url }}
+          style={{ flex: 1 }}
+          cacheEnabled={false} // ✅ Deshabilitar caché
+          domStorageEnabled={false} // ✅ Deshabilitar almacenamiento local
+        />
       </View>
     </Screen>
   );

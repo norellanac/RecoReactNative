@@ -5,6 +5,7 @@ import ServicesStackNavigation from '@/app/features/Services/screens/ServicesSta
 import TaskStack from '@/app/features/Task/screens/TaskStack';
 import { ChatNavigation } from '@/app/features/Chat/screens/ChatStack';
 import AuthStack from '../features/auth/screens/AuthStack';
+import { ProfileNavigation } from '@/app/features/Profile/screens/ProfileStack';
 
 const AuthorizedAppStack = createNativeStackNavigator();
 
@@ -22,6 +23,10 @@ const AuthorizedApp = () => {
       <AuthorizedAppStack.Screen name="AuthStack" component={AuthStack} />
       <AuthorizedAppStack.Screen name="TaskStack" component={TaskStack} />
       <AuthorizedAppStack.Screen name="ChatStack" component={ChatNavigation} />
+      <AuthorizedAppStack.Screen
+        name="ProfileStack"
+        component={ProfileNavigation}
+      />
       {/* Other authenticated screens can be added here */}
     </AuthorizedAppStack.Navigator>
   );

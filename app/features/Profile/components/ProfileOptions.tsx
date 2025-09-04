@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Text } from '../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@/app/components/atoms/Icon';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { logout } from '@/app/redux/slices/authSlice';
+import ModalComponent from '@/app/components/molecules/ModalComponent';
 
 export const ProfileMenuOptions = ({
   navigation,
@@ -15,9 +16,19 @@ export const ProfileMenuOptions = ({
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
+    setShowLogoutModal(false);
+  };
+
+  const handleLogoutPress = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowLogoutModal(false);
   };
 
   const options = [
@@ -56,7 +67,13 @@ export const ProfileMenuOptions = ({
         color: '#625B71',
         family: 'Ionicons',
       },
-      onPress: () => navigation.navigate('Terms'),
+      onPress: () =>
+        navigation.navigate('AuthStack', {
+          screen: 'TermsAndConditions',
+          params: {
+            url: 'https://recolatam.com/terms-and-conditions',
+          },
+        }),
     },
     {
       key: 'PrivacyPolicy',
@@ -67,14 +84,20 @@ export const ProfileMenuOptions = ({
         color: '#625B71',
         family: 'Ionicons',
       },
-      onPress: () => navigation.navigate('PrivacyPolicy'),
+      onPress: () =>
+        navigation.navigate('AuthStack', {
+          screen: 'PrivacyPolicy',
+          params: {
+            url: 'https://recolatam.com/privacy-policy',
+          },
+        }),
     },
     {
       key: 'Logout',
       label: t('userProfile.logout', 'Logout'),
       value: '',
       icon: { name: 'log-out-outline', color: '#D32F2F', family: 'Ionicons' },
-      onPress: handleLogout,
+      onPress: handleLogoutPress,
     },
   ];
 
@@ -129,6 +152,33 @@ export const ProfileMenuOptions = ({
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+      <ModalComponent
+        visible={showLogoutModal}
+        onClose={handleCloseModal}
+        title={
+          <Text variant="title" size="large" color="error">
+            {t('userProfile.logoutConfirmTitle', 'Confirm Logout')}
+          </Text>
+        }
+        confirmButtonText={t('userProfile.logoutConfirm', 'Yes, Logout')}
+        cancelButtonText={t('userProfile.cancel', 'Cancel')}
+        onConfirm={handleLogout}
+        hideCancelButton={false}
+      >
+        <View>
+          <Text
+            variant="body"
+            size="large"
+            color="secondary"
+            style={styles.modalText}
+          >
+            {t(
+              'userProfile.logoutConfirmMessage',
+              'Are you sure you want to logout?',
+            )}
+          </Text>
+        </View>
+      </ModalComponent>
     </View>
   );
 };
@@ -159,5 +209,11 @@ const styles = StyleSheet.create({
   value: {
     textAlign: 'right',
     marginLeft: -80,
+  },
+  modalText: {
+    textAlign: 'center',
+    lineHeight: 22,
+    marginTop: -8,
+    marginBottom: 16,
   },
 });

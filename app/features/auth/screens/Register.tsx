@@ -39,7 +39,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
             size={'large'}
             color="primary"
             style={{ textAlign: 'center' }}
-            onPress={() => navigation.navigate('Terms')}
+            onPress={() => navigation.navigate('TermsAndConditions')}
           >
             {t('register.terms_service', 'Terms of Service')}
           </Text>

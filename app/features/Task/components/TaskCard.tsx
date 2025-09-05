@@ -10,7 +10,7 @@ import useChatHandler from '@/app/hooks/useChatHandler';
 const TaskCard = ({ task }) => {
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const { startChatWith } = useChatHandler();
+  const { startChatWith, isLoading } = useChatHandler();
 
   const detail = task.details?.[0];
   const service = detail?.productService;
@@ -23,23 +23,19 @@ const TaskCard = ({ task }) => {
   });
 
   const handleChat = () => {
-    console.log('TaskCard task:', task); // 🔍 Inspeccionar el contenido de task
+    const providerId = service?.userId;
 
-    // Obtener el proveedor desde productService
-    const providerId = service?.userId; // ID del proveedor
-    const otherUser = {
-      id: service?.userId,
-      name: service?.name, // Usar el nombre del servicio como nombre temporal
-      lastname: '', // No disponible en la respuesta actual
-      avatarUrl: service?.urlImage, // Usar la imagen del servicio como avatar temporal
+    // ✅ Crear objeto con datos del proveedor de la tarea
+    const providerData = {
+      name: service?.name || 'Proveedor', //Para pasarlo cuando venga del backend
+      lastname: '', //Para pasarlo cuando venga del backend
+      avatarUrl: service?.urlImage || null, //Para pasarlo cuando venga del backend
+      // Si no tienes estos datos, puedes usar valores por defecto
     };
 
-    console.log('TaskCard handleChat:', { providerId, otherUser });
-
-    if (providerId && otherUser) {
-      startChatWith(providerId, otherUser); // ✅ Pasar providerId y otherUser
+    if (providerId) {
+      startChatWith(providerId, providerData);
     } else {
-      console.error('No provider information found for this task.');
     }
   };
 
@@ -113,9 +109,10 @@ const TaskCard = ({ task }) => {
         <Button
           variant="text"
           title={t('taskCard.chat', 'Chat')}
-          style={styles.actionButton}
+          style={[styles.actionButton, isLoading && { opacity: 0.6 }]}
           textStyle={styles.actionButtonText}
           onPress={handleChat}
+          disabled={isLoading}
         />
       </View>
     </View>
@@ -164,7 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 8,
     marginBottom: 4,
-    backgroundColor: '#eee',
+    backgroundColor: '#eee', // ✅ Mantener imagen por defecto
   },
   userName: {
     textAlign: 'center',

@@ -4,7 +4,6 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
-  Image,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
@@ -25,14 +24,13 @@ import {
   useSendMessageMutation,
   useAddReactionMutation,
 } from '@/app/services/chatApi';
-import { getApiImageUrl } from '@/app/utils/Environment';
 
 const REACTIONS = [
   { type: 'like', emoji: '👍' },
   { type: 'love', emoji: '❤️' },
   { type: 'laugh', emoji: '😂' },
   { type: 'wow', emoji: '😮' },
-  { type: 'sad', emoji: '😢' },
+  { type: 'sad', emoji: '👎' },
 ];
 
 const ChatScreen = () => {
@@ -146,7 +144,6 @@ const ChatScreen = () => {
     }).start();
   };
 
-  // Función para cerrar el menú de reacciones
   const closeReactionPicker = () => {
     Animated.spring(scaleAnim, {
       toValue: 0,
@@ -159,7 +156,6 @@ const ChatScreen = () => {
     });
   };
 
-  // Función para manejar selección de reacción
   const handleReactionSelect = async (reactionType) => {
     if (!selectedMessageId) return;
 
@@ -179,7 +175,6 @@ const ChatScreen = () => {
     }
   };
 
-  // Enviar mensaje
   const sendMessage = async () => {
     if (!inputText.trim() || !currentUserId) return;
 
@@ -300,7 +295,6 @@ const ChatScreen = () => {
     </View>
   );
 
-  // Estados de carga y error
   if (isLoading) {
     return (
       <Screen
@@ -349,13 +343,6 @@ const ChatScreen = () => {
       </Screen>
     );
   }
-
-  // const getAvatarSource = () => {
-  //   if (otherUser.avatarUrl) {
-  //     return getApiImageUrl(otherUser.avatarUrl);
-  //   }
-  //   return { uri: 'https://via.placeholder.com/32/CCCCCC/FFFFFF?text=User' };
-  // };
 
   return (
     <>
@@ -473,7 +460,6 @@ const ChatScreen = () => {
   );
 };
 
-// Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -488,12 +474,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-  // headerAvatar: {
-  //   width: 32,
-  //   height: 32,
-  //   borderRadius: 16,
-  //   marginRight: 8,
-  // },
   loadingAvatarContainer: {
     marginRight: 8,
   },

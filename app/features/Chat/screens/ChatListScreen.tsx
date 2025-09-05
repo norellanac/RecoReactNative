@@ -3,7 +3,6 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Image,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
@@ -13,14 +12,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useGetChatsByUserIdQuery } from '@/app/services/chatApi';
-import { getApiImageUrl } from '@/app/utils/Environment';
 import { Avatar } from '@/app/components/molecules/Avatar';
+import { Icon } from '@/app/components/atoms/Icon';
 
 const ChatListScreen = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
 
-  // 🔌 Conectar con Redux y API
   const currentUser = useSelector((state) => state.auth.user);
   const currentUserId = currentUser?.id;
 
@@ -28,80 +26,134 @@ const ChatListScreen = () => {
     data: conversationsResponse,
     isLoading,
     isError,
+    error,
     refetch,
   } = useGetChatsByUserIdQuery(currentUserId, {
     skip: !currentUserId,
   });
 
+  // ✅ Mejor validación de datos
   const conversations = conversationsResponse?.data || [];
+  const isValidConversations =
+    Array.isArray(conversations) && conversations.length > 0;
 
   // 🔄 Funciones para transformar datos de API a formato UI
   const getOtherUser = (conversation, currentUserId) => {
-    return conversation.user1Id === currentUserId
-      ? conversation.user2
-      : conversation.user1;
+    if (!conversation || !currentUserId) return null;
+
+    try {
+      return conversation.user1Id === currentUserId
+        ? conversation.user2
+        : conversation.user1;
+    } catch (error) {
+      return null;
+    }
   };
 
   const getLastMessage = (conversation) => {
-    if (conversation.messages.length === 0)
+    try {
+      if (!conversation?.messages || conversation.messages.length === 0) {
+        return t('chat.noMessages', 'No messages yet');
+      }
+      return (
+        conversation.messages[conversation.messages.length - 1]?.content ||
+        t('chat.noMessages', 'No messages yet')
+      );
+    } catch (error) {
       return t('chat.noMessages', 'No messages yet');
-    return conversation.messages[conversation.messages.length - 1].content;
+    }
   };
 
   const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = diffMs / (1000 * 60 * 60);
+    try {
+      if (!dateString) return '';
 
-    if (diffHours < 1) {
-      return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      });
-    } else if (diffHours < 24) {
-      return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      });
-    } else {
-      return t('chat.yesterday', 'Yesterday');
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffHours = diffMs / (1000 * 60 * 60);
+
+      if (diffHours < 1) {
+        return date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+      } else if (diffHours < 24) {
+        return date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+      } else {
+        return t('chat.yesterday', 'Yesterday');
+      }
+    } catch (error) {
+      return '';
     }
   };
 
   // 🔄 Transformar datos de API al formato que espera la UI
   const transformToUIFormat = (conversations) => {
-    if (!Array.isArray(conversations)) {
+    try {
+      // ✅ Validación mejorada
+      if (!Array.isArray(conversations) || conversations.length === 0) {
+        console.log('No conversations to transform');
+        return [];
+      }
+
+      return conversations
+        .map((conversation) => {
+          try {
+            const otherUser = getOtherUser(conversation, currentUserId);
+
+            // ✅ Validar que otherUser existe
+            if (!otherUser) {
+              console.warn(
+                'No other user found for conversation:',
+                conversation.id,
+              );
+              return null;
+            }
+
+            const lastMessage = getLastMessage(conversation);
+            const lastMessageTime =
+              conversation.messages && conversation.messages.length > 0
+                ? formatTime(
+                    conversation.messages[conversation.messages.length - 1]
+                      ?.createdAt,
+                  )
+                : '';
+
+            return {
+              id: conversation.id.toString(),
+              user: {
+                name: `${otherUser.name || ''} ${otherUser.lastname || ''}`.trim(),
+                avatarUrl: otherUser.avatarUrl,
+                firstName: otherUser.name || '',
+                lastName: otherUser.lastname || '',
+              },
+              lastMessage: {
+                text: lastMessage,
+                timestamp: lastMessageTime,
+              },
+              unreadCount: 0, // TODO: Implementar lógica de no leídos
+              isOnline: false, // TODO: Implementar estado online
+            };
+          } catch (error) {
+            console.error(
+              'Error transforming conversation:',
+              conversation.id,
+              error,
+            );
+            return null;
+          }
+        })
+        .filter(Boolean); // ✅ Filtrar elementos null/undefined
+    } catch (error) {
+      console.error('Error in transformToUIFormat:', error);
       return [];
     }
-    return conversations.map((conversation) => {
-      const otherUser = getOtherUser(conversation, currentUserId);
-      const lastMessage = getLastMessage(conversation);
-      const lastMessageTime =
-        conversation.messages.length > 0
-          ? formatTime(
-              conversation.messages[conversation.messages.length - 1].createdAt,
-            )
-          : '';
-
-      return {
-        id: conversation.id.toString(),
-        user: {
-          name: `${otherUser.name} ${otherUser.lastname}`,
-          avatarUrl: otherUser.avatarUrl,
-          firstName: otherUser.name,
-          lastName: otherUser.lastname,
-        },
-        lastMessage: {
-          text: lastMessage,
-          timestamp: lastMessageTime,
-        },
-        unreadCount: 0, // TODO: Implementar lógica de no leídos
-        isOnline: false, // TODO: Implementar estado online
-      };
-    });
   };
 
   // 📱 UI Components
@@ -109,20 +161,35 @@ const ChatListScreen = () => {
     <TouchableOpacity
       style={styles.chatItem}
       onPress={() => {
-        const originalConversation = conversations.find(
-          (c) => c.id.toString() === item.id,
-        );
-        const otherUser = getOtherUser(originalConversation, currentUserId);
+        try {
+          const originalConversation = conversations.find(
+            (c) => c.id.toString() === item.id,
+          );
 
-        navigation.navigate('ChatScreen', {
-          conversationId: parseInt(item.id),
-          otherUser: {
-            id: otherUser.id,
-            name: otherUser.name,
-            lastname: otherUser.lastname,
-            avatarUrl: otherUser.avatarUrl,
-          },
-        });
+          if (!originalConversation) {
+            console.error('Original conversation not found');
+            return;
+          }
+
+          const otherUser = getOtherUser(originalConversation, currentUserId);
+
+          if (!otherUser) {
+            console.error('Other user not found');
+            return;
+          }
+
+          navigation.navigate('ChatScreen', {
+            conversationId: parseInt(item.id),
+            otherUser: {
+              id: otherUser.id,
+              name: otherUser.name || '',
+              lastname: otherUser.lastname || '',
+              avatarUrl: otherUser.avatarUrl,
+            },
+          });
+        } catch (error) {
+          console.error('Error navigating to chat:', error);
+        }
       }}
     >
       <View style={styles.avatarContainer}>
@@ -130,7 +197,7 @@ const ChatListScreen = () => {
           avatarUrl={item.user.avatarUrl}
           name={item.user.firstName}
           lastname={item.user.lastName}
-          size={50} // Tamaño para la lista de chats
+          size={50}
         />
         {item.isOnline && <View style={styles.onlineIndicator} />}
       </View>
@@ -163,6 +230,33 @@ const ChatListScreen = () => {
     </TouchableOpacity>
   );
 
+  // ✅ Validar si hay error o no hay userId
+  if (!currentUserId) {
+    return (
+      <Screen
+        statusBarProps={{
+          showBackButton: true,
+          title: (
+            <Text
+              variant="title"
+              size="medium"
+              color="info"
+              style={styles.headerTitle}
+            >
+              {t('messages.title', 'Messages')}
+            </Text>
+          ),
+        }}
+      >
+        <View style={[styles.container, styles.centerContainer]}>
+          <Text style={styles.errorText}>
+            {t('chat.userNotFound', 'User not found')}
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
   // 🔄 Estados de carga y error
   if (isLoading) {
     return (
@@ -192,6 +286,7 @@ const ChatListScreen = () => {
   }
 
   if (isError) {
+    console.error('ChatListScreen Error:', error);
     return (
       <Screen
         statusBarProps={{
@@ -253,8 +348,18 @@ const ChatListScreen = () => {
           onRefresh={refetch}
           ListEmptyComponent={
             <View style={styles.centerContainer}>
-              <Text style={styles.emptyText}>
-                {t('chat.noConversations', 'No conversations yet')}
+              <Icon name="emoji-sad" size={56} color="#999" family="Entypo" />
+              <Text style={styles.emptyTitleText}>
+                {t(
+                  'chat.noConversationsTitle',
+                  'No hay conversaciones todavía',
+                )}
+              </Text>
+              <Text style={styles.emptyDescriptionText}>
+                {t(
+                  'chat.noConversationsDescription',
+                  'Explora servicios y crea una nueva tarea. Una vez confirmada, podrás chatear con tu proveedor asignado.',
+                )}
               </Text>
             </View>
           }
@@ -264,7 +369,6 @@ const ChatListScreen = () => {
   );
 };
 
-// ✅ Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -272,9 +376,32 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   centerContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+    paddingVertical: 40,
+    minHeight: 600,
+  },
+  emptyTitleText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 16,
+    marginBottom: 12,
+  },
+  emptyDescriptionText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
+    paddingHorizontal: 10,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
   },
   headerTitle: {
     marginTop: 12,

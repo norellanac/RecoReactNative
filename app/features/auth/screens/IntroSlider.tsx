@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import { Button } from '../../../components/atoms';
@@ -160,26 +159,6 @@ const IntroSlider: React.FC = () => {
             />
           ))}
         </View>
-
-        <View style={styles.arrows}>
-          <TouchableOpacity onPress={handlePrev} disabled={currentIndex === 0}>
-            <Ionicons
-              name="chevron-back-outline"
-              size={24}
-              color={currentIndex === 0 ? '#E0E0E0' : '#6750A4'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleNext}
-            disabled={currentIndex === slides.length - 1}
-          >
-            <Ionicons
-              name="chevron-forward-outline"
-              size={24}
-              color={currentIndex === slides.length - 1 ? '#E0E0E0' : '#6750A4'}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
     </Screen>
   );
@@ -216,6 +195,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 20,
+    marginBottom: 80,
   },
   dot: {
     width: 10,
@@ -228,13 +208,6 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: '#E0E0E0',
-  },
-  arrows: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginVertical: 20,
   },
 });
 

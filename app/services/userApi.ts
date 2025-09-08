@@ -16,7 +16,7 @@ export const userApi = createApi({
         body: userData,
       }),
     }),
-    updateAvatar: builder.mutation<any, { userId: string; formData: FormData }>({
+    updateUserAvatar: builder.mutation<any, { userId: string; formData: FormData }>({
       query: ({ userId, formData }) => ({
         url: `/users/${userId}/avatar`,
         method: 'PUT',
@@ -43,7 +43,7 @@ export const userApi = createApi({
 export const {
   useGetUsersQuery,
   useCreateUserMutation,
-  useUpdateAvatarMutation,
+  useUpdateUserAvatarMutation,
   useUpdateUserNameMutation,
   useUpdateUserInfoMutation,
 } = userApi;

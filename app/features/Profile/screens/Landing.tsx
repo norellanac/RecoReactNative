@@ -1,18 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Alert,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, TextInput, Alert } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Button, Text } from '../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { selectAuth, setAuthUserState } from '@/app/redux/slices/authSlice';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
 import { useUpdateUserNameMutation } from '@/app/services/userApi';
 import { ProfileStackParams } from './ProfileStack';
@@ -22,6 +14,7 @@ import { Icon } from '@/app/components/atoms/Icon';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
 import { useHasRole } from '@/app/hooks/useHasRole';
 import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
+import { ProfileAvatarUploader } from '../components/ProfileAvatarUploader';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
@@ -35,19 +28,8 @@ export const LandingProfile = ({ navigation }: Props) => {
   const [lastname, setLastname] = useState(user?.lastname || '');
   const [updateUserName, { isLoading }] = useUpdateUserNameMutation();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [avatar, setAvatar] = useState(user?.avatarUrl || '');
-  const [pendingAvatar, setPendingAvatar] = useState<string | null>(null);
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo } = useUserEvents();
-
-  useEffect(() => {
-    setAvatar(user?.avatarUrl || '');
-  }, [user?.avatarUrl]);
-
-  const BASE_URL =
-    process.env.EXPO_PUBLIC_API_URL?.replace(/\/api\/v1\/$/, '') ||
-    'https://dev.recolatam.com';
 
   const handleSwitchRole = async () => {
     try {
@@ -59,16 +41,6 @@ export const LandingProfile = ({ navigation }: Props) => {
         t('userProfile.updateFailed', 'Failed to update role'),
       );
     }
-  };
-
-  const getAvatarSource = () => {
-    if (avatar && avatar.startsWith('http')) {
-      return { uri: avatar };
-    }
-    if (avatar && avatar.startsWith('/')) {
-      return { uri: BASE_URL + avatar };
-    }
-    return require('@/app/assets/img/default-Reco-image.png');
   };
 
   const handleSaveNameChanges = async () => {
@@ -100,41 +72,13 @@ export const LandingProfile = ({ navigation }: Props) => {
     }
   };
 
-  const handleImageChange = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      maxWidth: 300,
-      maxHeight: 300,
-      quality: 0.8,
-    });
-
-    if (result.assets && result.assets.length > 0) {
-      setAvatar(result.assets[0].uri || '');
-      setModalOpen(true);
-    }
-  };
-
-  // Para mostrar la imagen en el modal:
-  const getModalAvatarSource = () => {
-    if (pendingAvatar) return { uri: pendingAvatar };
-    return getAvatarSource();
-  };
-
-  const handleSaveImage = () => {
-    // Implementar aquí la lógica para guardar la imagen en el servidor
-    setAvatar(pendingAvatar || avatar); // Solo actualiza si se guardó
-    setPendingAvatar(null);
-    setModalOpen(false);
-    Alert.alert(
-      t('userProfile.success', 'Success'),
-      t('userProfile.imageUpdated', 'Image updated successfully'),
+  const handleAvatarUpdate = (newAvatarUrl: string) => {
+    dispatch(
+      setAuthUserState({
+        ...user,
+        avatarUrl: newAvatarUrl,
+      }),
     );
-  };
-
-  // Si se cierra el modal sin guardar:
-  const handleCloseModal = () => {
-    setPendingAvatar(null);
-    setModalOpen(false);
   };
 
   return (
@@ -154,22 +98,10 @@ export const LandingProfile = ({ navigation }: Props) => {
       }}
     >
       <View style={styles.container}>
-        {/* Avatar Upload */}
-        <TouchableOpacity onPress={handleImageChange}>
-          <Image source={getAvatarSource()} style={styles.avatar} />
-        </TouchableOpacity>
-        {/* Modal para cambiar foto */}
-        <ModalComponent
-          visible={modalOpen}
-          onClose={handleCloseModal}
-          title={t('userProfile.changeProfilePhoto', 'Change profile photo')}
-          confirmButtonText={t('userProfile.save', 'Save')}
-          onConfirm={handleSaveImage}
-          hideCancelButton={true}
-        >
-          {/* Puedes agregar contenido extra aquí si lo necesitas */}
-          <Image source={getModalAvatarSource()} style={styles.avatar} />
-        </ModalComponent>
+        <ProfileAvatarUploader
+          user={user}
+          onAvatarUpdate={handleAvatarUpdate}
+        />
 
         <Text
           variant="title"
@@ -180,6 +112,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           {user?.name || t('userProfile.defaultName', 'Name')}{' '}
           {user?.lastname || t('userProfile.defaultLastname', 'Lastname')}
         </Text>
+
         <Button
           variant="text"
           title={t('userProfile.editName', 'Edit Name')}
@@ -193,6 +126,7 @@ export const LandingProfile = ({ navigation }: Props) => {
             />
           }
         />
+
         <ModalComponent
           visible={editNameModalOpen}
           onClose={() => setEditNameModalOpen(false)}
@@ -216,6 +150,7 @@ export const LandingProfile = ({ navigation }: Props) => {
         </ModalComponent>
 
         <ProfileMenuOptions navigation={navigation} user={user} />
+
         <Button
           variant="filled"
           title={
@@ -226,7 +161,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           onPress={handleSwitchRole}
           style={[
             styles.becomeMerchantButton,
-            { backgroundColor: isMerchant ? '#019FE9' : '#6750A4' },
+            { backgroundColor: isMerchant ? '#1C1B1F' : '#6750A4' },
           ]}
           startIcon={
             <Icon
@@ -248,12 +183,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 10,
   },
-  avatar: {
-    width: 125,
-    height: 125,
-    borderRadius: 75,
-    marginBottom: 10,
-  },
   userName: {
     fontWeight: 'bold',
     marginBottom: -10,
@@ -269,15 +198,5 @@ const styles = StyleSheet.create({
   becomeMerchantButton: {
     marginTop: 20,
     width: '70%',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
 });

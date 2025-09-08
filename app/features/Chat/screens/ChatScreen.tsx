@@ -4,7 +4,6 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
-  Image,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
@@ -16,6 +15,7 @@ import {
 import { Text } from 'react-native';
 import { Screen } from '../../../components/templates';
 import { Icon } from '../../../components/atoms/Icon';
+import { Avatar } from '@/app/components/molecules/Avatar';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -24,14 +24,13 @@ import {
   useSendMessageMutation,
   useAddReactionMutation,
 } from '@/app/services/chatApi';
-import { getApiImageUrl } from '@/app/utils/Environment';
 
 const REACTIONS = [
   { type: 'like', emoji: '👍' },
   { type: 'love', emoji: '❤️' },
   { type: 'laugh', emoji: '😂' },
   { type: 'wow', emoji: '😮' },
-  { type: 'sad', emoji: '😢' },
+  { type: 'sad', emoji: '👎' },
 ];
 
 const ChatScreen = () => {
@@ -145,7 +144,6 @@ const ChatScreen = () => {
     }).start();
   };
 
-  // Función para cerrar el menú de reacciones
   const closeReactionPicker = () => {
     Animated.spring(scaleAnim, {
       toValue: 0,
@@ -158,7 +156,6 @@ const ChatScreen = () => {
     });
   };
 
-  // Función para manejar selección de reacción
   const handleReactionSelect = async (reactionType) => {
     if (!selectedMessageId) return;
 
@@ -178,7 +175,6 @@ const ChatScreen = () => {
     }
   };
 
-  // Enviar mensaje
   const sendMessage = async () => {
     if (!inputText.trim() || !currentUserId) return;
 
@@ -299,7 +295,6 @@ const ChatScreen = () => {
     </View>
   );
 
-  // Estados de carga y error
   if (isLoading) {
     return (
       <Screen
@@ -307,7 +302,9 @@ const ChatScreen = () => {
           showBackButton: true,
           title: (
             <View style={styles.headerContainer}>
-              <View style={[styles.headerAvatar, styles.loadingAvatar]} />
+              <View style={styles.loadingAvatarContainer}>
+                <Avatar size={32} />
+              </View>
               <View>
                 <Text style={styles.headerName}>Loading...</Text>
               </View>
@@ -347,13 +344,6 @@ const ChatScreen = () => {
     );
   }
 
-  const getAvatarSource = () => {
-    if (otherUser.avatarUrl) {
-      return getApiImageUrl(otherUser.avatarUrl);
-    }
-    return { uri: 'https://via.placeholder.com/32/CCCCCC/FFFFFF?text=User' };
-  };
-
   return (
     <>
       <Screen
@@ -361,7 +351,14 @@ const ChatScreen = () => {
           showBackButton: true,
           title: (
             <View style={styles.headerContainer}>
-              <Image source={getAvatarSource()} style={styles.headerAvatar} />
+              <View style={styles.loadingAvatarContainer}>
+                <Avatar
+                  avatarUrl={otherUser.avatarUrl}
+                  name={otherUser.name}
+                  lastname={otherUser.lastname}
+                  size={32}
+                />
+              </View>
               <View>
                 <Text style={styles.headerName}>
                   {`${otherUser.name} ${otherUser.lastname}`}
@@ -463,7 +460,6 @@ const ChatScreen = () => {
   );
 };
 
-// Estilos (sin cambios)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -478,14 +474,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-  headerAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  loadingAvatarContainer: {
     marginRight: 8,
-  },
-  loadingAvatar: {
-    backgroundColor: '#f0f0f0',
   },
   headerName: {
     fontSize: 16,

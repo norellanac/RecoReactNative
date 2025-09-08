@@ -6,18 +6,73 @@ export const chatApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Chats', 'Messages'],
   endpoints: (builder) => ({
+    // ✅ Reemplazar getChatsByUserId con queryFn personalizada
     getChatsByUserId: builder.query({
-      query: (id) => `chat/conversations/user/${id}`,
-      providesTags: (result, error, id) => [
+      queryFn: async (userId, api, extraOptions, baseQuery) => {
+        try {
+          //console.log('getChatsByUserId - Fetching for user:', userId);
+          
+          const result = await baseQuery(`chat/conversations/user/${userId}`);
+          
+          //console.log('getChatsByUserId - Result:', result);
+          
+          // ✅ Si es exitoso, devolver los datos
+          if (result.data) {
+            return { data: result.data };
+          }
+          
+          // ✅ Si hay error y es 404, devolver datos vacíos como éxito
+          if (result.error) {
+            const errorStatus = result.error.status || result.error?.data?.statusCode;
+            if (errorStatus === 404) {
+              //console.log('No conversations found (404) - returning empty data');
+              return {
+                data: {
+                  success: true,
+                  statusCode: 200,
+                  message: 'No conversations yet',
+                  data: [],
+                },
+              };
+            }
+            
+            // ✅ Para otros errores, devolver el error tal como está
+            //console.error('getChatsByUserId - Real error:', result.error);
+            return { error: result.error };
+          }
+          
+          // ✅ Caso fallback - no debería llegar aquí
+          console.warn('getChatsByUserId - Unexpected result structure');
+          return {
+            data: {
+              success: true,
+              statusCode: 200,
+              message: 'No conversations yet',
+              data: [],
+            },
+          };
+          
+        } catch (error) {
+          console.error('getChatsByUserId - Catch error:', error);
+          return {
+            error: {
+              status: 'FETCH_ERROR',
+              error: error.message || 'Unknown error',
+            },
+          };
+        }
+      },
+      providesTags: (result, error, userId) => [
         'Chats',
-        { type: 'Chats', id: 'LIST' }, // Tag específico para la lista
+        { type: 'Chats', id: 'LIST' },
       ],
     }),
+    
     getChatById: builder.query({
       query: (id) => `chat/messages/${id}/`,
       providesTags: (result, error, id) => [
         { type: 'Messages', id },
-        { type: 'Messages', id: 'LIST' }, // Tag genérico para invalidaciones masivas
+        { type: 'Messages', id: 'LIST' },
       ],
     }),
     createChat: builder.mutation({
@@ -28,7 +83,7 @@ export const chatApi = createApi({
       }),
       invalidatesTags: [
         'Chats',
-        { type: 'Chats', id: 'LIST' }, // Invalidar la lista de chats
+        { type: 'Chats', id: 'LIST' },
       ],
     }),
     updateChat: builder.mutation({
@@ -39,7 +94,7 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, error, { chatId }) => [
         { type: 'Messages', id: chatId },
-        'Chats', // También invalidar la lista de chats por si cambió el último mensaje
+        'Chats',
       ],
     }),
     sendMessage: builder.mutation({
@@ -50,7 +105,7 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, error, { conversationId }) => [
         { type: 'Messages', id: conversationId },
-        'Chats', // Invalidar chats porque el último mensaje cambió
+        'Chats',
       ],
     }),
     addReaction: builder.mutation({
@@ -59,12 +114,9 @@ export const chatApi = createApi({
         method: 'POST',
         body: reactionData,
       }),
-      // Optimización: Las reacciones solo afectan a la conversación específica
       invalidatesTags: (result, error, { reactableId }) => {
-        // Necesitamos obtener el conversationId del reactableId (messageId)
-        // Por ahora, invalidamos solo los mensajes específicos
         return [
-          { type: 'Messages', id: 'LIST' }, // Invalidar todas las conversaciones de mensajes
+          { type: 'Messages', id: 'LIST' },
         ];
       },
     }),

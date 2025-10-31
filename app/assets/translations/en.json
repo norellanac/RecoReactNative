@@ -214,7 +214,8 @@
     "save": "Save",
     "selectedLanguage": "You have selected:",
     "success": "Success",
-    "updateFailed": "Failed to update name"
+    "updateFailed": "Failed to update name",
+    "version": "Version"
   },
   "validations": {
     "invalid": "Invalid {{field}}",

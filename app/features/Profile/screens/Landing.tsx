@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Alert } from 'react-native';
+import Constants from 'expo-constants';
 import { Screen } from '../../../components/templates';
 import { Button, Text } from '../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
@@ -172,6 +173,17 @@ export const LandingProfile = ({ navigation }: Props) => {
             />
           }
         />
+
+        <View style={styles.versionContainer}>
+          <Text
+            variant="title"
+            size="small"
+            color="primary"
+            style={styles.versionText}
+          >
+            {`${t('userProfile.version', 'Version')} ${Constants.expoConfig?.version || '0.0.0'}`}
+          </Text>
+        </View>
       </View>
     </Screen>
   );
@@ -198,5 +210,14 @@ const styles = StyleSheet.create({
   becomeMerchantButton: {
     marginTop: 20,
     width: '70%',
+  },
+  versionContainer: {
+    paddingTop: 110,
+    alignItems: 'center',
+    width: '100%',
+  },
+  versionText: {
+    opacity: 0.6,
+    fontSize: 12,
   },
 });

@@ -10,6 +10,14 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --coverage",
+    "appium": "NODE_OPTIONS=--experimental-vm-modules appium",
+    "appium:server": "NODE_OPTIONS=--experimental-vm-modules appium server --address 0.0.0.0 --port 4723 --log-level info",
+    "appium:install-drivers": "npm config set legacy-peer-deps true && appium driver install uiautomator2 && appium driver install xcuitest && npm config set legacy-peer-deps false",
+    "appium:list-drivers": "appium driver list",
+    "appium:doctor": "appium driver doctor uiautomator2 && appium driver doctor xcuitest",
+    "test:e2e:android": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" E2E_DEVICE=\"android\" yarn test --detectOpenHandles",
+    "test:e2e:ios": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" E2E_DEVICE=\"ios\" yarn test",
+    "test:e2e:setup": "yarn appium:install-drivers",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "lint": "eslint . --quiet",
     "extract": "i18next 'app/**/*.{ts,tsx}'"
@@ -67,6 +75,9 @@
     "@types/react-test-renderer": "^18.0.7",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
+    "appium": "^3.1.0",
+    "appium-uiautomator2-driver": "^6.1.0",
+    "appium-xcuitest-driver": "^10.2.2",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
@@ -80,7 +91,8 @@
     "prettier": "^3.3.3",
     "react-native-svg-transformer": "^1.5.1",
     "react-test-renderer": "19.1.0",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "webdriverio": "^8.40.6"
   },
   "private": true
 }

@@ -1,4 +1,3 @@
-import { t } from 'i18next';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '../../../components/atoms';
@@ -9,6 +8,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParams } from './AuthStack';
 import { LoginForm } from '../components/molecules';
 import { Button } from '@/app/components/atoms';
+import { AppVersion } from '@/app/components/molecules';
 import { useTranslation } from 'react-i18next';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Login'>;
@@ -49,6 +49,7 @@ export const Login = ({ navigation }: Props) => {
               onPress={() => navigation.navigate('Register')}
             />
           </View>
+          <AppVersion />
         </SafeAreaView>
       </View>
     </Screen>

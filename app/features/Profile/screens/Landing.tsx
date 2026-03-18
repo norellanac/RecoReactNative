@@ -16,6 +16,7 @@ import ModalComponent from '@/app/components/molecules/ModalComponent';
 import { useHasRole } from '@/app/hooks/useHasRole';
 import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 import { ProfileAvatarUploader } from '../components/ProfileAvatarUploader';
+import { AppVersion } from '@/app/components/molecules';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
@@ -174,16 +175,7 @@ export const LandingProfile = ({ navigation }: Props) => {
           }
         />
 
-        <View style={styles.versionContainer}>
-          <Text
-            variant="title"
-            size="small"
-            color="primary"
-            style={styles.versionText}
-          >
-            {`${t('userProfile.version', 'Version')} ${Constants.expoConfig?.version || '0.0.0'}`}
-          </Text>
-        </View>
+        <AppVersion />
       </View>
     </Screen>
   );

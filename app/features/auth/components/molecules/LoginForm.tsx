@@ -12,6 +12,7 @@ import { loginSuccess } from '@/app/redux/slices/authSlice';
 import { LoginValues } from '@/app/types/api/apiResponses';
 import { useLoginMutation } from '@/app/services/authApi';
 import { Icon } from '@/app/components/atoms/Icon';
+import { BASE_URL } from '@/app/utils/Environment';
 
 export const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -25,6 +26,51 @@ export const LoginForm: React.FC = () => {
 
   // ✅ Función para mapear errores a mensajes amigables
   const getErrorMessage = (error: any): string => {
+    const status = error?.status;
+    const originalStatus = error?.originalStatus;
+    const httpStatus = originalStatus || (typeof status === 'number' ? status : null);
+
+    if (status === 'FETCH_ERROR') {
+      return t(
+        'login.errors.networkError',
+        `Error de conexión. No se pudo conectar al servidor (${BASE_URL}). Verifica tu conexión a internet.`,
+      );
+    }
+
+    if (status === 'TIMEOUT_ERROR') {
+      return t(
+        'login.errors.timeout',
+        'La solicitud tardó demasiado. Intenta de nuevo.',
+      );
+    }
+
+    if (status === 'PARSING_ERROR') {
+      if (httpStatus === 404) {
+        return t(
+          'login.errors.serviceUnavailable',
+          'Servicio no disponible. Intenta de nuevo más tarde.',
+        );
+      }
+      return t(
+        'login.errors.serverError',
+        `Error del servidor (${httpStatus || 'desconocido'}). Intenta más tarde.`,
+      );
+    }
+
+    if (httpStatus && httpStatus >= 500) {
+      return t(
+        'login.errors.serverError',
+        `Error del servidor (${httpStatus}). Intenta más tarde.`,
+      );
+    }
+
+    if (httpStatus === 404) {
+      return t(
+        'login.errors.serviceUnavailable',
+        'Servicio no disponible. Intenta de nuevo más tarde.',
+      );
+    }
+
     const errorMessage =
       error?.data?.message || error?.message || 'Unknown error';
 
@@ -90,11 +136,11 @@ export const LoginForm: React.FC = () => {
           loginSuccess({ user: result.data.user, token: token as string }),
         );
       } else {
-        console.error('Login failed:', result.message);
+        console.error('Login failed:', JSON.stringify(result, null, 2));
         showErrorAlert(getErrorMessage(result));
       }
     } catch (err: any) {
-      //console.error('Failed to login:', err);
+      console.error('Login error:', JSON.stringify(err, null, 2));
       showErrorAlert(getErrorMessage(err));
     }
   };

@@ -15,7 +15,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
   const { t } = useTranslation();
 
   return (
-    <Screen statusBarProps={{}} scrollable>
+    <Screen statusBarProps={{}} scrollable safeAreaBottom>
       <View style={styles.container}>
         <Text
           variant={'headline'}

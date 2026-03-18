@@ -7,6 +7,7 @@ interface ScreenProps {
   children: ReactNode;
   container?: boolean;
   scrollable?: boolean; // Enable/disable scrolling
+  safeAreaBottom?: boolean; // Include bottom safe area edge
   safeAreaBackground?: string; // Custom background for SafeAreaView
   statusBarProps?: {
     leftElement?: React.ReactNode;
@@ -29,6 +30,7 @@ export const Screen: React.FC<ScreenProps> = ({
   statusBarProps,
   container = false,
   scrollable = false, // Default to non-scrollable
+  safeAreaBottom = false,
   safeAreaBackground, // Custom background prop
 }) => {
   // Determinar el color de fondo del SafeAreaView
@@ -58,7 +60,11 @@ export const Screen: React.FC<ScreenProps> = ({
 
   return (
     <SafeAreaView
-      edges={['top', 'left', 'right']}
+      edges={
+        safeAreaBottom
+          ? ['top', 'left', 'right', 'bottom']
+          : ['top', 'left', 'right']
+      }
       style={{
         backgroundColor: getSafeAreaBackground(),
         flex: 1,

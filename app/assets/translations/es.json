@@ -201,8 +201,7 @@
     "save": "Guardar",
     "selectedLanguage": "Has seleccionado:",
     "success": "Éxito",
-    "updateFailed": "Error al actualizar el nombre",
-    "version": "Versión"
+    "updateFailed": "Error al actualizar el nombre"
   },
   "validations": {
     "invalid": "{{field}} no es válido",

@@ -2,9 +2,8 @@
   "expo": {
     "name": "Reco",
     "slug": "Reco",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "orientation": "portrait",
-    "newArchEnabled": true,
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -19,11 +18,11 @@
       }
     },
     "android": {
-        "permissions": [
-          "READ_MEDIA_IMAGES",
-          "READ_EXTERNAL_STORAGE",
-          "WRITE_EXTERNAL_STORAGE",
-          "CAMERA"
+      "permissions": [
+        "READ_MEDIA_IMAGES",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
@@ -42,8 +41,8 @@
           "resizeMode": "contain",
           "imageWidth": 200
         }
-      ]
-
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "extra": {
       "eas": {

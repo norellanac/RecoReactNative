@@ -1,0 +1,35 @@
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import BottomTabNavigator from './BottomTabNavigator';
+import ServicesStackNavigation from '@/app/features/Services/screens/ServicesStack';
+import TaskStack from '@/app/features/Task/screens/TaskStack';
+import { ChatNavigation } from '@/app/features/Chat/screens/ChatStack';
+import AuthStack from '../features/auth/screens/AuthStack';
+import { ProfileNavigation } from '@/app/features/Profile/screens/ProfileStack';
+
+const AuthorizedAppStack = createNativeStackNavigator();
+
+const AuthorizedApp = () => {
+  return (
+    <AuthorizedAppStack.Navigator screenOptions={{ headerShown: false }}>
+      <AuthorizedAppStack.Screen
+        name="MainTabs"
+        component={BottomTabNavigator}
+      />
+      <AuthorizedAppStack.Screen
+        name="ServicesStack"
+        component={ServicesStackNavigation}
+      />
+      <AuthorizedAppStack.Screen name="AuthStack" component={AuthStack} />
+      <AuthorizedAppStack.Screen name="TaskStack" component={TaskStack} />
+      <AuthorizedAppStack.Screen name="ChatStack" component={ChatNavigation} />
+      <AuthorizedAppStack.Screen
+        name="ProfileStack"
+        component={ProfileNavigation}
+      />
+      {/* Other authenticated screens can be added here */}
+    </AuthorizedAppStack.Navigator>
+  );
+};
+
+export default AuthorizedApp;

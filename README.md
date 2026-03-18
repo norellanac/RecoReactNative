@@ -1,50 +1,190 @@
-# Welcome to your Expo app 👋
+# ProjectX Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Welcome to ProjectX Mobile, an advanced mobile application built with Expo, designed to deliver a seamless and efficient experience across both Android and iOS platforms. Leveraging the power of React Native and a suite of carefully selected libraries, this project aims to provide a robust foundation for developing high-quality mobile applications.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Cross-Platform Support**: Runs on Android, iOS, and web platforms.
+- **Internationalization**: Integrated with `i18next` and `react-i18next` for easy localization.
+- **Custom Icons**: Utilizes `@expo/vector-icons` for a wide range of icons.
+- **Navigation**: Implemented with `@react-navigation/native` for smooth and intuitive navigation between screens.
+- **Performance Optimized**: Includes `react-native-reanimated` and `react-native-gesture-handler` for fluid animations and gestures.
+- **Testing Ready**: Setup with `jest` and `jest-expo` for unit testing.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- Yarn package manager
+- Expo CLI
+
+### Installation
+
+1. Clone the repository:
 
    ```bash
-   npm install
+   git clone <repository-url>
    ```
 
-2. Start the app
+2. Navigate to the project directory:
 
    ```bash
-    npx expo start
+   cd ProjectX-Mobile
    ```
 
-In the output, you'll find options to open the app in a
+3. Install the dependencies:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+    yarn install
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+4. Start the development server:
 
-## Get a fresh project
+   ```bash
+   yarn start
+   ```
 
-When you're ready, run:
+5. Open the Expo Go app on your mobile device and scan the QR code to run the application.
+
+## Development
+
+### Code Formatting & Linting
+
+Format and lint your code to ensure consistency:
 
 ```bash
-npm run reset-project
+yarn format  # Format with Prettier
+yarn lint    # Lint with ESLint
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Unit Testing
 
-## Learn more
+The project uses Jest and React Native Testing Library for unit testing. The Jest configuration automatically switches between unit and E2E test modes.
 
-To learn more about developing your project with Expo, look at the following resources:
+**Run unit tests:**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+yarn test  # Run all unit tests with coverage
+```
 
-## Join the community
+**Test Configuration:**
+- **Framework**: Jest 30.2.0 + React Native Testing Library
+- **Setup**: `setupTests.js` configures mocks and test environment
+- **Coverage**: Automatic coverage reports in terminal and `coverage/` folder
+- **Test Location**: `**/__tests__/**/*.test.js` files
 
-Join our community of developers creating universal apps.
+**Writing Tests:**
+- Place test files in `__tests__/` folders next to components
+- Use `.test.js` extension
+- Import from `@atoms`, `@molecules` aliases (configured in Jest)
+- ThemeProvider and navigation mocks are pre-configured
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**Example test structure:**
+```javascript
+import { render, fireEvent } from '@testing-library/react-native';
+import { Button } from '@atoms';
+
+describe('Button Component', () => {
+  it('should render correctly', () => {
+    const { getByText } = render(<Button title="Test" />);
+    expect(getByText('Test')).toBeTruthy();
+  });
+});
+```
+
+**Switch test modes** (in `jest.config.js`):
+```javascript
+const isUnitTesting = true;  // true = unit tests, false = E2E tests
+```
+
+## E2E testing (Appium + Expo Go)
+
+This project includes end-to-end (E2E) test support using Appium and WebDriver-based tooling. Below are quick instructions to get E2E tests running on macOS (zsh) using Expo Go.
+
+Important: tests expect `E2E_DEVICE` environment variable to be set to `android` or `ios`. Example test scripts use `yarn test:e2e:android`.
+
+1) Verify devices / UDIDs
+
+- Android (physical device):
+
+```bash
+# list connected Android devices (show device id)
+adb devices
+# Example output: R5CX419HV2R\tdevice
+```
+
+- iOS Simulator UDID:
+
+```bash
+# list available simulators and their UDIDs
+xcrun simctl list devices
+# copy the UDID of the simulator you want to use (e.g. iPhone 15 Pro)
+```
+
+- iOS physical device UDID (macOS):
+
+```bash
+# install libimobiledevice if you don't have it
+brew install libimobiledevice
+# list connected iOS devices (UDIDs)
+idevice_id -l
+# Alternative (if idevice_id not available):
+system_profiler SPUSBDataType | grep -A20 -i "iphone"
+```
+
+2) Ensure Appium is running
+
+You can run Appium with the project-local binary (recommended) or global install.
+
+```bash
+# using local install
+yarn appium
+# or using npx
+npx appium
+```
+
+3) Fix common UiAutomator2 missing APK error (Android)
+
+If Appium fails to create a session with an error mentioning a missing `settings_apk-debug.apk`, reinstall the UiAutomator2 driver used by Appium:
+
+```bash
+# uninstall then reinstall the UiAutomator2 driver
+npx appium driver uninstall uiautomator2
+npx appium driver install uiautomator2
+# then restart Appium
+npx appium
+```
+
+4) Verify connections
+
+```bash
+# Confirm Appium is listening on port 4723
+nc -vz 127.0.0.1 4723
+```
+
+5) Run E2E tests
+
+```bash
+# Android E2E tests
+yarn test:e2e:android
+# iOS E2E tests  
+yarn test:e2e:ios
+```
+
+### Troubleshooting
+
+**Expo Go Configuration**: The project is pre-configured for Expo Go (`host.exp.exponent` / `host.exp.Exponent`).
+
+**iOS Physical Devices**: Requires proper provisioning and developer signing.
+
+**Node.js Compatibility**: Use Node.js 20.x for best WebDriverIO/Appium compatibility.
+
+**ADB Issues**: Restart ADB if device connection fails:
+```bash
+adb kill-server && adb start-server
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

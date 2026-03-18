@@ -7,6 +7,7 @@ import { AuthStackParams } from './AuthStack';
 import { Button } from '@/app/components/atoms';
 import { useTranslation } from 'react-i18next';
 import { RegisterForm } from '../components/molecules';
+import { AppVersion } from '@/app/components/molecules';
 
 type Props = NativeStackScreenProps<AuthStackParams, 'Landing'>;
 
@@ -14,7 +15,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
   const { t } = useTranslation();
 
   return (
-    <Screen statusBarProps={{}}>
+    <Screen statusBarProps={{}} scrollable safeAreaBottom>
       <View style={styles.container}>
         <Text
           variant={'headline'}
@@ -78,6 +79,7 @@ export const Register = ({ navigation } /** route, navigation */ : Props) => {
           />
         </View>
       </View>
+      <AppVersion />
     </Screen>
   );
 };

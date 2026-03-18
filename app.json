@@ -2,7 +2,7 @@
   "expo": {
     "name": "Reco",
     "slug": "Reco",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -29,6 +29,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "gt.com.reco.app"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/98712f33-47b0-4bf5-b2cc-d91b0524ad16"
     },
     "plugins": [
       "expo-font",

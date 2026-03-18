@@ -5,21 +5,20 @@
     }
   },
   "auth": {
+    "error": {
+      "updating_password": "Error al actualizar la contraseña"
+    },
+    "OTPVerification": {
+      "error": "Código de verificación inválido"
+    },
     "register": {
       "confirm_password": "Confirmar Contraseña",
       "email": "Correo electrónico",
-      "full_name": "Nombre Completo",
+      "lastname": "Apellido",
+      "name": "Nombre",
       "password": "Contraseña"
     }
   },
-  "privacyPolicy": {
-  "title": "Política de Privacidad",
-  "content": "Última actualización: 15 de julio 2025\n\n1. Responsable del Tratamiento\nNombre Legal: Reco - Profesionales de Confianza\nDirección Fiscal: Residenciales San Jose, San José Pinula, Guatemala.\nEmail: privacy@recolatam.com\n\n2. Datos que Recopilamos\n a) Datos proporcionados por usted:\n- Registro: Nombre completo, email, teléfono, foto de perfil.\n- Profesionales: Experiencia, habilidades, licencias (opcional), precios.\n- Contenido: Fotos de proyectos, reseñas, mensajes.\n b) Datos recopilados automáticamente:\n- Ubicación GPS: Solo cuando la app está en uso (puede desactivarse)\n- Dispositivo: Modelo, SO, dirección IP.\n- Uso: Tiempo en pantalla, búsquedas, clics.\n c) Datos de terceros:\n- Si inicia sesión con Facebook/Google: Nombre y email.\n\n3. Finalidades del Tratamiento\nUsamos sus datos para:\n✅ Conectar usuarios con profesionales\n✅ Personalizar recomendaciones (usando ubicación)\n✅ Verificar identidades (foto de perfil)\n✅ Mejorar nuestra plataforma (análisis de uso)\n📢 Enviar ofertas relevantes (puede optar por no recibirlas)\n\n4. Bases Legales (Ley 57-2008)\n- Contrato ejecución: Para prestar el servicio\n- Consentimiento explícito: Para ubicación y marketing\n- Interés legítimo: Análisis de datos anonimizados\n\n5. Compartir Datos\nSus datos podrán ser compartidos con:\n- Profesionales: Solo al contratar un servicio (verán su nombre y ubicación aproximada)\n- Proveedores técnicos: Hosting en AWS/Google Cloud (con contratos GDPR)\n- Autoridades: Por requerimiento legal en Guatemala\n\n6. Seguridad de Datos\nImplementamos:\n- Encriptación SSL/TLS en comunicaciones\n- Accesos restringidos con autenticación de dos factores\n- Copias de seguridad diarias\n\n7. Derechos ARCO\nUsted puede:\n- Acceder a sus datos almacenados\n- Rectificar información incorrecta\n- Cancelar su cuenta y eliminar datos\n- Oponerse a tratamientos con fines comerciales\nPara ejercerlos: Enviar solicitud a privacy@reco.com (respondemos en 10 días hábiles)\n\n8. Retención de Datos\n- Cuentas activas: Hasta que solicite eliminación\n- Cuentas inactivas: 2 años (luego anonimizamos)\n- Datos de transacciones: 5 años (por obligaciones fiscales)\n\n9. Menores de Edad\n⚠️ Prohibido el registro a menores de 18 años. Si detectamos una cuenta de menor, será eliminada inmediatamente.\n\n10. Cambios en esta Política\nNotificaremos cambios vía:\n- Email a usuarios registrados\n- Banner destacado en la app durante 7 días\n\n11. Contacto\nPara dudas sobre privacidad:\nprivacy@recolatam.com\nOficina: Residenciales San Jose, San José Pinula, Guatemala."
-},
-"terms": {
-  "title": "Términos y Condiciones para Reco (Plataforma Web y App Móvil)",
-  "content": "Última actualización: 15 de julio de 2025\n\n1. Aceptación de los Términos\nAl acceder o utilizar Reco (plataforma web o aplicación móvil), usted acepta estos Términos y Condiciones, nuestra Política de Privacidad y todas las políticas aplicables. Si no está de acuerdo, absténgase de usar nuestros servicios.\nPara usar Reco debe ser mayor de 18 años y tener capacidad legal para contratar en Guatemala.\n\n2. Definiciones\n\"Usuario\": Quien busca servicios profesionales.\n\"Profesional\": Quien ofrece servicios a través de Reco.\n\"Plataforma\": Sitio web, app móvil y servicios asociados de Reco.\n\n3. Servicios de Reco\nReco actúa como intermediario tecnológico para conectar Usuarios con Profesionales. No somos empleadores ni responsables por la calidad, seguridad o legalidad de los servicios prestados por los Profesionales.\n\n4. Registro y Cuentas\nDebe proporcionar información verídica y actualizada.\nEs responsable de la confidencialidad de su cuenta y todas las actividades bajo ella.\nReco se reserva el derecho de suspender cuentas por información falsa o conducta inapropiada.\n\n5. Permisos de la App Móvil\nAl usar la app, usted autoriza expresamente:\nUbicación: Para mostrar Profesionales cercanos y mejorar recomendaciones (puede desactivarlo en ajustes del dispositivo).\nCámara y Galería: Para subir fotos de proyectos o verificar identidad de Profesionales.\nNotificaciones: Para recibir actualizaciones de contrataciones, mensajes y promociones.\n(Estos permisos se gestionan según nuestra Política de Privacidad y puede revocarlos en cualquier momento).\n\n6. Responsabilidades del Usuario y Profesional\nUsuarios:\nEvaluar la idoneidad del Profesional (verificando reseñas, credenciales, etc.).\nNo realizar pagos fuera de la Plataforma (excepto propinas post-servicio).\nProfesionales:\nCumplir con todas las leyes locales (impuestos, licencias, seguros).\nGarantizar la exactitud de su perfil, precios y disponibilidad.\nProhibido para ambos:\nUso con fines ilegales, fraude o acoso.\nCopiar/concurrencia desleal usando datos de Reco.\n\n7. Contratación y Pagos\nModelo actual: Gratuito para conexiones básicas.\nFuturos modelos: Reco podrá implementar sistemas de pago, suscripciones o publicidad, notificándolo con 30 días de antelación.\nDisputas: Cualquier conflicto entre Usuario y Profesional debe resolverse entre las partes. Reco podrá mediar a discreción, sin obligación legal.\n\n8. Contenido Generado por Usuarios\nUsted otorga a Reco una licencia no exclusiva para usar fotos, reseñas y otros contenidos subidos a la Plataforma.\nProhibido subir contenido difamatorio, violento o que infrinja derechos de terceros.\n\n9. Limitación de Responsabilidad\nReco no garantiza:\nLa disponibilidad, puntualidad o calidad de los servicios de los Profesionales.\nLa exactitud de perfiles o reseñas.\nDaños derivados del uso de la Plataforma (ej.: fallos técnicos, malware).\nLa responsabilidad máxima de Reco será el monto pagado por usted en los últimos 6 meses.\n\n10. Privacidad y Datos\nEl uso de datos personales (ubicación, fotos, contacto) se rige por nuestra Política de Privacidad, cumpliendo con la Ley de Protección de Datos Personales de Guatemala (Ley 57-2008).\n\n11. Propiedad Intelectual\nTodos los derechos sobre la Plataforma (software, logos, contenido) son propiedad de Reco o sus licenciantes. Queda prohibida su reproducción sin autorización.\n\n12. Modificaciones y Terminación\nReco puede actualizar estos Términos notificándolo con 15 días de antelación. El uso continuado implica aceptación.\nPuede cerrar su cuenta en cualquier momento. Reco podrá suspender servicios por incumplimiento grave.\n\n13. Ley Aplicable y Resolución de Conflictos\nSe rigen por las leyes de Guatemala.\nCualquier disputa se resolverá mediante negociación obligatoria y, de persistir, en los tribunales de la Ciudad de Guatemala.\n\n14. Contacto\nPara preguntas legales: legal@recolatam.com\nDirección física: Residenciales San Jose, San José Pinula, Guatemala."
-},
   "bottomTabs": {
     "favorites": "Favoritos",
     "home": "Inicio",
@@ -29,11 +28,12 @@
     "messages": "Mensajes"
   },
   "business": {
-    "title": "Mis Servicios",
+    "myServices": "Editar mis servicios",
     "tabs": {
-      "register": "Registrar nuevo servicio",
-      "myServices": "Servicios registrados"
-    }
+      "myServices": "Servicios registrados",
+      "register": "Registrar nuevo servicio"
+    },
+    "title": "Mis Servicios"
   },
   "businessProfilePage": {
     "profile": {
@@ -94,80 +94,205 @@
       "tip": "Consejo: Puedes editar tu perfil en cualquier momento."
     }
   },
+  "chat": {
+    "error": "Error al cargar conversaciones",
+    "errorLoadingMessages": "Error al cargar mensajes",
+    "loading": "Cargando conversaciones...",
+    "noConversationsDescription": "Explora servicios y crea una nueva tarea. Una vez confirmada, podrás chatear con tu proveedor asignado.",
+    "noConversationsTitle": "No hay conversaciones todavía",
+    "noMessages": "Aún no hay mensajes",
+    "online": "En línea",
+    "placeholder": "Escribe un mensaje...",
+    "userNotFound": "Usuario no encontrado",
+    "yesterday": "Ayer"
+  },
   "common": {
     "cancel": "Cancelar",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "error": "Error",
+    "loading": "Cargando...",
+    "ok": "OK",
+    "perDay": "por día",
+    "retry": "Reintentar",
+    "reviews": "reseñas",
+    "success": "Éxito"
   },
   "commons": {
     "and": "y ",
     "app_name": "Reco"
   },
   "favorites": {
-    "title": "Mis Favoritos",
+    "addFirst": "Agrega tu primer favorito",
     "empty": "No tienes servicios favoritos aún",
-    "emptyDescription": "Agrega servicios a favoritos desde la pantalla de servicios"
+    "emptyDescription": "Agrega servicios a favoritos desde la pantalla de servicios",
+    "title": "Mis Favoritos"
   },
   "forms": {
     "commons": {
       "addAnother": "+  Añadir otro",
+      "email": "Ingresar correo electrónico",
       "error": "Error",
+      "minLength": "Mínimo {{length}} caracteres",
       "mustBeNumber": "Debe ser un número",
+      "passwordsMustMatch": "Las contraseñas deben coincidir",
       "permissionDenied": "Permiso denegado",
       "permissionGallery": "Se requiere acceso a la galería para seleccionar una imagen.",
       "remove": "Eliminar",
-      "required": "Requerido",
-      "email": "Ingresar correo electrónico"
+      "required": "Requerido"
     }
   },
   "Forms": {
     "email": "Correo Electrónico",
     "password": "Contraseña",
-    "password_long": ""
+    "password_long": "La contraseña debe tener al menos 8 caracteres"
   },
   "home_screen": {
     "all": "Ver todos",
     "all_categories": "Todas las categorías",
     "categoriesTitle": "Categorías",
     "error": "Ocurrió un error al cargar los datos.",
+    "greeting_afternoon": "Buenas Tardes",
+    "greeting_evening": "Buenas Noches",
+    "greeting_morning": "Buenos Días",
     "loading": "Cargando datos...",
+    "moreButton": "Más",
     "searchPlaceholder": "Busca los servicios que necesitas",
     "servicesAvailable": "Servicios disponibles",
-    "viewAll": "Ver todas",
-    "moreButton": "Más"
+    "viewAll": "Ver todas"
   },
   "login": {
+    "error": "Error de inicio de sesión",
+    "errors": {
+      "accountDisabled": "Tu cuenta ha sido deshabilitada",
+      "general": "Error al iniciar sesión. Verifica tus datos e intenta de nuevo",
+      "invalidCredentials": "La contraseña es incorrecta",
+      "networkError": "Error de conexión. No se pudo conectar al servidor. Verifica tu conexión a internet.",
+      "serverError": "Error del servidor. Intenta más tarde.",
+      "serviceUnavailable": "Servicio no disponible. Intenta de nuevo más tarde.",
+      "timeout": "La solicitud tardó demasiado. Intenta de nuevo.",
+      "tooManyAttempts": "Demasiados intentos. Intenta de nuevo más tarde",
+      "userNotFound": "No encontramos una cuenta con este correo electrónico"
+    },
     "forget_password": "¿Olvidaste tu contraseña?",
     "have_not_account": "¿No tienes una cuenta?",
-    "login": "Iniciar Sesión"
+    "login": "Iniciar Sesión",
+    "title": "Inicia sesión en tu cuenta"
+  },
+  "messages": {
+    "title": "Mensajes"
+  },
+  "passwordReco": {
+    "updateSuccess": {
+      "body": "¡Felicidades! Tu contraseña ha sido cambiada. Haz clic en continuar para iniciar sesión.",
+      "CTAbutton": "Continuar al inicio de sesión",
+      "title": "Contraseña actualizada exitosamente"
+    }
+  },
+  "passwordRecovery": {
+    "body1": "Ingresa tu correo electrónico para recibir un código de restablecimiento de contraseña.",
+    "email_placeholder": "Correo electrónico",
+    "error_message": "Error al enviar la solicitud. Intenta de nuevo.",
+    "OTPVerification": {
+      "body": "Hemos enviado un código de verificación a tu correo. Ingrésalo a continuación para continuar.",
+      "didNotReceive": "¿No recibiste el código?",
+      "OtpError": "Formato de código inválido. Debe ser de 6 caracteres alfanuméricos.",
+      "OtpPlaceHolder": "Ingresa tu código de 6 dígitos",
+      "OtpRequired": "El código es obligatorio",
+      "resend": "Reenviar código",
+      "title": "Revisa tu correo",
+      "verifyCode": "Verificar código"
+    },
+    "resetPasswordButton": "Restablecer contraseña",
+    "SetNewPass": {
+      "body": "Crea una nueva contraseña. Asegúrate de que sea diferente a las anteriores por seguridad.",
+      "placeholder1": "Nueva contraseña",
+      "placeholder2": "Confirmar contraseña",
+      "title": "Establece una nueva contraseña",
+      "update": "Actualizar contraseña"
+    },
+    "success_message": "Se ha enviado un código de recuperación a tu correo.",
+    "title": "Recuperar contraseña",
+    "title1": "¿Olvidaste tu contraseña?"
+  },
+  "privacyPolicy": {
+    "content": "Última actualización: 15 de julio 2025\n\n1. Responsable del Tratamiento\nNombre Legal: Reco - Profesionales de Confianza\nDirección Fiscal: Residenciales San Jose, San José Pinula, Guatemala.\nEmail: privacy@recolatam.com\n\n2. Datos que Recopilamos\n a) Datos proporcionados por usted:\n- Registro: Nombre completo, email, teléfono, foto de perfil.\n- Profesionales: Experiencia, habilidades, licencias (opcional), precios.\n- Contenido: Fotos de proyectos, reseñas, mensajes.\n b) Datos recopilados automáticamente:\n- Ubicación GPS: Solo cuando la app está en uso (puede desactivarse)\n- Dispositivo: Modelo, SO, dirección IP.\n- Uso: Tiempo en pantalla, búsquedas, clics.\n c) Datos de terceros:\n- Si inicia sesión con Facebook/Google: Nombre y email.\n\n3. Finalidades del Tratamiento\nUsamos sus datos para:\n✅ Conectar usuarios con profesionales\n✅ Personalizar recomendaciones (usando ubicación)\n✅ Verificar identidades (foto de perfil)\n✅ Mejorar nuestra plataforma (análisis de uso)\n📢 Enviar ofertas relevantes (puede optar por no recibirlas)\n\n4. Bases Legales (Ley 57-2008)\n- Contrato ejecución: Para prestar el servicio\n- Consentimiento explícito: Para ubicación y marketing\n- Interés legítimo: Análisis de datos anonimizados\n\n5. Compartir Datos\nSus datos podrán ser compartidos con:\n- Profesionales: Solo al contratar un servicio (verán su nombre y ubicación aproximada)\n- Proveedores técnicos: Hosting en AWS/Google Cloud (con contratos GDPR)\n- Autoridades: Por requerimiento legal en Guatemala\n\n6. Seguridad de Datos\nImplementamos:\n- Encriptación SSL/TLS en comunicaciones\n- Accesos restringidos con autenticación de dos factores\n- Copias de seguridad diarias\n\n7. Derechos ARCO\nUsted puede:\n- Acceder a sus datos almacenados\n- Rectificar información incorrecta\n- Cancelar su cuenta y eliminar datos\n- Oponerse a tratamientos con fines comerciales\nPara ejercerlos: Enviar solicitud a privacy@reco.com (respondemos en 10 días hábiles)\n\n8. Retención de Datos\n- Cuentas activas: Hasta que solicite eliminación\n- Cuentas inactivas: 2 años (luego anonimizamos)\n- Datos de transacciones: 5 años (por obligaciones fiscales)\n\n9. Menores de Edad\n⚠️ Prohibido el registro a menores de 18 años. Si detectamos una cuenta de menor, será eliminada inmediatamente.\n\n10. Cambios en esta Política\nNotificaremos cambios vía:\n- Email a usuarios registrados\n- Banner destacado en la app durante 7 días\n\n11. Contacto\nPara dudas sobre privacidad:\nprivacy@recolatam.com\nOficina: Residenciales San Jose, San José Pinula, Guatemala.",
+    "intro": "Bienvenido a nuestra Política de Privacidad"
+  },
+  "rateScreen": {
+    "feedbackPlaceholder": "Deja un comentario sobre el profesional",
+    "leaveFeedback": "Deja tu comentario aquí",
+    "rate": "Calificar",
+    "submit": "Enviar",
+    "subtitle": "Toca una estrella para calificar el servicio",
+    "taskFeedback": "Dar opinión"
+  },
+  "RateScreen": {
+    "modalMessage": "Tu reseña ha sido enviada exitosamente.",
+    "modalTitle": "¡Gracias por tu opinión!"
   },
   "register": {
     "already_have_an_account": "¿Ya tienes una cuenta?",
+    "error": "Error de registro",
+    "errors": {
+      "accountNotActivated": "Cuenta creada exitosamente. Revisa tu correo para activarla",
+      "accountPending": "Cuenta creada. Está pendiente de aprobación",
+      "emailExists": "Este correo ya está registrado. ¿Quieres iniciar sesión?",
+      "general": "Error al crear la cuenta. Verifica tus datos e intenta de nuevo",
+      "invalidEmail": "El formato del correo electrónico no es válido",
+      "lastnameRequired": "El apellido es obligatorio",
+      "loginAfterSignup": "Cuenta creada pero hubo un error al iniciar sesión automáticamente",
+      "nameRequired": "El nombre es obligatorio",
+      "passwordRequired": "La contraseña es obligatoria",
+      "registrationDisabled": "El registro está temporalmente deshabilitado",
+      "serverError": "Error del servidor. Intenta de nuevo más tarde",
+      "weakPassword": "La contraseña debe ser más segura. Incluye mayúsculas, números y símbolos"
+    },
     "privacy_policy": "Política de Privacidad",
     "sign_up": "Regístrate",
+    "success": "Registro exitoso",
     "terms_service": "Términos del Servicio",
-    "terms_text": "Al registrarte, aceptas nuestros"
+    "terms_text": "Al registrarte, aceptas nuestros",
+    "title": "Crea tu cuenta",
+    "welcomeMessage": "Bienvenido a Reco! Tu cuenta ha sido creada exitosamente"
+  },
+  "search": {
+    "allServices": "Todos los servicios",
+    "found": "encontrados",
+    "noResultsFound": "No se encontraron resultados",
+    "noResultsFoundDescription": "Lo sentimos, no se encontró lo que buscas. Verifica o intenta con otra palabra clave.",
+    "resultsFor": "Resultados para",
+    "searchPlaceholder": "Buscar servicios...",
+    "searchResults": "Resultados de búsqueda"
+  },
+  "searchFilterModal": {
+    "searchCategory": "Buscar categoría...",
+    "searchLocation": "Buscar ubicación...",
+    "selectCategories": "Seleccionar categorías",
+    "selectLocations": "Seleccionar ubicaciones",
+    "title": "Filtrar"
   },
   "services": {
     "allServices": {
-      "title": "Todos los servicios",
-      "founds": "encontrados",
       "noResults": "No se encontraron servicios",
       "noResultsDescription": "Intenta ajustar tus filtros o busca algo más.",
       "perDay": "/ por día",
-      "resultsFor": "Resultados para",
       "reviews": "reseñas",
-      "searchPlaceholder": "Buscar servicios que necesitas"
+      "title": "Todos los servicios"
+    },
+    "categoryProducts": {
+      "noResults": "No se encontraron servicios en esta categoría",
+      "noResultsDescription": "Intenta ajustar tu búsqueda o revisa otras categorías."
     },
     "serviceDetails": {
       "floorPrice": "/ por día",
       "noReviews": "Aún no hay reseñas. ¡Sé el primero en dejar una reseña!",
       "otherSkills": "Otras habilidades",
       "reviews": "Reseñas",
-      "seeAll": "Ver todo",
       "selectDate": "Elegir fecha y hora",
       "selectDateTime": "Seleccionar fecha y hora",
       "skillsAndExperience": "Habilidades y experiencia"
-    }
+    },
+    "taskDetails": "Detalles de la tarea"
   },
   "slider": {
     "get_started": "Comenzar",
@@ -177,13 +302,57 @@
     "title_3": "Basado en las calificaciones de usuarios que compraron sus servicios.",
     "title_4": "Explora, compara y agenda en pocos pasos."
   },
-  "messages": {
-    "title": "Mensajes",
-    "empty": "No tienes mensajes",
-    "emptyDescription": "Cuando recibas mensajes, aparecerán aquí."
+  "splash": {
+    "tagline": "Conectando servicios de calidad"
+  },
+  "task": {
+    "title": "Tareas"
+  },
+  "taskCard": {
+    "chat": "Chat",
+    "viewDetails": "Ver detalles"
+  },
+  "taskDetails": {
+    "cancel": "Cancelar",
+    "completeRequest": "Completar solicitud",
+    "confirm": "Confirmar",
+    "confirmMessage": "¿Estás seguro de enviar tu solicitud para {{serviceName}}?",
+    "confirmTitle": "¿Confirmar tu solicitud?",
+    "inputPlaceholder": "Describe tu solicitud...",
+    "noData": "No hay datos disponibles",
+    "orderError": "Error al crear la orden. Intenta de nuevo.",
+    "shareDetails": "¡Ya casi! Comparte algunos detalles para preparar a tu especialista.",
+    "startConversation": "Iniciar conversación",
+    "tasker": "Profesional",
+    "timeAndDate": "Fecha y hora"
+  },
+  "taskOrderDetails": {
+    "statusUpdated": "¡Estado de la orden actualizado exitosamente!",
+    "statusUpdateError": "No se pudo actualizar el estado de la orden.",
+    "updating": "Actualizando orden..."
+  },
+  "tasks": {
+    "emptySubtitle": "Déjanos ayudarte a hacer el trabajo.\nReserva una tarea y la verás aquí.",
+    "emptyTitle": "No hay tareas disponibles actualmente",
+    "searchTasker": "Buscar un profesional"
+  },
+  "terms": {
+    "content": "Última actualización: 15 de julio de 2025\n\n1. Aceptación de los Términos\nAl acceder o utilizar Reco (plataforma web o aplicación móvil), usted acepta estos Términos y Condiciones, nuestra Política de Privacidad y todas las políticas aplicables. Si no está de acuerdo, absténgase de usar nuestros servicios.\nPara usar Reco debe ser mayor de 18 años y tener capacidad legal para contratar en Guatemala.\n\n2. Definiciones\n\"Usuario\": Quien busca servicios profesionales.\n\"Profesional\": Quien ofrece servicios a través de Reco.\n\"Plataforma\": Sitio web, app móvil y servicios asociados de Reco.\n\n3. Servicios de Reco\nReco actúa como intermediario tecnológico para conectar Usuarios con Profesionales. No somos empleadores ni responsables por la calidad, seguridad o legalidad de los servicios prestados por los Profesionales.\n\n4. Registro y Cuentas\nDebe proporcionar información verídica y actualizada.\nEs responsable de la confidencialidad de su cuenta y todas las actividades bajo ella.\nReco se reserva el derecho de suspender cuentas por información falsa o conducta inapropiada.\n\n5. Permisos de la App Móvil\nAl usar la app, usted autoriza expresamente:\nUbicación: Para mostrar Profesionales cercanos y mejorar recomendaciones (puede desactivarlo en ajustes del dispositivo).\nCámara y Galería: Para subir fotos de proyectos o verificar identidad de Profesionales.\nNotificaciones: Para recibir actualizaciones de contrataciones, mensajes y promociones.\n(Estos permisos se gestionan según nuestra Política de Privacidad y puede revocarlos en cualquier momento).\n\n6. Responsabilidades del Usuario y Profesional\nUsuarios:\nEvaluar la idoneidad del Profesional (verificando reseñas, credenciales, etc.).\nNo realizar pagos fuera de la Plataforma (excepto propinas post-servicio).\nProfesionales:\nCumplir con todas las leyes locales (impuestos, licencias, seguros).\nGarantizar la exactitud de su perfil, precios y disponibilidad.\nProhibido para ambos:\nUso con fines ilegales, fraude o acoso.\nCopiar/concurrencia desleal usando datos de Reco.\n\n7. Contratación y Pagos\nModelo actual: Gratuito para conexiones básicas.\nFuturos modelos: Reco podrá implementar sistemas de pago, suscripciones o publicidad, notificándolo con 30 días de antelación.\nDisputas: Cualquier conflicto entre Usuario y Profesional debe resolverse entre las partes. Reco podrá mediar a discreción, sin obligación legal.\n\n8. Contenido Generado por Usuarios\nUsted otorga a Reco una licencia no exclusiva para usar fotos, reseñas y otros contenidos subidos a la Plataforma.\nProhibido subir contenido difamatorio, violento o que infrinja derechos de terceros.\n\n9. Limitación de Responsabilidad\nReco no garantiza:\nLa disponibilidad, puntualidad o calidad de los servicios de los Profesionales.\nLa exactitud de perfiles o reseñas.\nDaños derivados del uso de la Plataforma (ej.: fallos técnicos, malware).\nLa responsabilidad máxima de Reco será el monto pagado por usted en los últimos 6 meses.\n\n10. Privacidad y Datos\nEl uso de datos personales (ubicación, fotos, contacto) se rige por nuestra Política de Privacidad, cumpliendo con la Ley de Protección de Datos Personales de Guatemala (Ley 57-2008).\n\n11. Propiedad Intelectual\nTodos los derechos sobre la Plataforma (software, logos, contenido) son propiedad de Reco o sus licenciantes. Queda prohibida su reproducción sin autorización.\n\n12. Modificaciones y Terminación\nReco puede actualizar estos Términos notificándolo con 15 días de antelación. El uso continuado implica aceptación.\nPuede cerrar su cuenta en cualquier momento. Reco podrá suspender servicios por incumplimiento grave.\n\n13. Ley Aplicable y Resolución de Conflictos\nSe rigen por las leyes de Guatemala.\nCualquier disputa se resolverá mediante negociación obligatoria y, de persistir, en los tribunales de la Ciudad de Guatemala.\n\n14. Contacto\nPara preguntas legales: legal@recolatam.com\nDirección física: Residenciales San Jose, San José Pinula, Guatemala.",
+    "title": "Términos y Condiciones para Reco (Plataforma Web y App Móvil)"
+  },
+  "update": {
+    "checking": "Buscando actualizaciones...",
+    "downloading": "Descargando actualización...",
+    "later": "Más tarde",
+    "ready": "¡Actualización lista!",
+    "restart": "Reiniciar",
+    "restart_message": "Se ha descargado una nueva versión. Reinicia para aplicarla.",
+    "title": "Actualización disponible",
+    "up_to_date": "Al día"
   },
   "userProfile": {
     "account": "Cuenta",
+    "cancel": "Cancelar",
     "changeLanguage": "Cambiar Idioma",
     "changePassword": "Cambiar Contraseña",
     "changeProfilePhoto": "Cambiar foto de perfil",
@@ -192,21 +361,34 @@
     "editName": "Editar Nombre",
     "editNameTitle": "Editar Nombre",
     "error": "Error",
+    "imagePickerError": "Error al abrir el selector de imágenes",
     "imageUpdated": "Imagen actualizada con éxito",
+    "imageUpdateFailed": "Error al actualizar la imagen. Intenta de nuevo.",
     "lastname": "Apellido",
+    "legal": "Información legal",
     "logout": "Cerrar Sesión",
+    "logoutConfirm": "Sí, cerrar sesión",
+    "logoutConfirmMessage": "¿Estás seguro de que deseas cerrar sesión?",
+    "logoutConfirmTitle": "Confirmar cierre de sesión",
     "name": "Nombre",
     "nameUpdated": "Nombre actualizado con éxito",
-    "publishServices": "Publicar mis servicios",
+    "noImageSelected": "No se seleccionó imagen o falta el ID de usuario",
+    "permission": "Permiso requerido",
+    "permissionMessage": "Se requiere permiso para acceder a la galería.",
+    "privacyPolicy": "Política de Privacidad",
     "save": "Guardar",
     "selectedLanguage": "Has seleccionado:",
     "success": "Éxito",
+    "switchToMerchant": "Convertirse en profesional",
+    "switchToUser": "Cambiar a usuario",
+    "terms": "Términos y Condiciones",
+    "title": "Perfil",
     "updateFailed": "Error al actualizar el nombre"
   },
   "validations": {
     "invalid": "{{field}} no es válido",
-    "length": "{{field}} debe tener al menos {{length}} caracteres",
     "min_length": "Mínimo {{length}} caracteres",
+    "passwords_match": "Las contraseñas deben coincidir",
     "required": "Este {{field}} es obligatorio"
   }
 }

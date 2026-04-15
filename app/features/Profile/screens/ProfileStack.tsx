@@ -5,6 +5,7 @@ import { ChangeLanguage } from './ChangeLanguage';
 import { BusinessStepperScreen } from '@/app/features/Business/screens/BusinessStepperScreen';
 import { TermsScreen } from './TermsScreen';
 import { PrivacyPolicyScreen } from './PrivacyPolicyScreen';
+import { LogViewerScreen } from './LogViewerScreen';
 
 export type ProfileStackParams = {
   ProfileHome: undefined;
@@ -12,6 +13,7 @@ export type ProfileStackParams = {
   BusinessStepper: undefined;
   Terms: undefined;
   PrivacyPolicy: undefined;
+  LogViewer: undefined;
 };
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
@@ -33,6 +35,7 @@ export const ProfileNavigation = () => {
         name="PrivacyPolicy"
         component={PrivacyPolicyScreen}
       />
+      <ProfileStack.Screen name="LogViewer" component={LogViewerScreen} />
     </ProfileStack.Navigator>
   );
 };

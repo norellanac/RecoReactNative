@@ -17,6 +17,7 @@ export const ProfileMenuOptions = ({
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [emailClickCount, setEmailClickCount] = useState(0);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -31,16 +32,29 @@ export const ProfileMenuOptions = ({
     setShowLogoutModal(false);
   };
 
+  const handleEmailPress = () => {
+    setEmailClickCount((prev) => {
+      const newCount = prev + 1;
+      if (newCount >= 7) {
+        navigation.navigate('LogViewer');
+        return 0;
+      }
+      return newCount;
+    });
+  };
+
   const options = [
     {
       key: 'email',
+      enabled: !!user?.email,
       label: t('userProfile.account', 'Account'),
       value: user?.email || 'email@example.com',
       icon: { name: 'person-outline', color: '#625B71', family: 'Ionicons' },
-      onPress: null,
+      onPress: handleEmailPress,
     },
     {
       key: 'changePassword',
+      enabled: true,
       label: t('userProfile.changePassword', 'Change password'),
       value: '',
       icon: {
@@ -53,6 +67,7 @@ export const ProfileMenuOptions = ({
     },
     {
       key: 'changeLanguage',
+      enabled: true,
       label: t('userProfile.changeLanguage', 'Change language'),
       value: '',
       icon: { name: 'language-outline', color: '#625B71', family: 'Ionicons' },
@@ -60,6 +75,7 @@ export const ProfileMenuOptions = ({
     },
     {
       key: 'Terms',
+      enabled: true,
       label: t('userProfile.terms', 'Terms and Conditions'),
       value: '',
       icon: {
@@ -77,6 +93,7 @@ export const ProfileMenuOptions = ({
     },
     {
       key: 'PrivacyPolicy',
+      enabled: true,
       label: t('userProfile.privacyPolicy', 'Privacy Policy'),
       value: '',
       icon: {
@@ -93,7 +110,20 @@ export const ProfileMenuOptions = ({
         }),
     },
     {
+      key: 'Logs',
+      enabled: emailClickCount >= 7,
+      label: t('userProfile.appLogs', 'App Logs'),
+      value: '',
+      icon: {
+        name: 'document-attach-outline',
+        color: '#625B71',
+        family: 'Ionicons',
+      },
+      onPress: () => navigation.navigate('LogViewer'),
+    },
+    {
       key: 'Logout',
+      enabled: true,
       label: t('userProfile.logout', 'Logout'),
       value: '',
       icon: { name: 'log-out-outline', color: '#D32F2F', family: 'Ionicons' },

@@ -14,6 +14,7 @@ import { ordersApi } from '../../services/ordersApi';
 import { locationsApi } from '../../services/locationsApi';
 import { chatApi } from '../../services/chatApi';
 import { reviewsApi } from '@/app/services/reviewsApi';
+import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -46,6 +47,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  devTools: false,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
@@ -59,6 +61,8 @@ export const store = configureStore({
       chatApi.middleware,
       reviewsApi.middleware,
     ),
+  enhancers: (getDefaultEnhancers) =>
+    getDefaultEnhancers().concat(devToolsEnhancer()),
 });
 
 export const persistor = persistStore(store);

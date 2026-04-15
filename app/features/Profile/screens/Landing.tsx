@@ -85,6 +85,7 @@ export const LandingProfile = ({ navigation }: Props) => {
 
   return (
     <Screen
+      scrollable
       statusBarProps={{
         showBackButton: true,
         title: (

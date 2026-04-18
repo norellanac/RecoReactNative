@@ -156,7 +156,7 @@ export const RegisterForm: React.FC = () => {
       console.log('✅ Auto-login result:', JSON.stringify(result, null, 2));
 
       if (result.success) {
-        const { token, user } = result.data;
+        const { accessToken, refreshToken, user } = result.data;
 
         showSuccessAlert(
           t(
@@ -165,7 +165,7 @@ export const RegisterForm: React.FC = () => {
           ),
         );
 
-        dispatch(loginSuccess({ user, token }));
+        dispatch(loginSuccess({ user, accessToken, refreshToken }));
       } else {
         console.error('❌ Auto-login failed:', result.message);
         showErrorAlert(getLoginErrorMessage(result));

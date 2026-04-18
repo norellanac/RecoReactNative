@@ -55,7 +55,8 @@
     "extra": {
       "eas": {
         "projectId": "98712f33-47b0-4bf5-b2cc-d91b0524ad16"
-      }
+      },
+      "EXPO_PUBLIC_API_URL": "http://192.168.0.2:8000/api/v1/"
     }
   }
 }

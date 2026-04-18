@@ -2,7 +2,7 @@
   "expo": {
     "name": "Reco",
     "slug": "Reco",
-    "version": "0.7.3",
+    "version": "0.7.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -56,7 +56,7 @@
       "eas": {
         "projectId": "98712f33-47b0-4bf5-b2cc-d91b0524ad16"
       },
-      "EXPO_PUBLIC_API_URL": "http://192.168.0.2:8000/api/v1/"
+      "EXPO_PUBLIC_API_URL": "https://dev.recolatam.com/api/v1"
     }
   }
 }

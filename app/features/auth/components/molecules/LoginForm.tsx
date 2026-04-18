@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInput } from '../../../../components/atoms';
@@ -13,12 +13,44 @@ import { LoginValues } from '@/app/types/api/apiResponses';
 import { useLoginMutation } from '@/app/services/authApi';
 import { Icon } from '@/app/components/atoms/Icon';
 import { BASE_URL } from '@/app/utils/Environment';
+import { useBiometricAuth } from '@/app/hooks/useBiometricAuth';
+import { useGlobalModal } from '@/app/hooks/useGlobalModal';
 
 export const LoginForm: React.FC = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
+  const { showModal } = useGlobalModal();
+  const {
+    enableBiometrics,
+    isBiometricEnabled,
+    authenticateWithBiometrics,
+    getBiometricIcon,
+  } = useBiometricAuth();
+
+  const [biometricsAvailable, setBiometricsAvailable] = useState(false);
+  const [bioInfo, setBioInfo] = useState<{
+    name: string;
+    family: any;
+    label: string;
+  }>({
+    name: 'fingerprint',
+    family: 'MaterialIcons',
+    label: 'Touch ID',
+  });
+
+  React.useEffect(() => {
+    const checkBiometrics = async () => {
+      const isEnabled = await isBiometricEnabled();
+      setBiometricsAvailable(isEnabled);
+      if (isEnabled) {
+        const info = await getBiometricIcon();
+        setBioInfo(info);
+      }
+    };
+    checkBiometrics();
+  }, [isBiometricEnabled]);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -28,7 +60,8 @@ export const LoginForm: React.FC = () => {
   const getErrorMessage = (error: any): string => {
     const status = error?.status;
     const originalStatus = error?.originalStatus;
-    const httpStatus = originalStatus || (typeof status === 'number' ? status : null);
+    const httpStatus =
+      originalStatus || (typeof status === 'number' ? status : null);
 
     if (status === 'FETCH_ERROR') {
       return t(
@@ -106,20 +139,13 @@ export const LoginForm: React.FC = () => {
 
   // ✅ Función para mostrar alertas amigables
   const showErrorAlert = (message: string) => {
-    Alert.alert(
-      t('login.error', 'Error de inicio de sesión'),
+    showModal({
+      title: t('login.error', 'Error de inicio de sesión'),
       message,
-      [
-        {
-          text: t('common.ok', 'Entendido'),
-          style: 'default',
-        },
-      ],
-      { cancelable: true },
-    );
+    });
   };
 
-  const handleLogin = async (values: LoginValues) => {
+  const handleLogin = async (values: LoginValues, setFieldValue?: any) => {
     console.log('Login values:', values);
     try {
       const cleanEmail = values.email.trim();
@@ -132,9 +158,47 @@ export const LoginForm: React.FC = () => {
 
       if (result.success) {
         const { accessToken, refreshToken, user } = result.data;
-        dispatch(
-          loginSuccess({ user, accessToken, refreshToken }),
-        );
+
+        // Dispatch login first to ensure state is updated
+        dispatch(loginSuccess({ user, accessToken, refreshToken }));
+
+        // Check for biometrics enrollment after success login
+        const biometricsEnabled = await isBiometricEnabled();
+        if (!biometricsEnabled) {
+          // Wrap in setTimeout to ensure it's not dismissed by navigation or previous UI
+          setTimeout(() => {
+            showModal({
+              title: t('common.enable_biometrics', 'Enable Biometrics'),
+              message: t(
+                'common.biometrics_message',
+                'Would you like to use biometrics for future logins?',
+              ),
+              onConfirm: async () => {
+                // Small delay to allow previous modal to close before starting biometrics
+                setTimeout(async () => {
+                  const success = await enableBiometrics(
+                    cleanEmail,
+                    values.password,
+                  );
+                  if (success) {
+                    // Success modal
+                    setTimeout(() => {
+                      showModal({
+                        title: t('common.success', 'Success'),
+                        message: t(
+                          'common.biometrics_enabled',
+                          'Biometrics enabled successfully',
+                        ),
+                      });
+                    }, 500);
+                  }
+                }, 300);
+              },
+              showCancelButton: true,
+              confirmButtonText: t('common.yes', 'Yes'),
+            });
+          }, 800);
+        }
       } else {
         console.error('Login failed:', JSON.stringify(result, null, 2));
         showErrorAlert(getErrorMessage(result));
@@ -142,6 +206,15 @@ export const LoginForm: React.FC = () => {
     } catch (err: any) {
       console.error('Login error:', JSON.stringify(err, null, 2));
       showErrorAlert(getErrorMessage(err));
+    }
+  };
+
+  const handleBiometricLogin = async (setFieldValue: any) => {
+    const credentials = await authenticateWithBiometrics();
+    if (credentials) {
+      setFieldValue('email', credentials.email);
+      setFieldValue('password', credentials.password);
+      handleLogin(credentials, setFieldValue);
     }
   };
 
@@ -179,7 +252,14 @@ export const LoginForm: React.FC = () => {
           ),
       })}
     >
-      {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        setFieldValue,
+      }) => (
         <View style={styles.form}>
           <TextInput
             placeholder={t('Forms.email', 'Email')}
@@ -215,6 +295,22 @@ export const LoginForm: React.FC = () => {
             isLoading={isLoading}
             style={{ marginTop: 32 }}
           />
+          {biometricsAvailable && (
+            <Button
+              variant="outlined"
+              title={t('login.biometric_login', `Login with ${bioInfo.label}`)}
+              onPress={() => handleBiometricLogin(setFieldValue)}
+              style={{ marginTop: 16 }}
+              startIcon={
+                <Icon
+                  name={bioInfo.name}
+                  family={bioInfo.family}
+                  size={24}
+                  color="primary"
+                />
+              }
+            />
+          )}
         </View>
       )}
     </Formik>

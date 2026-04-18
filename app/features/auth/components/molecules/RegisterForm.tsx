@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInput } from '../../../../components/atoms';
@@ -11,12 +11,16 @@ import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { loginSuccess } from '@/app/redux/slices/authSlice';
 import { useLoginMutation, useSignupMutation } from '@/app/services/authApi';
 import { Icon } from '@/app/components/atoms/Icon';
+import { useGlobalModal } from '@/app/hooks/useGlobalModal';
+import { useBiometricAuth } from '@/app/hooks/useBiometricAuth';
 
 export const RegisterForm: React.FC = () => {
   const { t } = useTranslation();
   const [onSignup, { isLoading: isSignupLoading }] = useSignupMutation();
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
+  const { showModal } = useGlobalModal();
+  const { isBiometricEnabled, enableBiometrics } = useBiometricAuth();
   const [showPassword, setShowPassword] = React.useState(false);
 
   const isLoading = isSignupLoading || isLoginLoading;
@@ -116,32 +120,18 @@ export const RegisterForm: React.FC = () => {
 
   // ✅ Función para mostrar alertas de error
   const showErrorAlert = (message: string, title?: string) => {
-    Alert.alert(
-      title || t('register.error', 'Error de registro'),
+    showModal({
+      title: title || t('register.error', 'Error de registro'),
       message,
-      [
-        {
-          text: t('common.ok', 'Entendido'),
-          style: 'default',
-        },
-      ],
-      { cancelable: true },
-    );
+    });
   };
 
   // ✅ Función para mostrar alertas de éxito
   const showSuccessAlert = (message: string) => {
-    Alert.alert(
-      t('register.success', 'Registro exitoso'),
+    showModal({
+      title: t('register.success', 'Registro exitoso'),
       message,
-      [
-        {
-          text: t('common.ok', 'Continuar'),
-          style: 'default',
-        },
-      ],
-      { cancelable: true },
-    );
+    });
   };
 
   const handleLogin = async (values: any) => {
@@ -166,6 +156,41 @@ export const RegisterForm: React.FC = () => {
         );
 
         dispatch(loginSuccess({ user, accessToken, refreshToken }));
+
+        // Check for biometrics enrollment after success register (auto-login)
+        const biometricsEnabled = await isBiometricEnabled();
+        if (!biometricsEnabled) {
+          setTimeout(() => {
+            showModal({
+              title: t('common.enable_biometrics', 'Enable Biometrics'),
+              message: t(
+                'common.biometrics_message',
+                'Would you like to use biometrics for future logins?',
+              ),
+              onConfirm: async () => {
+                setTimeout(async () => {
+                  const success = await enableBiometrics(
+                    values.email.trim(),
+                    values.password,
+                  );
+                  if (success) {
+                    setTimeout(() => {
+                      showModal({
+                        title: t('common.success', 'Success'),
+                        message: t(
+                          'common.biometrics_enabled',
+                          'Biometrics enabled successfully',
+                        ),
+                      });
+                    }, 500);
+                  }
+                }, 300);
+              },
+              showCancelButton: true,
+              confirmButtonText: t('common.yes', 'Yes'),
+            });
+          }, 800);
+        }
       } else {
         console.error('❌ Auto-login failed:', result.message);
         showErrorAlert(getLoginErrorMessage(result));

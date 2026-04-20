@@ -68,8 +68,9 @@ const BottomTabNavigator = React.memo(() => {
 
   const handleSwitchRole = async () => {
     try {
-      await handleUpdateUserInfo({ roles: [2] });
-    } catch (error) {}
+      const newRoles = isMerchant ? [2] : [2, 3];
+      await handleUpdateUserInfo({ roles: newRoles });
+    } catch {}
   };
 
   const { ChatNavigation } = require('../features/Chat/screens/ChatStack');
@@ -197,18 +198,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 32,
     borderRadius: 16,
-  },
-  badge: {
-    position: 'absolute',
-    top: -4,
-    right: -18,
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-    zIndex: 10,
   },
   profileBadge: {
     position: 'absolute',

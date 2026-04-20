@@ -30,8 +30,8 @@ const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.error = null;
     },
-    setAuthUserState(state, action: PayloadAction<UserResponseType>) {
-      state.user = action.payload.data;
+    setAuthUserState(state, action: PayloadAction<User>) {
+      state.user = action.payload;
     },
     updateTokens(
       state,

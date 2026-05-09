@@ -50,6 +50,8 @@ export const useBiometricAuth = () => {
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Enable Biometric Authentication',
         fallbackLabel: 'Use Passcode',
+        cancelLabel: 'Cancel',
+        disableDeviceFallback: false,
       });
 
       if (result.success) {
@@ -84,6 +86,9 @@ export const useBiometricAuth = () => {
 
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Authenticate with Biometrics',
+        fallbackLabel: 'Use Passcode',
+        cancelLabel: 'Cancel',
+        disableDeviceFallback: false,
       });
 
       if (result.success) {

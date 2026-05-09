@@ -4,7 +4,7 @@ import { HomeNavigation } from '../features/Home/screens/HomeStack';
 import { TaskPage } from '../features/Task/screens/Task';
 import { FavoritesNavigation } from '../features/Favorites/screens/FavoritesStack';
 import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Text, Button } from '../components/atoms';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
@@ -15,6 +15,7 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import { useHasRole } from '../hooks/useHasRole';
 import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 import { useNavigationState } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 const isTablet = Dimensions.get('window').width >= 768;
@@ -30,6 +31,7 @@ const BottomTabNavigator = React.memo(() => {
   const { theme } = useTheme();
   const { colors } = theme;
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const iconMapping = {
     Home: ['home', 'home-outline'],
@@ -150,8 +152,9 @@ const BottomTabNavigator = React.memo(() => {
           tabBarInactiveTintColor: colors.grey,
           tabBarStyle: {
             backgroundColor: colors.background,
-            paddingVertical: 15,
-            minHeight: 70,
+            paddingVertical: Platform.OS === 'ios' ? 15 : 10,
+            height: Platform.OS === 'ios' ? 85 + insets.bottom : 70 + insets.bottom,
+            paddingBottom: Platform.OS === 'ios' ? insets.bottom : (insets.bottom > 0 ? insets.bottom : 10),
           },
           tabBarLabelStyle: {
             display: 'none',

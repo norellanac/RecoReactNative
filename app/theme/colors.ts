@@ -15,3 +15,11 @@ export const colors = {
   softgrey: '#E8E8E8',
   // Add other color definitions here
 };
+
+// For dynamic branding colors, use useBranding().colors in components.
+// This gives the active brand palette (colorsLight) with DEFAULT_COLORS as fallback.
+import { BrandingConfig } from '../types/branding';
+import { DEFAULT_COLORS } from '../hooks/useBranding';
+
+export const getBrandingColors = (config: BrandingConfig | null) =>
+  config ? config.colorsLight : DEFAULT_COLORS;

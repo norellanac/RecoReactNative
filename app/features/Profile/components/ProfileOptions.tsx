@@ -6,6 +6,7 @@ import { Icon } from '@/app/components/atoms/Icon';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { logout } from '@/app/redux/slices/authSlice';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
+import { useBranding } from '@/app/hooks/useBranding';
 
 export const ProfileMenuOptions = ({
   navigation,
@@ -16,6 +17,7 @@ export const ProfileMenuOptions = ({
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const { config } = useBranding();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [emailClickCount, setEmailClickCount] = useState(0);
 
@@ -87,7 +89,7 @@ export const ProfileMenuOptions = ({
         navigation.navigate('AuthStack', {
           screen: 'TermsAndConditions',
           params: {
-            url: 'https://recolatam.com/terms-and-conditions',
+            url: config?.termsUrl || 'https://recolatam.com/terms-and-conditions',
           },
         }),
     },
@@ -105,7 +107,7 @@ export const ProfileMenuOptions = ({
         navigation.navigate('AuthStack', {
           screen: 'PrivacyPolicy',
           params: {
-            url: 'https://recolatam.com/privacy-policy',
+            url: config?.privacyUrl || 'https://recolatam.com/privacy-policy',
           },
         }),
     },

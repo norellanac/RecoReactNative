@@ -12,8 +12,29 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { persistor, store } from './redux/store/store';
 import * as Updates from 'expo-updates';
+import { useGetBrandingQuery } from './services/brandingApi';
+import { useAppDispatch } from './hooks/useAppDispatch';
+import { setBranding } from './redux/slices/brandingSlice';
 
-export default function App() {
+function BrandingLoader() {
+  const dispatch = useAppDispatch();
+  const { data: brandingData } = useGetBrandingQuery();
+
+  useEffect(() => {
+    if (brandingData && 'data' in brandingData && brandingData.data) {
+      dispatch(setBranding(brandingData.data));
+
+      const overrides = brandingData.data.copyOverrides || {};
+      Object.entries(overrides).forEach(([lang, keys]) => {
+        i18n.addResourceBundle(lang, 'translation', keys, true, true);
+      });
+    }
+  }, [brandingData, dispatch]);
+
+  return null;
+}
+
+function AppContent() {
   const [isAppReady, setAppReady] = useState(false);
 
   useEffect(() => {
@@ -39,14 +60,21 @@ export default function App() {
   if (!isAppReady) return <SplashScreenComponent onReady={handleAppReady} />;
 
   return (
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider>
+        <RootNavigator />
+      </ThemeProvider>
+    </I18nextProvider>
+  );
+}
+
+export default function App() {
+  return (
     <SafeAreaProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <I18nextProvider i18n={i18n}>
-            <ThemeProvider>
-              <RootNavigator />
-            </ThemeProvider>
-          </I18nextProvider>
+          <BrandingLoader />
+          <AppContent />
         </PersistGate>
       </Provider>
     </SafeAreaProvider>

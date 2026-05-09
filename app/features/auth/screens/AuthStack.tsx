@@ -5,6 +5,7 @@ import { Login } from './Login';
 import { Register } from './Register';
 import PasswordRecovery from './PasswordRecovery';
 import TextViewScreen from '@/app/features/Profile/screens/TextViewScreen';
+import { useBranding } from '@/app/hooks/useBranding';
 
 const AuthStack = createNativeStackNavigator();
 
@@ -18,6 +19,10 @@ export type AuthStackParams = {
 };
 
 const AuthNavigator = () => {
+  const { config } = useBranding();
+  const termsUrl = config?.termsUrl || 'https://recolatam.com/terms-and-conditions';
+  const privacyUrl = config?.privacyUrl || 'https://recolatam.com/privacy-policy';
+
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name="Landing" component={LandingAuth} />
@@ -26,12 +31,12 @@ const AuthNavigator = () => {
       <AuthStack.Screen
         name="TermsAndConditions"
         component={TextViewScreen}
-        initialParams={{ url: 'https://recolatam.com/terms-and-conditions' }}
+        initialParams={{ url: termsUrl }}
       />
       <AuthStack.Screen
         name="PrivacyPolicy"
         component={TextViewScreen}
-        initialParams={{ url: 'https://recolatam.com/privacy-policy' }}
+        initialParams={{ url: privacyUrl }}
       />
       <AuthStack.Screen name="PasswordRecovery" component={PasswordRecovery} />
     </AuthStack.Navigator>

@@ -16,6 +16,7 @@ import { useHasRole } from '../hooks/useHasRole';
 import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 import { useNavigationState } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useBranding } from '../hooks/useBranding';
 
 const Tab = createBottomTabNavigator();
 const isTablet = Dimensions.get('window').width >= 768;
@@ -52,6 +53,7 @@ const BottomTabNavigator = React.memo(() => {
 
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo } = useUserEvents();
+  const { config: brandingConfig } = useBranding();
 
   const navigationState = useNavigationState((state) => state);
   const currentTabRoute = navigationState.routes[navigationState.index]?.name;
@@ -85,7 +87,7 @@ const BottomTabNavigator = React.memo(() => {
     {
       name: 'Task',
       component: TaskPage,
-      show: true,
+      show: !brandingConfig || brandingConfig.features.tasksEnabled,
       options: {
         tabBarBadge:
           scheduledCount > 0 ? <TaskBadge count={scheduledCount} /> : undefined,
@@ -104,7 +106,7 @@ const BottomTabNavigator = React.memo(() => {
     {
       name: 'Messages',
       component: ChatNavigation,
-      show: true,
+      show: !brandingConfig || brandingConfig.features.chatEnabled,
     },
     {
       name: 'Profile',

@@ -18,6 +18,8 @@ import { SearchBar } from '@/app/components/molecules/SearchBar';
 import SearchFilterModal from '@/app/components/molecules/SearchFilterModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchTerm } from '@/app/redux/slices/filterProductsSlice';
+import { useBranding } from '@/app/hooks/useBranding';
+import { BASE_URL } from '@/app/utils/Environment';
 import CategoryList from '../components/molecules/CategoryList';
 
 type Props = NativeStackScreenProps<HomeStackParams, 'Home'>;
@@ -27,6 +29,17 @@ export const LandingHome = ({ navigation }: Props) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const search = useSelector((state) => state.filter.options.searchTerm);
   const dispatch = useDispatch();
+  const { config } = useBranding();
+
+  const carouselImages = config?.sliderImages?.length
+    ? config.sliderImages.map((url) => ({
+        img: url.startsWith('http') ? { uri: url } : { uri: `${BASE_URL}${url}` },
+        onButtonPress: () => navigation.navigate('AllServices'),
+      }))
+    : [
+        { img: slider_2, onButtonPress: () => navigation.navigate('AllServices') },
+        { img: slider_1, onButtonPress: () => navigation.navigate('AllCategories') },
+      ];
 
   const handleSearchChange = (text: string) => {
     dispatch(setSearchTerm(text));
@@ -101,21 +114,7 @@ export const LandingHome = ({ navigation }: Props) => {
           paddingHorizontal: 10,
         }}
       >
-        <Carousel
-          images={[
-            {
-              img: slider_2,
-              //buttonText: 'Busca servicios de confianza',
-              onButtonPress: () => navigation.navigate('AllServices'),
-            },
-            {
-              img: slider_1,
-              //buttonText: 'Explora categorías',
-              onButtonPress: () => navigation.navigate('AllCategories'),
-            },
-          ]}
-          autoScroll={true}
-        />
+        <Carousel images={carouselImages} autoScroll={true} />
 
         <View>
           <CategoryList

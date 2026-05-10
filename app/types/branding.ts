@@ -16,6 +16,12 @@ export interface BrandingColors {
   onTertiary: string;
 }
 
+export interface IntroSlide {
+  imageUrl: string;
+  title: string;
+  subtitle?: string;
+}
+
 export interface BrandingFeatures {
   chatEnabled: boolean;
   tasksEnabled: boolean;
@@ -36,6 +42,9 @@ export interface BrandingConfig {
   faviconUrl: string | null;
   defaultImageUrl: string | null;
   sliderImages: string[];
+  introSlides: IntroSlide[];
+  appStoreUrl: string;
+  playStoreUrl: string;
   colorsLight: BrandingColors;
   colorsDark: BrandingColors;
   fontFamily: string;

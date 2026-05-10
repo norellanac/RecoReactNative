@@ -12,24 +12,25 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { persistor, store } from './redux/store/store';
 import * as Updates from 'expo-updates';
-import { useGetBrandingQuery } from './services/brandingApi';
 import { useAppDispatch } from './hooks/useAppDispatch';
-import { setBranding } from './redux/slices/brandingSlice';
+import { useAppSelector } from './hooks/useAppSelector';
+import { fetchBranding, selectBranding } from './redux/slices/brandingSlice';
 
 function BrandingLoader() {
   const dispatch = useAppDispatch();
-  const { data: brandingData } = useGetBrandingQuery();
+  const { config } = useAppSelector(selectBranding);
 
   useEffect(() => {
-    if (brandingData && 'data' in brandingData && brandingData.data) {
-      dispatch(setBranding(brandingData.data));
+    dispatch(fetchBranding());
+  }, [dispatch]);
 
-      const overrides = brandingData.data.copyOverrides || {};
-      Object.entries(overrides).forEach(([lang, keys]) => {
+  useEffect(() => {
+    if (config?.copyOverrides) {
+      Object.entries(config.copyOverrides).forEach(([lang, keys]) => {
         i18n.addResourceBundle(lang, 'translation', keys, true, true);
       });
     }
-  }, [brandingData, dispatch]);
+  }, [config]);
 
   return null;
 }

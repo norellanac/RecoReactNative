@@ -4,7 +4,6 @@ import { categoryApi } from './categoryApi';
 import { userApi } from './userApi';
 import { ordersApi } from './ordersApi';
 import { locationsApi } from './locationsApi';
-import { brandingApi } from './brandingApi';
 
 export const api = {
   authApi,
@@ -13,5 +12,4 @@ export const api = {
   ordersApi,
   userApi,
   locationsApi,
-  brandingApi,
 };

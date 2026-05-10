@@ -16,6 +16,8 @@ import introSliderImg3 from '../../../assets/img/intro_sliders/intro_3.png';
 import introSliderImg4 from '../../../assets/img/intro_sliders/intro_4.png';
 import { Screen } from '@/app/components/templates';
 import { useNavigation } from '@react-navigation/native';
+import { useBranding } from '@/app/hooks/useBranding';
+import { BASE_URL } from '@/app/utils/Environment';
 
 type Slide = {
   title: string;
@@ -24,7 +26,9 @@ type Slide = {
 
 const IntroSlider: React.FC = () => {
   const { t } = useTranslation();
-  const slides: Slide[] = [
+  const { config, colors } = useBranding();
+
+  const LOCAL_SLIDES: Slide[] = [
     {
       image: introSliderImg1,
       title: t('slider.title_1', 'Find the expert you need in minutes.'),
@@ -48,6 +52,13 @@ const IntroSlider: React.FC = () => {
       ),
     },
   ];
+  const slides: Slide[] = config?.introSlides?.length
+    ? config.introSlides.map((s) => ({
+        image: s.imageUrl.startsWith('http') ? { uri: s.imageUrl } : { uri: `${BASE_URL}${s.imageUrl}` },
+        title: s.title,
+      }))
+    : LOCAL_SLIDES;
+
   const { width, height } = useWindowDimensions();
   const isPortrait = height > width;
   const navigation = useNavigation();
@@ -154,7 +165,9 @@ const IntroSlider: React.FC = () => {
               key={index}
               style={[
                 styles.dot,
-                currentIndex === index ? styles.activeDot : styles.inactiveDot,
+                currentIndex === index
+                  ? { backgroundColor: colors.primary, width: 24 }
+                  : styles.inactiveDot,
               ]}
             />
           ))}
@@ -202,9 +215,6 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginHorizontal: 5,
-  },
-  activeDot: {
-    backgroundColor: '#6750A4',
   },
   inactiveDot: {
     backgroundColor: '#E0E0E0',

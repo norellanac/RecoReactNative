@@ -78,6 +78,14 @@ const BottomTabNavigator = React.memo(() => {
   };
 
   const { ChatNavigation } = require('../features/Chat/screens/ChatStack');
+  // i18next-parser-start
+  // t('bottomTabs.home', 'Home')
+  // t('bottomTabs.task', 'Task')
+  // t('bottomTabs.products', 'Products')
+  // t('bottomTabs.favorites', 'Favorites')
+  // t('bottomTabs.messages', 'Messages')
+  // t('bottomTabs.profile', 'Profile')
+  // i18next-parser-end
   const tabScreens = [
     {
       name: 'Home',

@@ -78,9 +78,10 @@ export type Review = {
 
 export type User = {
   id: number;
-  name: string;
-  lastname: string;
-  email: string;
+  name: string | null;
+  lastname: string | null;
+  email: string | null;
+  phone: string | null;
   averageRating: number | null;
   avatarUrl: string | null;
   createdAt: string;

@@ -33,7 +33,9 @@ export const GreetingHeader = () => {
       <View style={styles.greetingContainer}>
         <Text style={styles.greetingText}>{getGreeting()} 👋</Text>
         <Text style={styles.nameText}>
-          {user?.name} {user?.lastname}
+          {user?.name
+            ? `${user.name}${user.lastname ? ` ${user.lastname}` : ''}`
+            : user?.email || user?.phone || ''}
         </Text>
       </View>
 

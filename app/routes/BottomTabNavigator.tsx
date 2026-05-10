@@ -4,7 +4,7 @@ import { HomeNavigation } from '../features/Home/screens/HomeStack';
 import { TaskPage } from '../features/Task/screens/Task';
 import { FavoritesNavigation } from '../features/Favorites/screens/FavoritesStack';
 import { ProfileNavigation } from '../features/Profile/screens/ProfileStack';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Text, Button } from '../components/atoms';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
@@ -15,6 +15,8 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import { useHasRole } from '../hooks/useHasRole';
 import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 import { useNavigationState } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useBranding } from '../hooks/useBranding';
 
 const Tab = createBottomTabNavigator();
 const isTablet = Dimensions.get('window').width >= 768;
@@ -30,6 +32,7 @@ const BottomTabNavigator = React.memo(() => {
   const { theme } = useTheme();
   const { colors } = theme;
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const iconMapping = {
     Home: ['home', 'home-outline'],
@@ -50,6 +53,7 @@ const BottomTabNavigator = React.memo(() => {
 
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo } = useUserEvents();
+  const { config: brandingConfig } = useBranding();
 
   const navigationState = useNavigationState((state) => state);
   const currentTabRoute = navigationState.routes[navigationState.index]?.name;
@@ -68,8 +72,9 @@ const BottomTabNavigator = React.memo(() => {
 
   const handleSwitchRole = async () => {
     try {
-      await handleUpdateUserInfo({ roles: [2] });
-    } catch (error) {}
+      const newRoles = isMerchant ? [2] : [2, 3];
+      await handleUpdateUserInfo({ roles: newRoles });
+    } catch {}
   };
 
   const { ChatNavigation } = require('../features/Chat/screens/ChatStack');
@@ -82,7 +87,7 @@ const BottomTabNavigator = React.memo(() => {
     {
       name: 'Task',
       component: TaskPage,
-      show: true,
+      show: !brandingConfig || brandingConfig.features.tasksEnabled,
       options: {
         tabBarBadge:
           scheduledCount > 0 ? <TaskBadge count={scheduledCount} /> : undefined,
@@ -101,7 +106,7 @@ const BottomTabNavigator = React.memo(() => {
     {
       name: 'Messages',
       component: ChatNavigation,
-      show: true,
+      show: !brandingConfig || brandingConfig.features.chatEnabled,
     },
     {
       name: 'Profile',
@@ -149,8 +154,9 @@ const BottomTabNavigator = React.memo(() => {
           tabBarInactiveTintColor: colors.grey,
           tabBarStyle: {
             backgroundColor: colors.background,
-            paddingVertical: 15,
-            minHeight: 70,
+            paddingVertical: Platform.OS === 'ios' ? 15 : 10,
+            height: Platform.OS === 'ios' ? 85 + insets.bottom : 70 + insets.bottom,
+            paddingBottom: Platform.OS === 'ios' ? insets.bottom : (insets.bottom > 0 ? insets.bottom : 10),
           },
           tabBarLabelStyle: {
             display: 'none',
@@ -197,18 +203,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 32,
     borderRadius: 16,
-  },
-  badge: {
-    position: 'absolute',
-    top: -4,
-    right: -18,
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-    zIndex: 10,
   },
   profileBadge: {
     position: 'absolute',

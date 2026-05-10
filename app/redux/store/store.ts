@@ -6,6 +6,7 @@ import authReducer from '../slices/authSlice';
 import serviceStepperReducer from '../slices/serviceStepperSlice';
 import favoritesReducer from '../slices/favoritesSlice';
 import filterProductsReducer from '../slices/filterProductsSlice';
+import brandingReducer from '../slices/brandingSlice';
 import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
@@ -14,6 +15,7 @@ import { ordersApi } from '../../services/ordersApi';
 import { locationsApi } from '../../services/locationsApi';
 import { chatApi } from '../../services/chatApi';
 import { reviewsApi } from '@/app/services/reviewsApi';
+import { brandingApi } from '../../services/brandingApi';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
 
 const rootReducer = combineReducers({
@@ -21,6 +23,7 @@ const rootReducer = combineReducers({
   serviceStepper: serviceStepperReducer,
   favorites: favoritesReducer,
   filter: filterProductsReducer,
+  branding: brandingReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
@@ -29,6 +32,7 @@ const rootReducer = combineReducers({
   [locationsApi.reducerPath]: locationsApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [reviewsApi.reducerPath]: reviewsApi.reducer,
+  [brandingApi.reducerPath]: brandingApi.reducer,
 });
 
 const persistConfig = {
@@ -39,8 +43,9 @@ const persistConfig = {
     'serviceStepper',
     'roleSwitcher',
     'filterProducts',
+    'branding',
     //'chat',
-  ], // Only persist the auth and serviceStepper reducers
+  ], // Only persist the auth, serviceStepper, and branding reducers
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -60,6 +65,7 @@ export const store = configureStore({
       locationsApi.middleware,
       chatApi.middleware,
       reviewsApi.middleware,
+      brandingApi.middleware,
     ),
   enhancers: (getDefaultEnhancers) =>
     getDefaultEnhancers().concat(devToolsEnhancer()),

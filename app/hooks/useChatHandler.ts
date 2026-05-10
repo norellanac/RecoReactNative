@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { selectAuth } from '@/app/redux/slices/authSlice';
 import {
   useGetChatsByUserIdQuery,
   useCreateChatMutation,
@@ -7,7 +8,8 @@ import {
 
 const useChatHandler = () => {
   const navigation = useNavigation();
-  const currentUserId = useSelector((state) => state.auth.user.id);
+  const { user } = useSelector(selectAuth);
+  const currentUserId = user?.id; // Normalized handle
   
   const [createChat, { isLoading: isCreatingChat }] = useCreateChatMutation();
   const { data: chatsResponse, refetch } = useGetChatsByUserIdQuery(currentUserId, {

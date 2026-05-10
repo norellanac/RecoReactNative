@@ -5,7 +5,7 @@ import {
   selectAuth,
   setAuthUserState,
 } from '../../../redux/slices/authSlice';
-import { useUpdateUserInfoMutation, } from '../../../services/userApi';
+import { useUpdateUserInfoMutation } from '../../../services/userApi';
 import { UpdateUserPayload } from '../../../types/api/apiRequests';
 
 const useUserEvents = () => {
@@ -13,10 +13,10 @@ const useUserEvents = () => {
   const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
   const { user } = useAppSelector(selectAuth);
   const dispatch = useAppDispatch();
-  
+
   const logoutUser = () => {
     dispatch(logout());
-  }
+  };
 
   const handleUpdateUserInfo = async (userObjNewFields: UpdateUserPayload) => {
     if (user) {
@@ -28,22 +28,18 @@ const useUserEvents = () => {
           },
         }).unwrap();
         if (userUpdateResponse.success) {
-          dispatch(
-            setAuthUserState({
-              ...userUpdateResponse.data
-            }),
-          );
-        };
-
+          dispatch(setAuthUserState(userUpdateResponse.data));
+        }
       } catch (error) {
         console.error('Error updating user info:', error);
       }
     }
-};
+  };
 
-  const roleNames = authState?.user?.roles?.map((role) => role.name.toLowerCase()) || [];
+  const roleNames =
+    authState?.user?.roles?.map((role) => role.name.toLowerCase()) || [];
 
-  return { roleNames, logoutUser, handleUpdateUserInfo };
+  return { roleNames, logoutUser, handleUpdateUserInfo, isLoading };
 };
 
 export { useUserEvents };

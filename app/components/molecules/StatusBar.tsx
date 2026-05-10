@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import RecoLogo from '@/app/assets/img/Reco_logo.png';
+import { useBranding } from '@/app/hooks/useBranding';
 
 type StatusBarProps = {
   leftElement?: React.ReactNode;
@@ -39,6 +39,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
   showBottomLine = true,
 }) => {
   const navigation = useNavigation();
+  const { getLogoSource } = useBranding();
   return (
     <View style={[styles.container, { backgroundColor }, containerStyle]}>
       <View style={styles.content}>
@@ -57,7 +58,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
         <TouchableOpacity onPress={onTitlePress} style={styles.titleContainer}>
           {title || (
             <Image
-              source={RecoLogo}
+              source={getLogoSource()}
               style={{
                 width: 100,
                 height: 28,
@@ -65,7 +66,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
                 marginTop: 5,
                 marginBottom: 5,
               }}
-              accessibilityLabel="Reco logo"
+              accessibilityLabel="App logo"
             />
           )}
         </TouchableOpacity>

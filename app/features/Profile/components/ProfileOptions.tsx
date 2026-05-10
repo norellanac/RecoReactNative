@@ -6,6 +6,7 @@ import { Icon } from '@/app/components/atoms/Icon';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { logout } from '@/app/redux/slices/authSlice';
 import ModalComponent from '@/app/components/molecules/ModalComponent';
+import { useBranding } from '@/app/hooks/useBranding';
 
 export const ProfileMenuOptions = ({
   navigation,
@@ -16,7 +17,9 @@ export const ProfileMenuOptions = ({
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const { config } = useBranding();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [emailClickCount, setEmailClickCount] = useState(0);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -31,16 +34,29 @@ export const ProfileMenuOptions = ({
     setShowLogoutModal(false);
   };
 
+  const handleEmailPress = () => {
+    setEmailClickCount((prev) => {
+      const newCount = prev + 1;
+      if (newCount >= 7) {
+        navigation.navigate('LogViewer');
+        return 0;
+      }
+      return newCount;
+    });
+  };
+
   const options = [
     {
       key: 'email',
+      enabled: !!user?.email,
       label: t('userProfile.account', 'Account'),
       value: user?.email || 'email@example.com',
       icon: { name: 'person-outline', color: '#625B71', family: 'Ionicons' },
-      onPress: null,
+      onPress: handleEmailPress,
     },
     {
       key: 'changePassword',
+      enabled: true,
       label: t('userProfile.changePassword', 'Change password'),
       value: '',
       icon: {
@@ -53,6 +69,7 @@ export const ProfileMenuOptions = ({
     },
     {
       key: 'changeLanguage',
+      enabled: true,
       label: t('userProfile.changeLanguage', 'Change language'),
       value: '',
       icon: { name: 'language-outline', color: '#625B71', family: 'Ionicons' },
@@ -60,6 +77,7 @@ export const ProfileMenuOptions = ({
     },
     {
       key: 'Terms',
+      enabled: true,
       label: t('userProfile.terms', 'Terms and Conditions'),
       value: '',
       icon: {
@@ -71,12 +89,13 @@ export const ProfileMenuOptions = ({
         navigation.navigate('AuthStack', {
           screen: 'TermsAndConditions',
           params: {
-            url: 'https://recolatam.com/terms-and-conditions',
+            url: config?.termsUrl || 'https://recolatam.com/terms-and-conditions',
           },
         }),
     },
     {
       key: 'PrivacyPolicy',
+      enabled: true,
       label: t('userProfile.privacyPolicy', 'Privacy Policy'),
       value: '',
       icon: {
@@ -88,12 +107,25 @@ export const ProfileMenuOptions = ({
         navigation.navigate('AuthStack', {
           screen: 'PrivacyPolicy',
           params: {
-            url: 'https://recolatam.com/privacy-policy',
+            url: config?.privacyUrl || 'https://recolatam.com/privacy-policy',
           },
         }),
     },
     {
+      key: 'Logs',
+      enabled: emailClickCount >= 7,
+      label: t('userProfile.appLogs', 'App Logs'),
+      value: '',
+      icon: {
+        name: 'document-attach-outline',
+        color: '#625B71',
+        family: 'Ionicons',
+      },
+      onPress: () => navigation.navigate('LogViewer'),
+    },
+    {
       key: 'Logout',
+      enabled: true,
       label: t('userProfile.logout', 'Logout'),
       value: '',
       icon: { name: 'log-out-outline', color: '#D32F2F', family: 'Ionicons' },

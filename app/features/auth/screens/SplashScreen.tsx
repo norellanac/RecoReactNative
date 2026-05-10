@@ -5,13 +5,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-
-const RecoLogo = require('../../../assets/img/Reco_logo.png');
+import { useBranding } from '../../../hooks/useBranding';
 
 const { width, height } = Dimensions.get('window');
 
 const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   const { t } = useTranslation();
+  const { getLogoSource, colors } = useBranding();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.3)).current;
@@ -69,7 +69,7 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Animated.View
         style={[
           styles.logoContainer,
@@ -80,7 +80,7 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
         ]}
       >
         <Image
-          source={RecoLogo}
+          source={getLogoSource()}
           style={styles.logoImage}
           resizeMode="contain"
         />
@@ -114,7 +114,7 @@ const SplashScreenComponent = ({ onReady }: { onReady: () => void }) => {
         ]}
       >
         <View style={styles.dots}>
-          <View style={[styles.dot, styles.dotActive]} />
+          <View style={[styles.dot, { backgroundColor: colors.primary, width: 24 }]} />
           <View style={styles.dot} />
           <View style={styles.dot} />
         </View>
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
   },
   logoContainer: {
     alignItems: 'center',
@@ -162,10 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#E0E0E0',
     marginHorizontal: 4,
-  },
-  dotActive: {
-    backgroundColor: '#7B61FF',
-    width: 24,
   },
 });
 

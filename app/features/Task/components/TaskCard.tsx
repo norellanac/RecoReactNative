@@ -25,6 +25,8 @@ const TaskCard = ({ task }) => {
   const handleChat = () => {
     const providerId = service?.userId;
 
+    console.error('service', service, detail);
+
     // ✅ Crear objeto con datos del proveedor de la tarea
     const providerData = {
       name: service?.name || 'Proveedor', //Para pasarlo cuando venga del backend

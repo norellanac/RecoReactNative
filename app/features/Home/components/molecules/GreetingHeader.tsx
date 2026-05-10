@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { Text } from '@/app/components/atoms';
-import RecoIcon from '../../../../assets/img/RecoIcon.png';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { selectAuth } from '@/app/redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@/app/components/molecules/Avatar';
+import { useBranding } from '@/app/hooks/useBranding';
 
 export const GreetingHeader = () => {
   const { t } = useTranslation();
   const { user } = useAppSelector(selectAuth);
+  const { getIconSource } = useBranding();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -37,7 +38,7 @@ export const GreetingHeader = () => {
       </View>
 
       <View style={styles.iconContainer}>
-        <Image source={RecoIcon} style={styles.recoIcon} resizeMode="contain" />
+        <Image source={getIconSource()} style={styles.recoIcon} resizeMode="contain" />
       </View>
     </View>
   );

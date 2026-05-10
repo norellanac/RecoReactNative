@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
-import { ViewStyle, TextStyle, ScrollView } from 'react-native';
+import { ViewStyle, TextStyle, ScrollView, View, StatusBar as RNStatusBar, Platform } from 'react-native';
 import StatusBar from '../molecules/StatusBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ScreenProps {
   children: ReactNode;
@@ -33,6 +33,8 @@ export const Screen: React.FC<ScreenProps> = ({
   safeAreaBottom = false,
   safeAreaBackground, // Custom background prop
 }) => {
+  const insets = useSafeAreaInsets();
+
   // Determinar el color de fondo del SafeAreaView
   const getSafeAreaBackground = () => {
     // 1. Si se proporciona un color personalizado, usarlo
@@ -59,19 +61,29 @@ export const Screen: React.FC<ScreenProps> = ({
   );
 
   return (
-    <SafeAreaView
-      edges={
-        safeAreaBottom
-          ? ['top', 'left', 'right', 'bottom']
-          : ['top', 'left', 'right']
-      }
+    <View
       style={{
         backgroundColor: getSafeAreaBackground(),
         flex: 1,
+        paddingTop: Platform.OS === 'android' ? 0 : insets.top,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+        paddingBottom: safeAreaBottom ? insets.bottom : 0,
       }}
     >
-      {statusBarProps && <StatusBar {...statusBarProps} />}
+      {Platform.OS === 'android' && (
+        <RNStatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+      )}
+      {statusBarProps && (
+        <View style={Platform.OS === 'android' ? { paddingTop: insets.top } : null}>
+          <StatusBar {...statusBarProps} />
+        </View>
+      )}
       {content}
-    </SafeAreaView>
+    </View>
   );
 };

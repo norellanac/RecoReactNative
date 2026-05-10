@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Alert } from 'react-native';
-import Constants from 'expo-constants';
 import { Screen } from '../../../components/templates';
 import { Button, Text } from '../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { useAppSelector } from '@/app/hooks/useAppSelector';
 import { selectAuth, setAuthUserState } from '@/app/redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
-import { useUpdateUserNameMutation } from '@/app/services/userApi';
 import { ProfileStackParams } from './ProfileStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProfileMenuOptions } from '../components/ProfileOptions';
@@ -28,16 +26,15 @@ export const LandingProfile = ({ navigation }: Props) => {
   const [editNameModalOpen, setEditNameModalOpen] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [lastname, setLastname] = useState(user?.lastname || '');
-  const [updateUserName, { isLoading }] = useUpdateUserNameMutation();
 
   const isMerchant = useHasRole('Merchant');
-  const { handleUpdateUserInfo } = useUserEvents();
+  const { handleUpdateUserInfo, isLoading } = useUserEvents();
 
   const handleSwitchRole = async () => {
     try {
       const newRoles = isMerchant ? [2] : [2, 3];
       await handleUpdateUserInfo({ roles: newRoles });
-    } catch (error) {
+    } catch {
       Alert.alert(
         t('userProfile.error', 'Error'),
         t('userProfile.updateFailed', 'Failed to update role'),
@@ -48,24 +45,16 @@ export const LandingProfile = ({ navigation }: Props) => {
   const handleSaveNameChanges = async () => {
     if (user?.id) {
       try {
-        const userUpdateResponse = await updateUserName({
-          userId: user.id.toString(),
+        await handleUpdateUserInfo({
           name,
           lastname,
-        }).unwrap();
-        dispatch(
-          setAuthUserState({
-            ...user,
-            name,
-            lastname,
-          }),
-        );
+        });
         Alert.alert(
           t('userProfile.success', 'Success'),
           t('userProfile.nameUpdated', 'Name updated successfully'),
         );
         setEditNameModalOpen(false);
-      } catch (error) {
+      } catch {
         Alert.alert(
           t('userProfile.error', 'Error'),
           t('userProfile.updateFailed', 'Failed to update name'),
@@ -75,16 +64,19 @@ export const LandingProfile = ({ navigation }: Props) => {
   };
 
   const handleAvatarUpdate = (newAvatarUrl: string) => {
-    dispatch(
-      setAuthUserState({
-        ...user,
-        avatarUrl: newAvatarUrl,
-      }),
-    );
+    if (user) {
+      dispatch(
+        setAuthUserState({
+          ...user,
+          avatarUrl: newAvatarUrl,
+        }),
+      );
+    }
   };
 
   return (
     <Screen
+      scrollable
       statusBarProps={{
         showBackButton: true,
         title: (

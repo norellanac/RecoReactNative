@@ -15,7 +15,6 @@ import { ordersApi } from '../../services/ordersApi';
 import { locationsApi } from '../../services/locationsApi';
 import { chatApi } from '../../services/chatApi';
 import { reviewsApi } from '@/app/services/reviewsApi';
-import { brandingApi } from '../../services/brandingApi';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
 
 const rootReducer = combineReducers({
@@ -32,7 +31,6 @@ const rootReducer = combineReducers({
   [locationsApi.reducerPath]: locationsApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
   [reviewsApi.reducerPath]: reviewsApi.reducer,
-  [brandingApi.reducerPath]: brandingApi.reducer,
 });
 
 const persistConfig = {
@@ -65,7 +63,6 @@ export const store = configureStore({
       locationsApi.middleware,
       chatApi.middleware,
       reviewsApi.middleware,
-      brandingApi.middleware,
     ),
   enhancers: (getDefaultEnhancers) =>
     getDefaultEnhancers().concat(devToolsEnhancer()),

@@ -13,40 +13,32 @@ import { Button } from '@/app/components/atoms';
 import slider_1 from '../../assets/img/home_sliders/slider_1_Reco.png';
 import slider_2 from '../../assets/img/home_sliders/slider_2_Reco.png';
 import { useTheme } from '@/app/theme/ThemeProvider';
+import { useBranding } from '@/app/hooks/useBranding';
+import { BASE_URL } from '@/app/utils/Environment';
 
 const { width } = Dimensions.get('window');
 
-// Define the interface for carousel items
 interface CarouselItem {
   img: ImageSourcePropType | { uri: string };
   buttonText?: string;
   onButtonPress?: () => void;
 }
 
-// Define props interface for the Carousel component
 interface CarouselProps {
-  images: CarouselItem[];
+  images?: CarouselItem[];
   autoScroll?: boolean;
   interval?: number;
-  imageStyle?: ImageStyle; // New prop for image styling
-  cardStyle?: ViewStyle; // Optional prop for card styling
+  imageStyle?: ImageStyle;
+  cardStyle?: ViewStyle;
 }
 
-const defaultImages = [
-  {
-    img: slider_1,
-    buttonText: 'Action 1',
-    onButtonPress: () => alert('Action 1 Pressed'),
-  },
-  {
-    img: slider_2,
-    buttonText: 'Action 2',
-    onButtonPress: () => alert('Action 2 Pressed'),
-  },
+const LOCAL_DEFAULT_IMAGES: CarouselItem[] = [
+  { img: slider_1 },
+  { img: slider_2 },
 ];
 
 const Carousel: React.FC<CarouselProps> = ({
-  images = defaultImages,
+  images,
   autoScroll = true,
   interval = 3500,
   imageStyle,
@@ -54,6 +46,16 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const { theme } = useTheme();
   const { colors } = theme;
+  const { config } = useBranding();
+
+  const brandingSlides: CarouselItem[] = config?.sliderImages?.length
+    ? config.sliderImages.map((url) => ({
+        img: url.startsWith('http') ? { uri: url } : { uri: `${BASE_URL}${url}` },
+      }))
+    : LOCAL_DEFAULT_IMAGES;
+
+  const resolvedImages = images ?? brandingSlides;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isUserInteracted, setIsUserInteracted] = useState(false);
   const [imageLoadErrors, setImageLoadErrors] = useState<
@@ -80,11 +82,11 @@ const Carousel: React.FC<CarouselProps> = ({
   };
 
   useEffect(() => {
-    if (isUserInteracted || !autoScroll || images?.length <= 1) return;
+    if (isUserInteracted || !autoScroll || resolvedImages?.length <= 1) return;
 
     const intervalId = setInterval(() => {
       setActiveIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % images?.length;
+        const nextIndex = (prevIndex + 1) % resolvedImages?.length;
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({
             x: nextIndex * (width - 20), // Adjust for horizontal margin
@@ -98,8 +100,8 @@ const Carousel: React.FC<CarouselProps> = ({
     return () => clearInterval(intervalId);
   }, [isUserInteracted, autoScroll, interval, images?.length]);
 
-  if (!images || images.length === 0) {
-    return null; // Don't render anything if no images are provided
+  if (!resolvedImages || resolvedImages.length === 0) {
+    return null;
   }
 
   return (
@@ -113,7 +115,7 @@ const Carousel: React.FC<CarouselProps> = ({
         scrollEventThrottle={16}
         onTouchStart={handleTouchStart}
       >
-        {images.map((image, index) => (
+        {resolvedImages.map((image, index) => (
           <View
             key={index}
             style={[styles.card, { width: width - 20 }, cardStyle]}
@@ -137,7 +139,7 @@ const Carousel: React.FC<CarouselProps> = ({
         ))}
       </ScrollView>
       <View style={styles.dotsContainer}>
-        {images.map((_, index) => (
+        {resolvedImages.map((_, index) => (
           <View
             key={index}
             style={[

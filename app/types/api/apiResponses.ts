@@ -9,7 +9,8 @@ export type UserResponseType = {
 
 export type LoginResponse = {
   user: User;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export type SuccessResponseType<T> = {

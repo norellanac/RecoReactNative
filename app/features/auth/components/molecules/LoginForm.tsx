@@ -131,9 +131,9 @@ export const LoginForm: React.FC = () => {
       console.log('Login result:', result);
 
       if (result.success) {
-        const token = result.data.token;
+        const { accessToken, refreshToken, user } = result.data;
         dispatch(
-          loginSuccess({ user: result.data.user, token: token as string }),
+          loginSuccess({ user, accessToken, refreshToken }),
         );
       } else {
         console.error('Login failed:', JSON.stringify(result, null, 2));
@@ -188,6 +188,9 @@ export const LoginForm: React.FC = () => {
             value={values.email}
             errorMsg={errors.email}
             variant="underlined"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            returnKeyType="next"
           />
           <TextInput
             placeholder={t('Forms.password', 'Password')}

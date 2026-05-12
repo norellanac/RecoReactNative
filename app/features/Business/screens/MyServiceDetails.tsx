@@ -9,14 +9,14 @@ import { getApiImageUrl } from '@/app/utils/Environment';
 import Carousel from '@/app/components/molecules/Carousel';
 import ReviewsSection from '@/app/components/molecules/ReviewsSection';
 import { useTranslation } from 'react-i18next';
+import { useLabels } from '@/app/hooks/useLabels';
+import { formatPrice } from '@/app/utils/formatters';
 
-type MyServiceDetailsRouteProp = RouteProp<
-  BusinessStackParams,
-  'MyServiceDetails'
->;
+type MyServiceDetailsRouteProp = RouteProp<BusinessStackParams, 'MyServiceDetails'>;
 
 const MyServiceDetails = () => {
   const { t } = useTranslation();
+  const { productService: L } = useLabels();
   const route = useRoute<MyServiceDetailsRouteProp>();
   const navigation = useNavigation();
   const { product } = route.params;
@@ -26,42 +26,26 @@ const MyServiceDetails = () => {
   const images = [{ img: getApiImageUrl(service?.urlImage) }];
   const categories = service.categories || [];
   const mainLocation = service.locations?.find((loc) => loc.type === 1);
-  const coverageLocations =
-    service.locations?.filter((loc) => loc.type === 2) || [];
+  const coverageLocations = service.locations?.filter((loc) => loc.type === 2) || [];
 
   return (
     <Screen
       statusBarProps={{
         showBackButton: true,
         title: (
-          <Text
-            variant="headline"
-            size="small"
-            color="info"
-            style={{ marginTop: 8 }}
-          >
-            {t('business.myServices', 'Editar mis servicios')}
+          <Text variant="headline" size="small" color="info" style={{ marginTop: 8 }}>
+            {t('business.myServices', `My ${L.entityNamePlural}`)}
           </Text>
         ),
         onLeftIconPress: () => navigation.goBack(),
       }}
     >
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
         <Carousel images={images} />
 
-        {/* Nombre y editar */}
+        {/* Name + edit */}
         <View style={styles.titleRow}>
-          <Text
-            variant="title"
-            size="large"
-            color="info"
-            style={styles.title}
-            numberOfLines={3}
-          >
+          <Text variant="title" size="large" color="info" style={styles.title} numberOfLines={3}>
             {service.name}
           </Text>
           <Icon
@@ -73,36 +57,26 @@ const MyServiceDetails = () => {
           />
         </View>
 
-        {/* Precio destacado */}
+        {/* Price badge */}
         <View style={styles.priceBadge}>
           <Text variant="body" size="large" style={styles.priceText}>
-            Q{service.price} /día
+            {formatPrice(service.price)} / {L.price}
           </Text>
         </View>
 
-        {/* Categorías */}
-        <Text
-          variant="title"
-          size="medium"
-          color="info"
-          style={styles.sectionTitle}
-        >
-          Categorías
+        {/* Categories */}
+        <Text variant="title" size="medium" color="info" style={styles.sectionTitle}>
+          {t('business.categories', 'Categories')}
         </Text>
         <View style={styles.chipRow}>
           {categories.length === 0 ? (
             <Text variant="body" size="medium" color="secondary">
-              Sin categorías
+              {t('business.noCategories', `No ${L.entityName} categories`)}
             </Text>
           ) : (
             categories.map((cat) => (
               <View key={cat.id} style={styles.chip}>
-                <Text
-                  variant="body"
-                  size="medium"
-                  color="secondary"
-                  style={styles.chipText}
-                >
+                <Text variant="body" size="medium" color="secondary" style={styles.chipText}>
                   {cat.name}
                 </Text>
               </View>
@@ -111,55 +85,41 @@ const MyServiceDetails = () => {
         </View>
         <View style={styles.divider} />
 
-        {/* Descripción */}
-        <Text
-          variant="title"
-          size="medium"
-          color="info"
-          style={styles.sectionTitle}
-        >
-          Habilidades y experiencia
+        {/* Description / Details */}
+        <Text variant="title" size="medium" color="info" style={styles.sectionTitle}>
+          {L.details}
         </Text>
         <View style={styles.infoCard}>
           <Text style={styles.infoText}>{service.description}</Text>
         </View>
-        {/* Dirección principal */}
-        <Text
-          variant="title"
-          size="medium"
-          color="info"
-          style={styles.sectionTitle}
-        >
-          Dirección principal
+
+        {/* Main location */}
+        <Text variant="title" size="medium" color="info" style={styles.sectionTitle}>
+          {L.location}
         </Text>
         <View style={styles.infoCard}>
           {mainLocation ? (
             <Text style={styles.infoText}>
-              {mainLocation.description ? ` ${mainLocation.description}` : ''}
+              {mainLocation.description ? `${mainLocation.description}` : ''}
               {mainLocation.city?.name ? `, ${mainLocation.city.name}` : ''}
             </Text>
           ) : (
-            <Text color="secondary">No registrada</Text>
+            <Text color="secondary">{t('business.noLocation', '—')}</Text>
           )}
         </View>
 
-        {/* Áreas de cobertura */}
-        <Text
-          variant="title"
-          size="medium"
-          color="info"
-          style={styles.sectionTitle}
-        >
-          Áreas de cobertura
+        {/* Coverage areas */}
+        <Text variant="title" size="medium" color="info" style={styles.sectionTitle}>
+          {L.serviceAreas}
         </Text>
         <View style={styles.chipRow}>
           {coverageLocations.length === 0 ? (
-            <Text color="secondary">No registradas</Text>
+            <Text color="secondary">{t('business.noAreas', '—')}</Text>
           ) : (
             coverageLocations.map((loc) => (
               <View key={loc.id} style={styles.chipSecondary}>
                 <Text style={styles.chipTextSecondary}>
-                  {loc.city?.name ? ` ${loc.city.name} |` : ''}
+                  {loc.city?.name ? `${loc.city.name}` : ''}
                 </Text>
               </View>
             ))
@@ -167,14 +127,9 @@ const MyServiceDetails = () => {
         </View>
         <View style={styles.divider} />
 
-        {/* Servicios adicionales */}
-        <Text
-          variant="title"
-          size="medium"
-          color="info"
-          style={styles.sectionTitle}
-        >
-          Servicios adicionales
+        {/* Additional details */}
+        <Text variant="title" size="medium" color="info" style={styles.sectionTitle}>
+          {t('business.additionalDetails', L.details)}
         </Text>
         {service.details && service.details.length > 0 ? (
           <View style={styles.skillsGrid}>
@@ -184,26 +139,19 @@ const MyServiceDetails = () => {
                   <Text style={styles.skillChipText}>{detail.label}</Text>
                 </View>
                 <Text style={styles.skillValue}>{detail.value}</Text>
-                <Text style={styles.skillDescription}>
-                  {detail.description}
-                </Text>
+                <Text style={styles.skillDescription}>{detail.description}</Text>
               </View>
             ))}
           </View>
         ) : (
           <Text color="secondary" style={{ marginHorizontal: 18 }}>
-            No hay servicios adicionales registrados.
+            {t('business.noDetails', `No ${L.details.toLowerCase()} listed.`)}
           </Text>
         )}
 
-        {/* Reseñas */}
-        <Text
-          variant="title"
-          size="medium"
-          color="info"
-          style={styles.sectionTitle}
-        >
-          Reseñas
+        {/* Reviews */}
+        <Text variant="title" size="medium" color="info" style={styles.sectionTitle}>
+          {L.rating}
         </Text>
         <ReviewsSection reviews={reviews} baseUrl={''} onSeeAll={() => {}} />
       </ScrollView>
@@ -212,133 +160,27 @@ const MyServiceDetails = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    //backgroundColor: '#FAF8FF',
-  },
-  contentContainer: {
-    paddingBottom: 32,
-    paddingHorizontal: 16,
-  },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 18,
-    marginBottom: 4,
-  },
-  title: {
-    fontWeight: 'bold',
-    flex: 1,
-    marginRight: 8,
-    fontSize: 24,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#E0E0E0',
-    marginVertical: 16,
-    //marginHorizontal: -16,
-  },
-  priceBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#EADDFF',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    marginBottom: 4,
-    marginTop: 2,
-  },
-  priceText: {
-    color: '#7B61FF',
-    fontWeight: 'bold',
-  },
-  sectionTitle: {
-    fontWeight: 'bold',
-    marginTop: 12,
-    marginBottom: 6,
-    //fontSize: 16,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 12,
-  },
-  chip: {
-    backgroundColor: '#F4F4F4',
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    marginRight: 4,
-    marginBottom: 4,
-  },
-  chipText: {
-    //fontWeight: 'bold',
-  },
-  chipSecondary: {
-    backgroundColor: '#F4F4F4',
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    marginRight: 6,
-    marginBottom: 6,
-  },
-  chipTextSecondary: {
-    color: '#7B7B7B',
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
-  infoCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#EADDFF',
-  },
-  infoText: {
-    color: '#444',
-    fontSize: 15,
-  },
-  skillsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  skillCard: {
-    flexBasis: '48%',
-    backgroundColor: '#F8F8F8',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#EADDFF',
-  },
-  skillChip: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#EADDFF',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    marginBottom: 6,
-  },
-  skillChipText: {
-    color: '#6750A4',
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
-  skillValue: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    marginBottom: 2,
-  },
-  skillDescription: {
-    color: '#7B7B7B',
-    fontSize: 13,
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  contentContainer: { paddingBottom: 32, paddingHorizontal: 16 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18, marginBottom: 4 },
+  title: { fontWeight: 'bold', flex: 1, marginRight: 8, fontSize: 24 },
+  divider: { height: 1, backgroundColor: '#E0E0E0', marginVertical: 16 },
+  priceBadge: { alignSelf: 'flex-start', backgroundColor: '#EADDFF', borderRadius: 16, paddingHorizontal: 16, paddingVertical: 6, marginBottom: 4, marginTop: 2 },
+  priceText: { color: '#7B61FF', fontWeight: 'bold' },
+  sectionTitle: { fontWeight: 'bold', marginTop: 12, marginBottom: 6 },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
+  chip: { backgroundColor: '#F4F4F4', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 4, marginRight: 4, marginBottom: 4 },
+  chipText: {},
+  chipSecondary: { backgroundColor: '#F4F4F4', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 4, marginRight: 6, marginBottom: 6 },
+  chipTextSecondary: { color: '#7B7B7B', fontWeight: 'bold', fontSize: 13 },
+  infoCard: { backgroundColor: '#fff', borderRadius: 12, padding: 12, marginBottom: 8, borderWidth: 1, borderColor: '#EADDFF' },
+  infoText: { color: '#444', fontSize: 15 },
+  skillsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 10, marginBottom: 20 },
+  skillCard: { flexBasis: '48%', backgroundColor: '#F8F8F8', borderRadius: 12, padding: 12, marginBottom: 12, borderWidth: 1, borderColor: '#EADDFF' },
+  skillChip: { alignSelf: 'flex-start', backgroundColor: '#EADDFF', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2, marginBottom: 6 },
+  skillChipText: { color: '#6750A4', fontWeight: 'bold', fontSize: 13 },
+  skillValue: { fontWeight: 'bold', fontSize: 15, marginBottom: 2 },
+  skillDescription: { color: '#7B7B7B', fontSize: 13 },
 });
 
 export default MyServiceDetails;

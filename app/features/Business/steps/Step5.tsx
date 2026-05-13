@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Text, TextInput } from '@/app/components/atoms';
 import dollarImage from '@/app/assets/img/stepper/step5_dollarImage.png';
 import { useTranslation } from 'react-i18next';
+import { useLabels } from '@/app/hooks/useLabels';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useUpdateProductMutation } from '@/app/services/productApi';
@@ -16,6 +17,7 @@ import CustomStepper from './CustomStepper';
 
 const Step5 = ({ onNext }: { onNext?: () => void }) => {
   const { t } = useTranslation();
+  const { productService: L } = useLabels();
   const dispatch = useAppDispatch();
   const stepperState = useAppSelector(selectStepper);
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
@@ -73,10 +75,7 @@ const Step5 = ({ onNext }: { onNext?: () => void }) => {
               color="info"
               style={styles.title}
             >
-              {t(
-                'businessStepper.step5.title',
-                'How much do you charge per day? 💰',
-              )}
+              {t('businessStepper.step5.title', `What is your ${L.price}? 💰`)}
             </Text>
             <Text
               variant="title"

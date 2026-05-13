@@ -1,43 +1,64 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInput } from '../../../../components/atoms';
+import { Text } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 import '../../../../helpers/i18n';
 import '../../../../../polyfills';
 import { Button } from '../../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
 import { loginSuccess } from '@/app/redux/slices/authSlice';
-import { LoginValues } from '@/app/types/api/apiResponses';
 import { useLoginMutation } from '@/app/services/authApi';
 import { Icon } from '@/app/components/atoms/Icon';
 import { BASE_URL } from '@/app/utils/Environment';
 import { useBiometricAuth } from '@/app/hooks/useBiometricAuth';
 import { useGlobalModal } from '@/app/hooks/useGlobalModal';
+import { useBranding } from '@/app/hooks/useBranding';
+import { Dropdown } from 'react-native-element-dropdown';
+
+type LoginMethod = 'email' | 'phone';
+
+const DIAL_CODES = [
+  { label: '🇬🇹 Guatemala', value: '+502' },
+  { label: '🇺🇸 USA / Canada', value: '+1' },
+  { label: '🇲🇽 Mexico', value: '+52' },
+  { label: '🇸🇻 El Salvador', value: '+503' },
+  { label: '🇭🇳 Honduras', value: '+504' },
+  { label: '🇳🇮 Nicaragua', value: '+505' },
+  { label: '🇨🇷 Costa Rica', value: '+506' },
+  { label: '🇵🇦 Panama', value: '+507' },
+  { label: '🇨🇴 Colombia', value: '+57' },
+  { label: '🇻🇪 Venezuela', value: '+58' },
+  { label: '🇦🇷 Argentina', value: '+54' },
+  { label: '🇧🇷 Brazil', value: '+55' },
+  { label: '🇨🇱 Chile', value: '+56' },
+  { label: '🇪🇸 Spain', value: '+34' },
+  { label: '🇬🇧 UK', value: '+44' },
+];
+
+// Biometric store saves identifier in the 'email' field regardless of type.
+// If it starts with '+' it's a phone number (E.164).
+const credentialFromIdentifier = (identifier: string, password: string) =>
+  identifier.startsWith('+')
+    ? { phone: identifier, password }
+    : { email: identifier, password };
 
 export const LoginForm: React.FC = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
+  const { colors } = useBranding();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const { showModal } = useGlobalModal();
-  const {
-    enableBiometrics,
-    isBiometricEnabled,
-    authenticateWithBiometrics,
-    getBiometricIcon,
-  } = useBiometricAuth();
+  const { enableBiometrics, isBiometricEnabled, authenticateWithBiometrics, getBiometricIcon } = useBiometricAuth();
 
+  const [loginMethod, setLoginMethod] = useState<LoginMethod>('email');
+  const [dialCode, setDialCode] = useState('+502');
+  const [showPassword, setShowPassword] = useState(false);
   const [biometricsAvailable, setBiometricsAvailable] = useState(false);
-  const [bioInfo, setBioInfo] = useState<{
-    name: string;
-    family: any;
-    label: string;
-  }>({
-    name: 'fingerprint',
-    family: 'MaterialIcons',
-    label: 'Touch ID',
+  const [bioInfo, setBioInfo] = useState<{ name: string; family: any; label: string }>({
+    name: 'fingerprint', family: 'MaterialIcons', label: 'Touch ID',
   });
 
   React.useEffect(() => {
@@ -52,145 +73,70 @@ export const LoginForm: React.FC = () => {
     checkBiometrics();
   }, [isBiometricEnabled]);
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+  const validationSchema = Yup.object().shape({
+    email: loginMethod === 'email'
+      ? Yup.string()
+          .email(t('validations.invalid', 'Invalid {{field}}', { field: t('Forms.email', 'Email') }))
+          .required(t('validations.required', 'This {{field}} is required', { field: t('Forms.email', 'Email') }))
+      : Yup.string(),
+    phoneNumber: loginMethod === 'phone'
+      ? Yup.string()
+          .min(6, t('validations.min_length', 'Minimum {{length}} characters', { length: 6 }))
+          .required(t('validations.required', 'This {{field}} is required', { field: t('Forms.phone', 'Phone') }))
+      : Yup.string(),
+    password: Yup.string()
+      .min(6, t('validations.min_length', 'Minimum {{length}} characters', { length: 6 }))
+      .required(t('validations.required', 'This {{field}} is required', { field: t('Forms.password', 'Password') })),
+  });
 
-  // ✅ Función para mapear errores a mensajes amigables
   const getErrorMessage = (error: any): string => {
     const status = error?.status;
     const originalStatus = error?.originalStatus;
-    const httpStatus =
-      originalStatus || (typeof status === 'number' ? status : null);
+    const httpStatus = originalStatus || (typeof status === 'number' ? status : null);
 
-    if (status === 'FETCH_ERROR') {
-      return t(
-        'login.errors.networkError',
-        `Error de conexión. No se pudo conectar al servidor (${BASE_URL}). Verifica tu conexión a internet.`,
-      );
-    }
-
-    if (status === 'TIMEOUT_ERROR') {
-      return t(
-        'login.errors.timeout',
-        'La solicitud tardó demasiado. Intenta de nuevo.',
-      );
-    }
-
+    if (status === 'FETCH_ERROR') return t('login.errors.networkError', `Connection error (${BASE_URL}).`);
+    if (status === 'TIMEOUT_ERROR') return t('login.errors.timeout', 'Request timed out. Try again.');
     if (status === 'PARSING_ERROR') {
-      if (httpStatus === 404) {
-        return t(
-          'login.errors.serviceUnavailable',
-          'Servicio no disponible. Intenta de nuevo más tarde.',
-        );
-      }
-      return t(
-        'login.errors.serverError',
-        `Error del servidor (${httpStatus || 'desconocido'}). Intenta más tarde.`,
-      );
+      return httpStatus === 404
+        ? t('login.errors.serviceUnavailable', 'Service unavailable.')
+        : t('login.errors.serverError', `Server error (${httpStatus ?? 'unknown'}).`);
     }
+    if (httpStatus && httpStatus >= 500) return t('login.errors.serverError', `Server error (${httpStatus}).`);
+    if (httpStatus === 404) return t('login.errors.serviceUnavailable', 'Service unavailable.');
 
-    if (httpStatus && httpStatus >= 500) {
-      return t(
-        'login.errors.serverError',
-        `Error del servidor (${httpStatus}). Intenta más tarde.`,
-      );
-    }
-
-    if (httpStatus === 404) {
-      return t(
-        'login.errors.serviceUnavailable',
-        'Servicio no disponible. Intenta de nuevo más tarde.',
-      );
-    }
-
-    const errorMessage =
-      error?.data?.message || error?.message || 'Unknown error';
-
-    switch (errorMessage) {
-      case 'User not found':
-        return t(
-          'login.errors.userNotFound',
-          'No encontramos una cuenta con este correo electrónico',
-        );
+    const msg = error?.data?.message || error?.message || '';
+    switch (msg) {
+      case 'User not found':    return t('login.errors.userNotFound', 'No account found with this credential');
       case 'Invalid credentials':
-      case 'Invalid password':
-        return t(
-          'login.errors.invalidCredentials',
-          'La contraseña es incorrecta',
-        );
-      case 'Account is disabled':
-        return t(
-          'login.errors.accountDisabled',
-          'Tu cuenta ha sido deshabilitada',
-        );
-      case 'Too many attempts':
-        return t(
-          'login.errors.tooManyAttempts',
-          'Demasiados intentos. Intenta de nuevo más tarde',
-        );
-      default:
-        return t(
-          'login.errors.general',
-          'Error al iniciar sesión. Verifica tus datos e intenta de nuevo',
-        );
+      case 'Invalid password':  return t('login.errors.invalidCredentials', 'Incorrect password');
+      case 'Account is disabled': return t('login.errors.accountDisabled', 'Your account has been disabled');
+      case 'Too many attempts': return t('login.errors.tooManyAttempts', 'Too many attempts. Try again later');
+      default:                  return t('login.errors.general', 'Login failed. Check your details and try again');
     }
   };
 
-  // ✅ Función para mostrar alertas amigables
-  const showErrorAlert = (message: string) => {
-    showModal({
-      title: t('login.error', 'Error de inicio de sesión'),
-      message,
-    });
-  };
-
-  const handleLogin = async (values: LoginValues, setFieldValue?: any) => {
-    console.log('Login values:', values);
+  const handleLogin = async (credential: { email?: string; phone?: string; password: string }) => {
     try {
-      const cleanEmail = values.email.trim();
-      const result = await login({
-        email: cleanEmail,
-        password: values.password,
-      }).unwrap();
-
-      console.log('Login result:', result);
-
+      const result = await login(credential as any).unwrap();
       if (result.success) {
         const { accessToken, refreshToken, user } = result.data;
-
-        // Dispatch login first to ensure state is updated
         dispatch(loginSuccess({ user, accessToken, refreshToken }));
 
-        // Check for biometrics enrollment after success login
         const biometricsEnabled = await isBiometricEnabled();
         if (!biometricsEnabled) {
-          // Wrap in setTimeout to ensure it's not dismissed by navigation or previous UI
+          const identifier = credential.email || credential.phone || '';
           setTimeout(() => {
             showModal({
               title: t('common.enable_biometrics', 'Enable Biometrics'),
-              message: t(
-                'common.biometrics_message',
-                'Would you like to use biometrics for future logins?',
-              ),
+              message: t('common.biometrics_message', 'Would you like to use biometrics for future logins?'),
               onConfirm: async () => {
-                // Small delay to allow previous modal to close before starting biometrics
                 setTimeout(async () => {
-                  const success = await enableBiometrics(
-                    cleanEmail,
-                    values.password,
-                  );
+                  const success = await enableBiometrics(identifier, credential.password);
                   if (success) {
-                    // Success modal
-                    setTimeout(() => {
-                      showModal({
-                        title: t('common.success', 'Success'),
-                        message: t(
-                          'common.biometrics_enabled',
-                          'Biometrics enabled successfully',
-                        ),
-                      });
-                    }, 500);
+                    setTimeout(() => showModal({
+                      title: t('common.success', 'Success'),
+                      message: t('common.biometrics_enabled', 'Biometrics enabled successfully'),
+                    }), 500);
                   }
                 }, 300);
               },
@@ -200,78 +146,105 @@ export const LoginForm: React.FC = () => {
           }, 800);
         }
       } else {
-        console.error('Login failed:', JSON.stringify(result, null, 2));
-        showErrorAlert(getErrorMessage(result));
+        showModal({ title: t('login.error', 'Login error'), message: getErrorMessage(result) });
       }
     } catch (err: any) {
-      console.error('Login error:', JSON.stringify(err, null, 2));
-      showErrorAlert(getErrorMessage(err));
+      showModal({ title: t('login.error', 'Login error'), message: getErrorMessage(err) });
     }
   };
 
   const handleBiometricLogin = async (setFieldValue: any) => {
     const credentials = await authenticateWithBiometrics();
     if (credentials) {
-      setFieldValue('email', credentials.email);
+      const credential = credentialFromIdentifier(credentials.email, credentials.password);
       setFieldValue('password', credentials.password);
-      handleLogin(credentials, setFieldValue);
+      if (credential.phone) {
+        setLoginMethod('phone');
+      } else {
+        setFieldValue('email', credentials.email);
+      }
+      handleLogin({ ...credential, password: credentials.password });
     }
   };
 
-  const handleSubmit = (values: { email: string; password: string }) => {
-    handleLogin(values);
+  const handleSubmit = (values: any) => {
+    const credential = loginMethod === 'email'
+      ? { email: values.email.trim(), password: values.password }
+      : { phone: `${dialCode}${values.phoneNumber.trim()}`, password: values.password };
+    handleLogin(credential);
   };
 
   return (
     <Formik
-      initialValues={{ email: '', password: '' }}
+      initialValues={{ email: '', phoneNumber: '', password: '' }}
       onSubmit={handleSubmit}
-      validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .required(
-            t('validations.required', 'This {{field}} is required', {
-              field: t('Forms.email', 'Email'),
-            }),
-          )
-          .email(
-            t('validations.invalid', 'Invalid {{field}}', {
-              field: t('Forms.email', 'Email'),
-            }),
-          ),
-        password: Yup.string()
-          .required(
-            t('validations.required', 'This {{field}} is required', {
-              field: t('Forms.password', 'Password'),
-            }),
-          )
-          .min(
-            6,
-            t('validations.min_length', 'Minimum {{length}} characters', {
-              length: 6,
-            }),
-          ),
-      })}
+      validationSchema={validationSchema}
     >
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        errors,
-        setFieldValue,
-      }) => (
+      {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
         <View style={styles.form}>
-          <TextInput
-            placeholder={t('Forms.email', 'Email')}
-            onChangeText={handleChange('email')}
-            onBlur={() => handleBlur('email')}
-            value={values.email}
-            errorMsg={errors.email}
-            variant="underlined"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            returnKeyType="next"
-          />
+
+          {/* Email / Phone toggle */}
+          <View style={[styles.toggle, { borderColor: colors.secondaryContainer }]}>
+            <TouchableOpacity
+              style={[styles.toggleTab, loginMethod === 'email' && { backgroundColor: colors.primary }]}
+              onPress={() => setLoginMethod('email')}
+            >
+              <Text variant="body" size="medium" style={{ color: loginMethod === 'email' ? colors.onPrimary : colors.textSecondary }}>
+                {t('auth.login.email_toggle', 'Email')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.toggleTab, loginMethod === 'phone' && { backgroundColor: colors.primary }]}
+              onPress={() => setLoginMethod('phone')}
+            >
+              <Text variant="body" size="medium" style={{ color: loginMethod === 'phone' ? colors.onPrimary : colors.textSecondary }}>
+                {t('auth.login.phone_toggle', 'Phone')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {loginMethod === 'email' ? (
+            <TextInput
+              placeholder={t('Forms.email', 'Email')}
+              onChangeText={handleChange('email')}
+              onBlur={() => handleBlur('email')}
+              value={values.email}
+              errorMsg={errors.email}
+              variant="underlined"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              returnKeyType="next"
+            />
+          ) : (
+            <View style={styles.phoneRow}>
+              <View style={styles.dialCodePicker}>
+                <Dropdown
+                  data={DIAL_CODES}
+                  labelField="label"
+                  valueField="value"
+                  value={dialCode}
+                  onChange={(item) => setDialCode(item.value)}
+                  placeholder={t('auth.login.dial_code', 'Code')}
+                  style={[styles.dropdown, { borderBottomColor: (colors as any).grey ?? '#79747E' }]}
+                  selectedTextStyle={{ fontSize: 13 }}
+                  containerStyle={{ width: 240 }}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  placeholder={t('Forms.phone', 'Phone number')}
+                  onChangeText={handleChange('phoneNumber')}
+                  onBlur={() => handleBlur('phoneNumber')}
+                  value={values.phoneNumber}
+                  errorMsg={errors.phoneNumber}
+                  variant="underlined"
+                  keyboardType="phone-pad"
+                  returnKeyType="next"
+                />
+              </View>
+            </View>
+          )}
+
           <TextInput
             placeholder={t('Forms.password', 'Password')}
             onChangeText={handleChange('password')}
@@ -280,14 +253,10 @@ export const LoginForm: React.FC = () => {
             errorMsg={errors.password}
             variant="underlined"
             secureTextEntry={!showPassword}
-            endAdornment={
-              <Icon
-                name={showPassword ? 'eye-off' : 'eye'}
-                onPress={handleShowPassword}
-              />
-            }
+            endAdornment={<Icon name={showPassword ? 'eye-off' : 'eye'} onPress={() => setShowPassword((v) => !v)} />}
             onSubmitEditing={() => handleSubmit()}
           />
+
           <Button
             variant="filled"
             title={t('login.login', 'Login')}
@@ -295,20 +264,14 @@ export const LoginForm: React.FC = () => {
             isLoading={isLoading}
             style={{ marginTop: 32 }}
           />
+
           {biometricsAvailable && (
             <Button
               variant="outlined"
               title={t('login.biometric_login', `Login with ${bioInfo.label}`)}
               onPress={() => handleBiometricLogin(setFieldValue)}
               style={{ marginTop: 16 }}
-              startIcon={
-                <Icon
-                  name={bioInfo.name}
-                  family={bioInfo.family}
-                  size={24}
-                  color="primary"
-                />
-              }
+              startIcon={<Icon name={bioInfo.name} family={bioInfo.family} size={24} color="primary" />}
             />
           )}
         </View>
@@ -319,7 +282,34 @@ export const LoginForm: React.FC = () => {
 
 const styles = StyleSheet.create({
   form: {
-    marginTop: 60,
+    marginTop: 40,
     padding: 16,
+  },
+  toggle: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    borderWidth: 1,
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  toggleTab: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  phoneRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginBottom: 4,
+  },
+  dialCodePicker: {
+    width: 120,
+    paddingTop: 4,
+  },
+  dropdown: {
+    borderBottomWidth: 1,
+    paddingVertical: 8,
   },
 });

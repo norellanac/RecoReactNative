@@ -8,24 +8,34 @@
     "error": {
       "updating_password": "Error al actualizar la contraseña"
     },
+    "login": {
+      "dial_code": "Código",
+      "email_toggle": "Correo",
+      "phone_toggle": "Teléfono"
+    },
     "OTPVerification": {
       "error": "Código de verificación inválido"
     },
     "register": {
       "confirm_password": "Confirmar Contraseña",
+      "confirmPassword": "Confirm Password",
+      "dial_code": "Código",
       "email": "Correo electrónico",
-      "lastname": "Apellido",
-      "name": "Nombre",
-      "password": "Contraseña"
+      "email_toggle": "Correo",
+      "merchant_description": "Publica tus servicios y recibe pedidos",
+      "merchant_toggle": "Quiero ofrecer servicios",
+      "password": "Contraseña",
+      "phone": "Número de teléfono",
+      "phone_toggle": "Teléfono"
     }
   },
   "bottomTabs": {
     "favorites": "Favoritos",
     "home": "Inicio",
+    "messages": "Mensajes",
     "products": "Productos",
     "profile": "Perfil",
-    "task": "Tareas",
-    "messages": "Mensajes"
+    "task": "Tareas"
   },
   "business": {
     "myServices": "Editar mis servicios",
@@ -107,15 +117,19 @@
     "yesterday": "Ayer"
   },
   "common": {
+    "biometrics_enabled": "¡Biometría habilitada!",
+    "biometrics_message": "¿Te gustaría usar la biometría para futuros inicios de sesión?",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
+    "enable_biometrics": "Habilitar Biometría",
     "error": "Error",
     "loading": "Cargando...",
-    "ok": "OK",
+    "ok": "Aceptar",
     "perDay": "por día",
     "retry": "Reintentar",
     "reviews": "reseñas",
-    "success": "Éxito"
+    "success": "Éxito",
+    "yes": "Sí"
   },
   "commons": {
     "and": "y ",
@@ -144,7 +158,8 @@
   "Forms": {
     "email": "Correo Electrónico",
     "password": "Contraseña",
-    "password_long": "La contraseña debe tener al menos 8 caracteres"
+    "password_long": "La contraseña debe tener al menos 8 caracteres",
+    "phone": "Número de teléfono"
   },
   "home_screen": {
     "all": "Ver todos",
@@ -161,6 +176,7 @@
     "viewAll": "Ver todas"
   },
   "login": {
+    "biometric_login": "",
     "error": "Error de inicio de sesión",
     "errors": {
       "accountDisabled": "Tu cuenta ha sido deshabilitada",
@@ -234,18 +250,8 @@
     "already_have_an_account": "¿Ya tienes una cuenta?",
     "error": "Error de registro",
     "errors": {
-      "accountNotActivated": "Cuenta creada exitosamente. Revisa tu correo para activarla",
-      "accountPending": "Cuenta creada. Está pendiente de aprobación",
-      "emailExists": "Este correo ya está registrado. ¿Quieres iniciar sesión?",
       "general": "Error al crear la cuenta. Verifica tus datos e intenta de nuevo",
-      "invalidEmail": "El formato del correo electrónico no es válido",
-      "lastnameRequired": "El apellido es obligatorio",
-      "loginAfterSignup": "Cuenta creada pero hubo un error al iniciar sesión automáticamente",
-      "nameRequired": "El nombre es obligatorio",
-      "passwordRequired": "La contraseña es obligatoria",
-      "registrationDisabled": "El registro está temporalmente deshabilitado",
-      "serverError": "Error del servidor. Intenta de nuevo más tarde",
-      "weakPassword": "La contraseña debe ser más segura. Incluye mayúsculas, números y símbolos"
+      "loginAfterSignup": "Cuenta creada pero hubo un error al iniciar sesión automáticamente"
     },
     "privacy_policy": "Política de Privacidad",
     "sign_up": "Regístrate",
@@ -352,6 +358,7 @@
   },
   "userProfile": {
     "account": "Cuenta",
+    "appLogs": "App Logs",
     "cancel": "Cancelar",
     "changeLanguage": "Cambiar Idioma",
     "changePassword": "Cambiar Contraseña",
@@ -389,6 +396,6 @@
     "invalid": "{{field}} no es válido",
     "min_length": "Mínimo {{length}} caracteres",
     "passwords_match": "Las contraseñas deben coincidir",
-    "required": "Este {{field}} es obligatorio"
+    "required": "{{field}} es obligatorio"
   }
 }

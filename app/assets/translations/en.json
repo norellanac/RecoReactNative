@@ -8,27 +8,37 @@
     "error": {
       "updating_password": ""
     },
+    "login": {
+      "dial_code": "Code",
+      "email_toggle": "Email",
+      "phone_toggle": "Phone"
+    },
     "OTPVerification": {
       "error": ""
     },
     "register": {
       "confirm_password": "Confirm Password",
+      "confirmPassword": "Confirm Password",
+      "dial_code": "Code",
       "email": "Email",
-      "lastname": "Last Name",
-      "name": "Name",
-      "password": "Password"
+      "email_toggle": "Email",
+      "merchant_description": "Publish your services and receive orders",
+      "merchant_toggle": "I want to offer services",
+      "password": "Password",
+      "phone": "Phone number",
+      "phone_toggle": "Phone"
     }
   },
   "bottomTabs": {
     "favorites": "Favorites",
     "home": "Home",
+    "messages": "Messages",
     "products": "Products",
     "profile": "Profile",
-    "task": "Task",
-    "messages": "Messages"
+    "task": "Task"
   },
   "business": {
-    "myServices": "Editar mis servicios",
+    "myServices": "Edit my services",
     "tabs": {
       "myServices": "My services",
       "register": "Register service"
@@ -107,15 +117,19 @@
     "yesterday": "Yesterday"
   },
   "common": {
+    "biometrics_enabled": "Biometrics enabled!",
+    "biometrics_message": "Would you like to use biometrics for future logins?",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "enable_biometrics": "Enable Biometrics",
     "error": "Error",
     "loading": "Loading...",
     "ok": "OK",
     "perDay": "per day",
     "retry": "Retry",
-    "reviews": "reseñas",
-    "success": "Success"
+    "reviews": "reviews",
+    "success": "Success",
+    "yes": "Yes"
   },
   "commons": {
     "and": "and ",
@@ -135,15 +149,16 @@
       "minLength": "Must be at least 6 characters",
       "mustBeNumber": "Must be a number",
       "passwordsMustMatch": "Passwords must match",
-      "permissionDenied": "Permiso denegado",
-      "permissionGallery": "Se requiere acceso a la galería para seleccionar una imagen.",
+      "permissionDenied": "Permission denied",
+      "permissionGallery": "Gallery access is required to select an image.",
       "remove": "Remove",
       "required": "Required"
     }
   },
   "Forms": {
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "phone": "Phone number"
   },
   "home_screen": {
     "all": "View all",
@@ -160,17 +175,18 @@
     "viewAll": "View all"
   },
   "login": {
-    "error": "Error de inicio de sesión",
+    "biometric_login": "",
+    "error": "Login Error",
     "errors": {
-      "accountDisabled": "Tu cuenta ha sido deshabilitada",
-      "general": "Error al iniciar sesión. Verifica tus datos e intenta de nuevo",
-      "invalidCredentials": "La contraseña es incorrecta",
+      "accountDisabled": "Your account has been disabled",
+      "general": "Error logging in. Please check your data and try again",
+      "invalidCredentials": "The password is incorrect",
       "networkError": "",
       "serverError": "",
-      "serviceUnavailable": "Servicio no disponible. Intenta de nuevo más tarde.",
-      "timeout": "La solicitud tardó demasiado. Intenta de nuevo.",
-      "tooManyAttempts": "Demasiados intentos. Intenta de nuevo más tarde",
-      "userNotFound": "No encontramos una cuenta con este correo electrónico"
+      "serviceUnavailable": "Service unavailable. Try again later.",
+      "timeout": "The request took too long. Try again.",
+      "tooManyAttempts": "Too many attempts. Try again later",
+      "userNotFound": "We couldn't find an account with this email"
     },
     "forget_password": "Forgot password?",
     "have_not_account": "Don't have an account?",
@@ -231,28 +247,18 @@
   },
   "register": {
     "already_have_an_account": "Already have an account?",
-    "error": "Error de registro",
+    "error": "Registration Error",
     "errors": {
-      "accountNotActivated": "Cuenta creada exitosamente. Revisa tu correo para activarla",
-      "accountPending": "Cuenta creada. Está pendiente de aprobación",
-      "emailExists": "Este correo ya está registrado. ¿Quieres iniciar sesión?",
-      "general": "Error al crear la cuenta. Verifica tus datos e intenta de nuevo",
-      "invalidEmail": "El formato del correo electrónico no es válido",
-      "lastnameRequired": "El apellido es obligatorio",
-      "loginAfterSignup": "Cuenta creada pero hubo un error al iniciar sesión automáticamente",
-      "nameRequired": "El nombre es obligatorio",
-      "passwordRequired": "La contraseña es obligatoria",
-      "registrationDisabled": "El registro está temporalmente deshabilitado",
-      "serverError": "Error del servidor. Intenta de nuevo más tarde",
-      "weakPassword": "La contraseña debe ser más segura. Incluye mayúsculas, números y símbolos"
+      "general": "Error creating account. Check your data and try again",
+      "loginAfterSignup": "Account created but there was an error logging in automatically"
     },
     "privacy_policy": "Privacy Policy",
     "sign_up": "Sign Up",
-    "success": "Registro exitoso",
+    "success": "Registration successful",
     "terms_service": "Terms of Service",
     "terms_text": "By signing up, you agree to our",
     "title": "Create your account",
-    "welcomeMessage": "Bienvenido a Reco! Tu cuenta ha sido creada exitosamente"
+    "welcomeMessage": "Welcome to Reco! Your account has been created successfully"
   },
   "search": {
     "allServices": "All Services",
@@ -302,7 +308,7 @@
     "title_4": "Explore, compare and schedule in a few steps."
   },
   "splash": {
-    "tagline": "Conectando servicios de calidad"
+    "tagline": "Connecting quality services"
   },
   "task": {
     "title": "Tasks"
@@ -351,6 +357,7 @@
   },
   "userProfile": {
     "account": "Account",
+    "appLogs": "App Logs",
     "cancel": "Cancel",
     "changeLanguage": "Change Language",
     "changePassword": "Change password",
@@ -387,7 +394,7 @@
   "validations": {
     "invalid": "Invalid {{field}}",
     "min_length": "Minimum {{length}} characters",
-    "passwords_match": "Las contraseñas deben coincidir",
-    "required": "This {{field}} is required"
+    "passwords_match": "Passwords must match",
+    "required": "{{field}} is required"
   }
 }

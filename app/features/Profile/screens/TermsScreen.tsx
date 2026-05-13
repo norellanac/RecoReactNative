@@ -1,13 +1,17 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Text } from '@/app/components/atoms';
 import { Screen } from '@/app/components/templates';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
+import { useBranding } from '@/app/hooks/useBranding';
 
 export const TermsScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const { config } = useBranding();
+
+  const appName = config?.appName || 'Reco';
 
   return (
     <Screen
@@ -23,10 +27,7 @@ export const TermsScreen = () => {
           color="primary"
           style={{ marginBottom: 16, fontWeight: 'bold' }}
         >
-          {t(
-            'terms.title',
-            'Terms and Conditions for Reco (Web Platform and Mobile App)',
-          )}
+          {t('terms.title', `Terms and Conditions for ${appName}`)}
         </Text>
         <Text
           variant="body"

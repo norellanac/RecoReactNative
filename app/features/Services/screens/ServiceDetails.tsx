@@ -24,6 +24,7 @@ import {
   selectIsFavorite,
 } from '@/app/redux/slices/favoritesSlice';
 import { formatPrice, formatRating } from '@/app/utils/formatters';
+import { useLabels } from '@/app/hooks/useLabels';
 
 type ServiceDetailsParams = {
   productService: ProductService;
@@ -36,6 +37,7 @@ type ServiceDetailsRouteProp = RouteProp<
 
 const ServiceDetails = () => {
   const { t } = useTranslation();
+  const { productService: L, order: O } = useLabels();
   const route = useRoute<ServiceDetailsRouteProp>();
   const navigation = useNavigation<any>();
   const { productService } = route.params;
@@ -128,8 +130,7 @@ const ServiceDetails = () => {
           </Text>
           <Icon name="star" family="MaterialIcons" size={16} color="#F7B500" />
           <Text variant="body" size="medium" color="info">
-            {formatRating(service.averageRating)} ({reviews.length}{' '}
-            {t('services.serviceDetails.reviews', 'reviews')} )
+            {formatRating(service.averageRating)} ({reviews.length} {L.rating})
           </Text>
         </View>
         <View style={styles.infoRow}>
@@ -145,7 +146,7 @@ const ServiceDetails = () => {
             ) : (
               <View style={styles.chip}>
                 <Text variant="body" size="small" style={styles.chipText}>
-                  Service
+                  {L.entityName}
                 </Text>
               </View>
             )}
@@ -158,7 +159,7 @@ const ServiceDetails = () => {
               color="#7B61FF"
             />
             <Text variant="body" size="medium" color="secondary">
-              {service.location ?? 'No location'}
+              {service.location ?? L.location}
             </Text>
           </View>
         </View>
@@ -167,7 +168,7 @@ const ServiceDetails = () => {
         <Text variant="title" size="large" style={styles.price}>
           {formatPrice(service.price)}{' '}
           <Text variant="body" size="small" color="secondary">
-            {t('services.serviceDetails.floorPrice', '/ per day')}
+            / {L.price}
           </Text>
         </Text>
 
@@ -175,7 +176,7 @@ const ServiceDetails = () => {
         <View style={styles.bottomButtons}>
           {/* <Button title="Message" variant="outlined" style={styles.bottomBtn} /> */}
           <Button
-            title="Book Now"
+            title={O.actions.create}
             variant="filled"
             style={styles.bottomBtn}
             onPress={handleBookNow}
@@ -264,10 +265,7 @@ const ServiceDetails = () => {
           color="info"
           style={styles.sectionTitle}
         >
-          {t(
-            'services.serviceDetails.skillsAndExperience',
-            'Skills & Experience',
-          )}
+          {L.details}
         </Text>
         <Text
           variant="body"

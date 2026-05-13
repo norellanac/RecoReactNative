@@ -20,6 +20,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUpdateOrderMutation } from '@/app/services/ordersApi';
 import { useHasRole } from '@/app/hooks/useHasRole';
 import useChatHandler from '@/app/hooks/useChatHandler';
+import { useLabels } from '@/app/hooks/useLabels';
 
 const TaskOrderDetailsScreen = () => {
   const { t } = useTranslation();
@@ -31,19 +32,20 @@ const TaskOrderDetailsScreen = () => {
   const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
   const isMerchant = useHasRole('Merchant');
   const { startChatWith } = useChatHandler();
+  const { productService: L, order: O } = useLabels();
 
   const { data, isLoading, isError } = useGetOrderByIdQuery(orderId);
 
   if (isLoading) {
     return (
-      <Text style={{ textAlign: 'center', marginTop: 40 }}>Loading...</Text>
+      <Text style={{ textAlign: 'center', marginTop: 40 }}>{t('common.loading', 'Loading...')}</Text>
     );
   }
 
   if (isError || !data?.data) {
     return (
       <Text style={{ textAlign: 'center', marginTop: 40 }}>
-        Order not found.
+        {O.entityName} {t('common.notFound', 'not found')}.
       </Text>
     );
   }
@@ -112,104 +114,48 @@ const TaskOrderDetailsScreen = () => {
 
   const renderActions = () => {
     switch (order.status) {
-      case 1: // Scheduled
+      case 1:
         return (
           <>
             {isMerchant && (
               <>
-                <Button
-                  title="Accept Task"
-                  variant="filled"
-                  style={styles.button}
-                  onPress={() => handleUpdateStatus(2)}
-                  disabled={isUpdating}
-                />
-                <Button
-                  title="Not interested"
-                  variant="tonal"
-                  style={[styles.button, { marginTop: 12 }]}
-                  onPress={() => handleUpdateStatus(4)}
-                  disabled={isUpdating}
-                />
+                <Button title={O.actions.confirm} variant="filled" style={styles.button} onPress={() => handleUpdateStatus(2)} disabled={isUpdating} />
+                <Button title={O.actions.cancel} variant="tonal" style={[styles.button, { marginTop: 12 }]} onPress={() => handleUpdateStatus(4)} disabled={isUpdating} />
               </>
             )}
             {!isMerchant && (
               <>
-                <Button
-                  title="Chat with provider"
-                  variant="tonal"
-                  style={styles.button}
-                  onPress={handleChat}
-                  disabled={isUpdating}
-                />
-                <Button
-                  title="Find a new professional"
-                  variant="text"
-                  style={[styles.button, { marginTop: 12 }]}
-                  onPress={() => navigation.navigate('AllServices')}
-                  disabled={isUpdating}
-                />
+                <Button title={`Chat with ${L.provider}`} variant="tonal" style={styles.button} onPress={handleChat} disabled={isUpdating} />
+                <Button title={`Find a new ${L.provider}`} variant="text" style={[styles.button, { marginTop: 12 }]} onPress={() => navigation.navigate('AllServices')} disabled={isUpdating} />
               </>
             )}
           </>
         );
-      case 2: // In Progress
+      case 2:
         return (
           <>
             {isMerchant && (
               <>
-                <Button
-                  title="Mark as completed"
-                  variant="filled"
-                  style={styles.button}
-                  onPress={() => handleUpdateStatus(3)} // 3 = Completed
-                  disabled={isUpdating}
-                />
-                <Button
-                  title="Cancel Task"
-                  variant="text"
-                  style={[styles.button, { marginTop: 12 }]}
-                  onPress={() => handleUpdateStatus(4)} // 4 = Canceled
-                  disabled={isUpdating}
-                />
+                <Button title={O.statuses.completed} variant="filled" style={styles.button} onPress={() => handleUpdateStatus(3)} disabled={isUpdating} />
+                <Button title={O.actions.cancel} variant="text" style={[styles.button, { marginTop: 12 }]} onPress={() => handleUpdateStatus(4)} disabled={isUpdating} />
               </>
             )}
             {!isMerchant && (
               <>
-                <Button
-                  title="Chat with provider"
-                  variant="tonal"
-                  style={[styles.button, { marginTop: 12 }]}
-                  onPress={handleChat}
-                  disabled={isUpdating}
-                />
-                <Button
-                  title="Cancel Task"
-                  variant="text"
-                  style={[styles.button, { marginTop: 12 }]}
-                  onPress={() => handleUpdateStatus(4)} // 4 = Canceled
-                  disabled={isUpdating}
-                />
+                <Button title={`Chat with ${L.provider}`} variant="tonal" style={[styles.button, { marginTop: 12 }]} onPress={handleChat} disabled={isUpdating} />
+                <Button title={O.actions.cancel} variant="text" style={[styles.button, { marginTop: 12 }]} onPress={() => handleUpdateStatus(4)} disabled={isUpdating} />
               </>
             )}
           </>
         );
-      case 3: // Completed
+      case 3:
         return (
           <>
             <Button
-              title="Rate"
+              title={O.statuses.completed}
               variant="filled"
               style={styles.button}
-              onPress={() =>
-                navigation.navigate('RateScreen', {
-                  service: {
-                    id: service?.id,
-                    urlImage: service?.urlImage,
-                    name: service?.name,
-                  },
-                })
-              }
+              onPress={() => navigation.navigate('RateScreen', { service: { id: service?.id, urlImage: service?.urlImage, name: service?.name } })}
               disabled={isUpdating}
             />
           </>
@@ -310,7 +256,7 @@ const TaskOrderDetailsScreen = () => {
             color="info"
             style={styles.sectionTitle}
           >
-            Time and date
+            {O.startDate}
           </Text>
           <View style={styles.timeRow}>
             <Ionicons

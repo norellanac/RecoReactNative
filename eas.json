@@ -15,6 +15,10 @@
         "ENVIRONMENT": "development"
       }
     },
+    "development-client": {
+      "extends": "development",
+      "developmentClient": true
+    },
     "preview": {
       "distribution": "internal",
       "channel": "preview",

@@ -6,9 +6,11 @@ import Tabs from '@/app/components/molecules/Tabs';
 import MyServices from '@/app/features/Business/screens/MyServices';
 import { BusinessStepperScreen } from '@/app/features/Business/screens/BusinessStepperScreen';
 import { useTranslation } from 'react-i18next';
+import { useLabels } from '@/app/hooks/useLabels';
 
 export const BusinessProfileScreen = ({ navigation }) => {
   const { t } = useTranslation();
+  const { productService: L } = useLabels();
   const [activeTab, setActiveTab] = useState(0);
 
   const switchToRegisterTab = () => {
@@ -17,11 +19,11 @@ export const BusinessProfileScreen = ({ navigation }) => {
 
   const tabs = [
     {
-      title: t('business.tabs.register', 'Register new service'),
+      title: t('business.tabs.register', `Register new ${L.entityName}`),
       render: () => <BusinessStepperScreen navigation={navigation} />,
     },
     {
-      title: t('business.tabs.myServices', 'My services'),
+      title: t('business.tabs.myServices', `My ${L.entityNamePlural}`),
       render: () => (
         <MyServices
           navigation={navigation}
@@ -42,7 +44,7 @@ export const BusinessProfileScreen = ({ navigation }) => {
             color="info"
             style={{ marginTop: 8 }}
           >
-            {t('business.title', 'My Services')}
+            {t('business.title', `My ${L.entityNamePlural}`)}
           </Text>
         ),
         onLeftIconPress: () => navigation.goBack(),

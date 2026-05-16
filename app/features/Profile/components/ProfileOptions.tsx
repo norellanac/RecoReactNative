@@ -14,6 +14,7 @@ export const ProfileMenuOptions = ({
 }: {
   navigation: any;
   user: any;
+  onEditContact?: () => void;
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -48,9 +49,9 @@ export const ProfileMenuOptions = ({
   const options = [
     {
       key: 'email',
-      enabled: !!user?.email,
+      enabled: !!(user?.email || user?.phone),
       label: t('userProfile.account', 'Account'),
-      value: user?.email || 'email@example.com',
+      value: user?.email || user?.phone || '',
       icon: { name: 'person-outline', color: '#625B71', family: 'Ionicons' },
       onPress: handleEmailPress,
     },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Alert } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 import { Screen } from '../../../components/templates';
 import { Button, Text } from '../../../components/atoms';
 import { useAppDispatch } from '@/app/hooks/useAppDispatch';
@@ -15,6 +16,8 @@ import { useHasRole } from '@/app/hooks/useHasRole';
 import { useUserEvents } from '@/app/features/auth/hooks/authHooks';
 import { ProfileAvatarUploader } from '../components/ProfileAvatarUploader';
 import { AppVersion } from '@/app/components/molecules';
+import { DIAL_CODES, parseE164 } from '@/app/utils/dialCodes';
+import { useBranding } from '@/app/hooks/useBranding';
 
 type Props = NativeStackScreenProps<ProfileStackParams, 'ProfileHome'>;
 
@@ -22,10 +25,18 @@ export const LandingProfile = ({ navigation }: Props) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
+  const { colors } = useBranding();
 
-  const [editNameModalOpen, setEditNameModalOpen] = useState(false);
+  const parsedPhone = user?.phone ? parseE164(user.phone) : null;
+
+  const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [lastname, setLastname] = useState(user?.lastname || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [dialCode, setDialCode] = useState(parsedPhone?.dialCode ?? '+502');
+  const [phoneNumber, setPhoneNumber] = useState(
+    parsedPhone?.localNumber ?? '',
+  );
 
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo, isLoading } = useUserEvents();
@@ -42,35 +53,37 @@ export const LandingProfile = ({ navigation }: Props) => {
     }
   };
 
-  const handleSaveNameChanges = async () => {
-    if (user?.id) {
-      try {
-        await handleUpdateUserInfo({
-          name,
-          lastname,
-        });
-        Alert.alert(
-          t('userProfile.success', 'Success'),
-          t('userProfile.nameUpdated', 'Name updated successfully'),
-        );
-        setEditNameModalOpen(false);
-      } catch {
-        Alert.alert(
-          t('userProfile.error', 'Error'),
-          t('userProfile.updateFailed', 'Failed to update name'),
-        );
-      }
+  const handleSaveProfile = async () => {
+    if (!email.trim() && !phoneNumber.trim()) {
+      Alert.alert(
+        t('userProfile.error', 'Error'),
+        t('profile.contact.atLeastOne', 'Email or phone number is required'),
+      );
+      return;
+    }
+    try {
+      await handleUpdateUserInfo({
+        name,
+        lastname,
+        email: email.trim() || null,
+        phone: phoneNumber.trim() ? `${dialCode}${phoneNumber.trim()}` : null,
+      } as any);
+      Alert.alert(
+        t('userProfile.success', 'Success'),
+        t('userProfile.profileUpdated', 'Profile updated successfully'),
+      );
+      setEditProfileModalOpen(false);
+    } catch {
+      Alert.alert(
+        t('userProfile.error', 'Error'),
+        t('userProfile.updateFailed', 'Failed to update profile'),
+      );
     }
   };
 
   const handleAvatarUpdate = (newAvatarUrl: string) => {
     if (user) {
-      dispatch(
-        setAuthUserState({
-          ...user,
-          avatarUrl: newAvatarUrl,
-        }),
-      );
+      dispatch(setAuthUserState({ ...user, avatarUrl: newAvatarUrl }));
     }
   };
 
@@ -109,8 +122,8 @@ export const LandingProfile = ({ navigation }: Props) => {
 
         <Button
           variant="text"
-          title={t('userProfile.editName', 'Edit Name')}
-          onPress={() => setEditNameModalOpen(true)}
+          title={t('userProfile.editProfile', 'Edit Profile')}
+          onPress={() => setEditProfileModalOpen(true)}
           endIcon={
             <Icon
               name="mode-edit"
@@ -122,11 +135,11 @@ export const LandingProfile = ({ navigation }: Props) => {
         />
 
         <ModalComponent
-          visible={editNameModalOpen}
-          onClose={() => setEditNameModalOpen(false)}
-          title={t('userProfile.editNameTitle', 'Edit Name')}
+          visible={editProfileModalOpen}
+          onClose={() => setEditProfileModalOpen(false)}
+          title={t('userProfile.editProfileTitle', 'Edit Profile')}
           confirmButtonText={t('userProfile.save', 'Save')}
-          onConfirm={handleSaveNameChanges}
+          onConfirm={handleSaveProfile}
           isConfirmButtonLoading={isLoading}
         >
           <TextInput
@@ -141,9 +154,47 @@ export const LandingProfile = ({ navigation }: Props) => {
             value={lastname}
             onChangeText={setLastname}
           />
+          <TextInput
+            style={styles.input}
+            placeholder={t('profile.contact.emailPlaceholder', 'Email')}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <View style={styles.phoneRow}>
+            <Dropdown
+              data={DIAL_CODES}
+              labelField="label"
+              valueField="value"
+              value={dialCode}
+              onChange={(item) => setDialCode(item.value)}
+              placeholder="Code"
+              style={[
+                styles.dialDropdown,
+                { borderColor: colors.grey ?? '#ccc' },
+              ]}
+              selectedTextStyle={{ fontSize: 13 }}
+              containerStyle={{ width: 250 }}
+            />
+            <TextInput
+              style={[styles.input, styles.phoneInput]}
+              placeholder={t(
+                'profile.contact.phonePlaceholder',
+                'Phone number',
+              )}
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+            />
+          </View>
         </ModalComponent>
 
-        <ProfileMenuOptions navigation={navigation} user={user} />
+        <ProfileMenuOptions
+          navigation={navigation}
+          user={user}
+          onEditContact={() => setEditProfileModalOpen(true)}
+        />
 
         <Button
           variant="filled"
@@ -191,17 +242,26 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     width: 300,
   },
+  phoneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    width: 300,
+    marginVertical: 5,
+  },
+  dialDropdown: {
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    width: 110,
+  },
+  phoneInput: {
+    flex: 1,
+    width: undefined,
+  },
   becomeMerchantButton: {
     marginTop: 20,
     width: '70%',
-  },
-  versionContainer: {
-    paddingTop: 110,
-    alignItems: 'center',
-    width: '100%',
-  },
-  versionText: {
-    opacity: 0.6,
-    fontSize: 12,
   },
 });

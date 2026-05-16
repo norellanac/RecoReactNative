@@ -14,26 +14,9 @@ import { useGlobalModal } from '@/app/hooks/useGlobalModal';
 import { useBiometricAuth } from '@/app/hooks/useBiometricAuth';
 import { useBranding } from '@/app/hooks/useBranding';
 import { Dropdown } from 'react-native-element-dropdown';
+import { DIAL_CODES } from '@/app/utils/dialCodes';
 
 type LoginMethod = 'email' | 'phone';
-
-const DIAL_CODES = [
-  { label: '🇬🇹 Guatemala', value: '+502' },
-  { label: '🇺🇸 USA / Canada', value: '+1' },
-  { label: '🇲🇽 Mexico', value: '+52' },
-  { label: '🇸🇻 El Salvador', value: '+503' },
-  { label: '🇭🇳 Honduras', value: '+504' },
-  { label: '🇳🇮 Nicaragua', value: '+505' },
-  { label: '🇨🇷 Costa Rica', value: '+506' },
-  { label: '🇵🇦 Panama', value: '+507' },
-  { label: '🇨🇴 Colombia', value: '+57' },
-  { label: '🇻🇪 Venezuela', value: '+58' },
-  { label: '🇦🇷 Argentina', value: '+54' },
-  { label: '🇧🇷 Brazil', value: '+55' },
-  { label: '🇨🇱 Chile', value: '+56' },
-  { label: '🇪🇸 Spain', value: '+34' },
-  { label: '🇬🇧 UK', value: '+44' },
-];
 
 export const RegisterForm: React.FC = () => {
   const { t } = useTranslation();
